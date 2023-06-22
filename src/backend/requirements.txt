@@ -1,0 +1,8 @@
+Django==4.1.6
+django-nested-admin==4.0.2
+django-polymorphic==3.1.0
+django-timezone-field==5.0
+Pillow==9.4.0
+drf-yasg==1.21.5
+django-cors-headers==3.13.0
+django-rest-polymorphic==0.1.10
