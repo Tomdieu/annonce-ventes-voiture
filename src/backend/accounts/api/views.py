@@ -40,7 +40,7 @@ class AuthenticationViewSet(GenericViewSet, CreateAPIView):
             login(request, user)
             return Response(
                 {
-                    "data": UserProfileSerializer(user.profile).data,
+                    "data": UserSerializer(user).data,
                     "token": user.auth_token.key,
                     "success": True,
                 },

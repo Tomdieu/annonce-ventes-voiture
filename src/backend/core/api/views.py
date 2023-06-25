@@ -7,7 +7,7 @@ from rest_framework.mixins import (
     UpdateModelMixin,
     DestroyModelMixin,
 )
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
 from rest_framework.viewsets import GenericViewSet
 
 from rest_framework.generics import CreateAPIView
@@ -16,7 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from core.models import Marque,Modele,Voiture,Annonce,PhotoVoiture
 
-from .serializers import (ModeleSerializer,MarqueSerializer,VoitureSerializer,AnnonceSerializer,PhotoVoitureSerializer,UpdatePhotoVoitureSerializer,VoitureListSerializer,AnnonceListSerializer)
+from .serializers import (ModeleListSerializer,ModeleSerializer,MarqueSerializer,VoitureSerializer,AnnonceSerializer,PhotoVoitureSerializer,UpdatePhotoVoitureSerializer,VoitureListSerializer,AnnonceListSerializer)
 
 class MarqueViewSet(CreateModelMixin,
     ListModelMixin,
@@ -37,8 +37,12 @@ class ModeleViewSet(CreateModelMixin,
     UpdateModelMixin,
     DestroyModelMixin,GenericViewSet):
 
-    serializer_class = ModeleSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return ModeleListSerializer
+        return ModeleSerializer
     
 
     def get_queryset(self):
@@ -52,6 +56,7 @@ class VoitureViewSet(CreateModelMixin,
 
     parser_class = [MultiPartParser, FormParser]
 
+
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
@@ -62,7 +67,7 @@ class VoitureViewSet(CreateModelMixin,
     
 
     def get_queryset(self):
-        return Voiture.objects.all()
+        return Voiture.objects.filter(proprietaire=self.request.user)
 
 class AnnonceViewSet(CreateModelMixin,
     ListModelMixin,

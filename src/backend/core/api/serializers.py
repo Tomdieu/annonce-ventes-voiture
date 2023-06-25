@@ -21,8 +21,21 @@ class MultipleIMageField(serializers.ListField):
         image_serializer = serializers.ImageField()
         return [image_serializer.to_representation(item) for item in value]
 
+class _MarqueSerializer(serializers.ModelSerializer):
+   
+    class Meta:
+        model = Marque
+        fields = '__all__'
+    
+
 class ModeleSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = Modele
+        fields = '__all__'
+
+class ModeleListSerializer(serializers.ModelSerializer):
+    marque = _MarqueSerializer()
     class Meta:
         model = Modele
         fields = '__all__'
@@ -63,7 +76,7 @@ class VoitureSerializer(serializers.ModelSerializer):
         exclude = ('proprietaire',)
 
     def create(self, validated_data):
-        photos = validated_data.pop('photos')
+        photos = validated_data.pop('upload_photos')
         voiture = Voiture.objects.create(**validated_data,proprietaire=self.context['request'].user)
         if photos:
             for image in photos:
