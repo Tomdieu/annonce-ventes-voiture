@@ -2,9 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
-
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/styles";
+
+import AuthProvider from './provider/AuthProvider'
+
+
 const theme = responsiveFontSizes(
   createTheme({
     typography: {
@@ -16,7 +19,9 @@ const theme = responsiveFontSizes(
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-    <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </ThemeProvider>
       
   </React.StrictMode>,

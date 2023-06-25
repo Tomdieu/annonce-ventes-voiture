@@ -4,7 +4,7 @@ type AuthContextType = {
     userToken: string;
     setUserToken: React.Dispatch<React.SetStateAction<string>>;
     user: object;
-    setUser: React.Dispatch<React.SetStateAction<object>>
+    setUser: React.Dispatch<React.SetStateAction<object>>;
 }
 
 export const AuthContext = React.createContext<AuthContextType>(null)

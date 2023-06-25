@@ -7,15 +7,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 import { Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
+
+import ApiService from '../../utils/ApiService'
+import {useAuth} from '../../context/AuthContext'
 
 const Login = () => {
 
   const date = new Date();
 
   const navigate = useNavigate();
+
+  const {setUserToken,setUser} = useAuth()
 
   return (
     <Grid
@@ -31,6 +35,14 @@ const Login = () => {
           initialValues={{ username: "", password: "" }}
           onSubmit={(e) => {
             console.log(e)
+            ApiService.login(JSON.stringify(e)).then(res=>res.json()).then(data=>{
+              if(data.success){
+
+                setUser(data.data);
+                setUserToken(data.token);
+                return navigate('/dashboard/')
+              }
+            })
           }}
         >
           {({
@@ -68,6 +80,7 @@ const Login = () => {
                 label={"password"}
                 required
                 name="password"
+                type={"passwod"}
                 value={values.password}
                 onChange={handleChange("password")}
                 onBlur={handleBlur("password")}
