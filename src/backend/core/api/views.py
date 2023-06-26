@@ -7,12 +7,14 @@ from rest_framework.mixins import (
     UpdateModelMixin,
     DestroyModelMixin,
 )
-from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
+from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser,JSONParser
 from rest_framework.viewsets import GenericViewSet
 
 from rest_framework.generics import CreateAPIView
 
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
+
+from rest_framework.decorators import action
 
 from core.models import Marque,Modele,Voiture,Annonce,PhotoVoiture
 
@@ -54,14 +56,13 @@ class VoitureViewSet(CreateModelMixin,
     UpdateModelMixin,
     DestroyModelMixin,GenericViewSet):
 
-    parser_class = [MultiPartParser, FormParser]
-
+    parser_class = [MultiPartParser, FormParser,JSONParser]
 
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
 
-        if self.request.method in ['GET']:
+        if self.action in ['list','retrieve']:
             return VoitureListSerializer
         return VoitureSerializer
     
@@ -75,13 +76,21 @@ class AnnonceViewSet(CreateModelMixin,
     UpdateModelMixin,
     DestroyModelMixin,GenericViewSet):
 
-    permission_classes = [IsAuthenticated]
     
     def get_serializer_class(self):
 
         if self.request.method in ['GET']:
             return AnnonceListSerializer
         return AnnonceSerializer
+
+    def get_permissions(self):
+        if self.action in ['list','retrieve']:
+            permission_classes  = [AllowAny]
+        else:
+            permission_classes  = [IsAuthenticated]
+
+        return [permission() for permission in permission_classes ] 
+    
     def get_queryset(self):
         
         queryset= Annonce.objects.filter(status = 'validé')
@@ -107,6 +116,14 @@ class AnnonceViewSet(CreateModelMixin,
             queryset = queryset.filter(voiture__km_parcouru=int(km))
 
         return queryset
+
+    @action(methods=['GET'],detail=False)
+    def private(self):
+        queryset = self.get_queryset()
+        queryset = queryset.filter(proprietaire=self.request.user)
+        serializer_class = self.get_serializer_class()(queryset,many=True).data
+        return Response(serializer_class)
+        
 
 
 class PhotoVoitureViewSet(CreateModelMixin,

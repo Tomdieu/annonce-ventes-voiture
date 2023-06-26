@@ -8,40 +8,46 @@ import {
   InputBase,
 } from "@mui/material";
 import Layout from "../../../components/dashboard/layouts";
-import { useState, useEffect,Suspense,lazy } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import ApiService from "../../../utils/ApiService";
 import { useAuth } from "../../../context/AuthContext";
 import { Add, Search } from "@mui/icons-material";
-const AddVoiture = lazy(()=>import("../../../components/voiture/AddVoiture"))
-
-
+import Voiture from "../../../components/voiture/Voiture";
+import { Helmet } from "react-helmet";
+const AddVoiture = lazy(() => import("../../../components/voiture/AddVoiture"));
 
 const Voitures = () => {
   const { userToken } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [showPopup, setShowPopup] = useState(false)
-  const [voitures,setVoitures] = useState([])
+  const [showPopup, setShowPopup] = useState(false);
+  const [voitures, setVoitures] = useState([]);
   useEffect(() => {
     setLoading(true);
     if (userToken) {
       ApiService.listVoiture(userToken)
         .then((res) => res.json())
         .then((data) => {
-          setVoitures(data)
+          console.log("Data");
+          console.log(data);
+          setVoitures(data);
         })
         .catch((err) => {
           console.log(err);
         })
         .finally(() => setLoading(false));
     }
-  }, []);
+  }, [userToken]);
   return (
     <Layout>
       <Box width={"100%"} height={"100%"}>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>Dashboard |</title>
+        </Helmet>
         <Grid container width={"100%"} height={"100%"}>
           <Grid item md={12} xs={12} sm={12} p={2}>
             <Typography variant={"h5"}>Marque</Typography>
-            <Breadcrumbs>Marque</Breadcrumbs>
+            <Breadcrumbs>Voitures</Breadcrumbs>
             <Breadcrumbs
               aria-label="breadcrumb"
               sx={{
@@ -60,7 +66,7 @@ const Voitures = () => {
             <Box width="100%">
               <Box sx={{ mt: 2, borderRadius: 5 }}>
                 <Button
-                  onClick={()=>setShowPopup(true)}
+                  onClick={() => setShowPopup(true)}
                   variant={"contained"}
                   sx={{ borderRadius: 8, backgroundColor: "#295ad6" }}
                   endIcon={<Add />}
@@ -89,10 +95,19 @@ const Voitures = () => {
                 </Box>
               </Box>
               <Suspense fallback={<div>Loading...</div>}>
-
-              <AddVoiture open={showPopup} onClose={setShowPopup} onReload={()=>window.location.reload()}/>
+                <AddVoiture
+                  open={showPopup}
+                  onClose={setShowPopup}
+                  onReload={() => window.location.reload()}
+                />
               </Suspense>
-                  {/* {voitures?.map()} */}
+              <Grid container gap={1} display={"flex"} flexDirection={"row"}>
+                {voitures?.map((voiture, key) => (
+                  <Grid sm={6} md={3} item>
+                    <Voiture voiture={voiture} key={key} />
+                  </Grid>
+                ))}
+              </Grid>
             </Box>
           </Grid>
         </Grid>

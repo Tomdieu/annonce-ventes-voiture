@@ -23,12 +23,30 @@ export interface MarqueTypes {
 }
 
 
+export interface ImageTypes {
+    id:number;
+    photo: string;
+}
+
+export interface UserTypes{
+    id:number;
+    email: string;
+    address:string;
+    first_name:string;
+    last_name:string;
+    phone_1:string;
+    phone_2:string;
+    usename:string;
+}
+
 export interface VoitureTypes {
+    id:number;
     annee:number;
     prix:number;
     description:string;
     num_chassi:string;
-    km_parcouru:string;
+    km_parcouru:number;
     model:ModeleTypes;
-    proprietaire:any
+    proprietaire:UserTypes;
+    images:ImageTypes[]
 }

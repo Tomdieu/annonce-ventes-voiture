@@ -169,6 +169,7 @@ const SingletonAddVoiture = (props: Props) => {
                       label="Annee de sortie du vehicule"
                       type="number"
                       fullWidth
+                      inputProps={{ min: "1900", max: new Date().getFullYear() }}
                       variant="outlined"
                       sx={{ fontSize: "28px" }}
                       onChange={(e) => {

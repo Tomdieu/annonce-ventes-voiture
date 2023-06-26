@@ -85,8 +85,9 @@ class VoitureSerializer(serializers.ModelSerializer):
 
     
 class VoitureListSerializer(serializers.ModelSerializer):
-    photos =  PhotVoitureSerializer(many=True, read_only=True)
+    images =  PhotVoitureSerializer(many=True, read_only=True)
     proprietaire = UserSerializer()
+    model = ModeleListSerializer()
     class Meta:
         model = Voiture
         fields = '__all__'
