@@ -55,7 +55,9 @@ const SingletonAddAnnonce = (props:Props) => {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-
+        <Formik>
+            
+        </Formik>
       </Dialog>
     )
 }

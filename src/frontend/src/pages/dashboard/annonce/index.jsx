@@ -163,7 +163,7 @@ const Voitures = () => {
                             }}
                           >
                             <TableCell>
-                                <Checkbox onChange={console.log}/>
+                                <Checkbox/>
                             </TableCell>
                             <TableCell component="th" scope="row">
                               {row.id}
