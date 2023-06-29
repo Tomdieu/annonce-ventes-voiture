@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Box, IconButton } from "@mui/material";
+import { Box, ButtonGroup, IconButton } from "@mui/material";
 import { VoitureTypes } from "../../types/";
 import { useState } from "react";
 import {
@@ -12,6 +12,8 @@ import {
   ArrowRight,
   CalendarToday,
   AttachMoney,
+  Feed,
+  RssFeed,
 } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { FaRoad, FaKey } from "react-icons/fa";
@@ -208,13 +210,17 @@ export default function Voiture(props: Props) {
           </Box>
         </Box>
       </CardContent>
-      <CardActions>
+      <CardActions sx={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <ButtonGroup size="small">
+
         <Button size="small" color="info">
-          Detail
+          Detaile
         </Button>
         <Button size="small" color="error">
-          Delete
+          Supprimer
         </Button>
+        </ButtonGroup>
+        <Button startIcon={<RssFeed/>} variant="outlined" size="small">Annonce</Button>
       </CardActions>
     </Card>
   );

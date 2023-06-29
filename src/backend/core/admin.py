@@ -64,7 +64,6 @@ class AnnonceAdmin(admin.ModelAdmin):
         "voiture",
         "description",
         "status",
-        "prix",
         "date_creation",
     )
     search_fields = ("titre", "status", "prix")

@@ -111,7 +111,7 @@ class AnnonceListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Annonce
-        exclude = ('status',)
+        fields = '__all__'
 
 
 class PhotoVoitureSerializer(serializers.ModelSerializer):

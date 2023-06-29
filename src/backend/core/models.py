@@ -21,6 +21,7 @@ class Modele(models.Model):
         ("electrique", "electrique"),
         ("essence", "essence"),
         ("diesele", "diesele"),
+        ("hybride","hybride")
     )
     nom = models.CharField(max_length=100)
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE, related_name="models")
@@ -49,6 +50,7 @@ class Voiture(models.Model):
     num_chassi = models.CharField(max_length=255)
     km_parcouru = models.IntegerField()
     model = models.ForeignKey(Modele, on_delete=models.CASCADE, related_name="voitures")
+    
     proprietaire = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="annonces"
     )
@@ -85,6 +87,9 @@ class Annonce(models.Model):
     voiture = models.ForeignKey(
         Voiture, on_delete=models.CASCADE, related_name="annonces"
     )
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    address = models.CharField(max_length=255)
     date_creation = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

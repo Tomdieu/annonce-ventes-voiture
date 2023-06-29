@@ -9,7 +9,9 @@ import Login from "../pages/auth/login";
 import DashboardPage from "../pages/dashboard";
 import MarquesPage from "../pages/dashboard/marque";
 import ModelesPage from "../pages/dashboard/modele";
-import Voitures from "../pages/dashboard/voiture";
+import VoituresPage from "../pages/dashboard/voiture";
+import AnnoncePage from "../pages/dashboard/annonce";
+
 // import { useAuth } from "../context/AuthContext";
 
 // Example function to check if the user token exists
@@ -40,7 +42,8 @@ const AppRoutes = () => {
             <Route path="" element={<DashboardPage />} />
             <Route path="marque/" element={<MarquesPage />} />
             <Route path="modele/" element={<ModelesPage />} />
-            <Route path="voiture/" element={<Voitures />} />
+            <Route path="voiture/" element={<VoituresPage />} />
+            <Route path="annonce/" element={<AnnoncePage/>}/>
           </Route>
           <Route path="*" element={<h1>Not Found</h1>}></Route>
         </Route>

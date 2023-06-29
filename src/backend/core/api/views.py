@@ -7,100 +7,123 @@ from rest_framework.mixins import (
     UpdateModelMixin,
     DestroyModelMixin,
 )
-from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser,JSONParser
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser,
+    FileUploadParser,
+    JSONParser,
+)
 from rest_framework.viewsets import GenericViewSet
 
 from rest_framework.generics import CreateAPIView
 
-from rest_framework.permissions import IsAuthenticated,AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from rest_framework.decorators import action
 
-from core.models import Marque,Modele,Voiture,Annonce,PhotoVoiture
+from core.models import Marque, Modele, Voiture, Annonce, PhotoVoiture
 
-from .serializers import (ModeleListSerializer,ModeleSerializer,MarqueSerializer,VoitureSerializer,AnnonceSerializer,PhotoVoitureSerializer,UpdatePhotoVoitureSerializer,VoitureListSerializer,AnnonceListSerializer)
+from .serializers import (
+    ModeleListSerializer,
+    ModeleSerializer,
+    MarqueSerializer,
+    VoitureSerializer,
+    AnnonceSerializer,
+    PhotoVoitureSerializer,
+    UpdatePhotoVoitureSerializer,
+    VoitureListSerializer,
+    AnnonceListSerializer,
+)
 
-class MarqueViewSet(CreateModelMixin,
+
+class MarqueViewSet(
+    CreateModelMixin,
     ListModelMixin,
     RetrieveModelMixin,
     UpdateModelMixin,
-    DestroyModelMixin,GenericViewSet):
-
+    DestroyModelMixin,
+    GenericViewSet,
+):
     serializer_class = MarqueSerializer
     permission_classes = [IsAuthenticated]
-    
 
     def get_queryset(self):
         return Marque.objects.all()
 
-class ModeleViewSet(CreateModelMixin,
+
+class ModeleViewSet(
+    CreateModelMixin,
     ListModelMixin,
     RetrieveModelMixin,
     UpdateModelMixin,
-    DestroyModelMixin,GenericViewSet):
-
+    DestroyModelMixin,
+    GenericViewSet,
+):
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
-        if self.request.method in ['GET']:
+        if self.request.method in ["GET"]:
             return ModeleListSerializer
         return ModeleSerializer
-    
 
     def get_queryset(self):
         return Modele.objects.all()
 
-class VoitureViewSet(CreateModelMixin,
+
+class VoitureViewSet(
+    CreateModelMixin,
     ListModelMixin,
     RetrieveModelMixin,
     UpdateModelMixin,
-    DestroyModelMixin,GenericViewSet):
-
-    parser_class = [MultiPartParser, FormParser,JSONParser]
+    DestroyModelMixin,
+    GenericViewSet,
+):
+    parser_class = [MultiPartParser, FormParser, JSONParser]
 
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
-
-        if self.action in ['list','retrieve']:
+        if self.action in ["list", "retrieve"]:
             return VoitureListSerializer
         return VoitureSerializer
-    
 
     def get_queryset(self):
         return Voiture.objects.filter(proprietaire=self.request.user)
 
-class AnnonceViewSet(CreateModelMixin,
+
+class AnnonceViewSet(
+    CreateModelMixin,
     ListModelMixin,
     RetrieveModelMixin,
     UpdateModelMixin,
-    DestroyModelMixin,GenericViewSet):
-
-    
+    DestroyModelMixin,
+    GenericViewSet,
+):
     def get_serializer_class(self):
-
-        if self.request.method in ['GET']:
+        if self.request.method in ["GET"]:
             return AnnonceListSerializer
         return AnnonceSerializer
 
     def get_permissions(self):
-        if self.action in ['list','retrieve']:
-            permission_classes  = [AllowAny]
+        if self.action in ["list", "retrieve"]:
+            permission_classes = [AllowAny]
         else:
-            permission_classes  = [IsAuthenticated]
+            permission_classes = [IsAuthenticated]
 
-        return [permission() for permission in permission_classes ] 
-    
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self):
-        
-        queryset= Annonce.objects.filter(status = 'validé')
-        
-        annee = request.query_params.get('annee',None)
-        prix =  request.query_params.get('prix',None)
-        marque = request.query_params.get('marque',None)
-        model = request.query_params.get('model',None)
-        titre = request.query_params.get('titre',None)
-        km = request.query_params.get('km_parcouru',None)
+        request = self.request
+        queryset = Annonce.objects.filter(voiture__proprietaire=self.request.user)
+
+        # queryset= Annonce.objects.filter(status = 'validé')
+
+        annee = request.query_params.get("annee", None)
+        prix = request.query_params.get("prix", None)
+        marque = request.query_params.get("marque", None)
+        model = request.query_params.get("model", None)
+        titre = request.query_params.get("titre", None)
+        km = request.query_params.get("km_parcouru", None)
 
         if titre:
             queryset = queryset.filter(titre=titre)
@@ -117,31 +140,28 @@ class AnnonceViewSet(CreateModelMixin,
 
         return queryset
 
-    @action(methods=['GET'],detail=False)
+    @action(methods=["GET"], detail=False)
     def private(self):
         queryset = self.get_queryset()
         queryset = queryset.filter(proprietaire=self.request.user)
-        serializer_class = self.get_serializer_class()(queryset,many=True).data
+        serializer_class = self.get_serializer_class()(queryset, many=True).data
         return Response(serializer_class)
-        
 
 
-class PhotoVoitureViewSet(CreateModelMixin,
+class PhotoVoitureViewSet(
+    CreateModelMixin,
     ListModelMixin,
     RetrieveModelMixin,
     UpdateModelMixin,
-    DestroyModelMixin,GenericViewSet):
-
+    DestroyModelMixin,
+    GenericViewSet,
+):
     permission_classes = [IsAuthenticated]
 
-
-
     def get_serializer_class(self):
-
-        if self.request.method in ['GET','POST']:
+        if self.request.method in ["GET", "POST"]:
             return PhotoVoitureSerializer
         return UpdatePhotoVoitureSerializer
 
     def get_queryset(self):
         return PhotoVoiture.objects.all()
-    

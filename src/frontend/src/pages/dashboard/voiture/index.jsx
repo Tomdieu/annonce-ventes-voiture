@@ -43,12 +43,11 @@ const Voitures = () => {
       <Box sx={{padding:0,margin:0}} width={"100%"} height={"100%"}>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Dashboard |</title>
+          <title>Dashboard | Voiture </title>
         </Helmet>
         <Grid container width={"100%"} height={"100%"}>
           <Grid item md={12} xs={12} sm={12} p={2}>
-            <Typography variant={"h5"}>Marque</Typography>
-            <Breadcrumbs>Voitures</Breadcrumbs>
+            <Typography variant={"h5"}>Voitures</Typography>
             <Breadcrumbs
               aria-label="breadcrumb"
               sx={{
