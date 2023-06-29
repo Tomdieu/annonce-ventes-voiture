@@ -40,7 +40,7 @@ const Modeles = () => {
         })
         .finally(() => setLoading(false));
     }
-  }, []);
+  }, [userToken]);
   return (
     <Layout>
       <Box width={"100%"} height={"100%"}>

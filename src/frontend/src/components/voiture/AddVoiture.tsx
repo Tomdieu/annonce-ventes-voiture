@@ -8,20 +8,37 @@ import {
   Divider,
   Box,
   Typography,
+  IconButton,
 } from "@mui/material";
 import { useAuth } from "../../context/AuthContext";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useEffect, useState, useLayoutEffect } from "react";
+import { useEffect, useState } from "react";
 import ApiService from "../../utils/ApiService";
 import { ModeleTypes } from "../../types";
-import { Save, Close, Add } from "@mui/icons-material";
+import { Save, Close, Add, Delete } from "@mui/icons-material";
 
-import { Formik, Form, Field } from "formik";
+import { makeStyles } from "@mui/styles";
+
+import { Formik, Form } from "formik";
 
 import createVoitureSchema from "../../schema/createVoitureSchema";
+
+const useStyles = makeStyles((theme) => ({
+  imageContainer: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: theme.spacing(2),
+  },
+  previewImage: {
+    width: 100,
+    height: 100,
+    marginRight: theme.spacing(2),
+    objectFit:"cover"
+  },
+}));
 
 type Props = {
   open: boolean;
@@ -38,8 +55,14 @@ const initialValues = {
   model: "",
 };
 
+type previewType = {
+  url: string;
+};
+
 const SingletonAddVoiture = (props: Props) => {
   const { userToken } = useAuth();
+
+  const classes = useStyles();
 
   const [modeles, setModeles] = useState<ModeleTypes[]>([]);
   const { open, onClose } = props;
@@ -49,6 +72,36 @@ const SingletonAddVoiture = (props: Props) => {
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState(initialValues);
+
+  const [previewImages, setPreviewImages] = useState<previewType[]>([]);
+
+  useEffect(() => {
+    if (images) {
+      const files = Array.from(images);
+
+      const _images: previewType[] = files.map((file) => ({
+        url: URL.createObjectURL(file),
+      }));
+
+      setPreviewImages([..._images]);
+
+      console.log({ _images });
+      console.log({ images });
+    }
+  }, [images]);
+
+  const handleRemoveImage = (index:number) => {
+    setPreviewImages((prevImages) => {
+      const updatedImages = [...prevImages];
+      updatedImages.splice(index, 1);
+      return updatedImages;
+    });
+    setImages((_images:FileList | null) => {
+      const updatedImages = [..._images];
+      updatedImages.splice(index, 1);
+      return updatedImages;
+    });
+  };
 
   const handleFormChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -135,7 +188,7 @@ const SingletonAddVoiture = (props: Props) => {
 
                   if (images) {
                     for (let i = 0; i < images.length; i++) {
-                      fData.append(`upload_photos`, images[i],images[0].name);
+                      fData.append(`upload_photos`, images[i], images[0].name);
                     }
                   }
 
@@ -169,7 +222,10 @@ const SingletonAddVoiture = (props: Props) => {
                       label="Annee de sortie du vehicule"
                       type="number"
                       fullWidth
-                      inputProps={{ min: "1900", max: new Date().getFullYear() }}
+                      inputProps={{
+                        min: "1900",
+                        max: new Date().getFullYear(),
+                      }}
                       variant="outlined"
                       sx={{ fontSize: "28px" }}
                       onChange={(e) => {
@@ -181,6 +237,31 @@ const SingletonAddVoiture = (props: Props) => {
                       helperText={touched.annee && errors.annee}
                       error={Boolean(touched.annee && errors.annee)}
                     />
+                    <TextField
+                      id="model"
+                      name="model"
+                      label="Modele du vehicule"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      sx={{ fontSize: "28px" }}
+                      select
+                      onChange={(e) => {
+                        handleFormChange(e);
+                        setFieldValue(e.target.name, e.target.value, true);
+                      }}
+                      onBlur={handleBlur("model")}
+                      value={values.model}
+                      helperText={touched.model && errors.model}
+                      error={Boolean(touched.model && errors.model)}
+                    >
+                      {modeles.length > 0 &&
+                        modeles?.map((model) => (
+                          <MenuItem key={model.id} value={model.id}>
+                            {model.marque?.nom} {model.nom} [{model.type}]
+                          </MenuItem>
+                        ))}
+                    </TextField>
                     <TextField
                       id="num_chassi"
                       name="num_chassi"
@@ -300,7 +381,7 @@ const SingletonAddVoiture = (props: Props) => {
                         Images
                       </Button>
                       <Typography variant="caption" color={"#f33f4e"}>
-                        {!images && "Selectionner au moin une(1) image"}
+                        {images && images?.length<1 && "Selectionner au moin une(1) image"}
                       </Typography>
                     </Box>
                     <input
@@ -315,31 +396,31 @@ const SingletonAddVoiture = (props: Props) => {
                         setImages(files);
                       }}
                     />
-                    <TextField
-                      id="model"
-                      name="model"
-                      label="Modele du vehicule"
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      sx={{ fontSize: "28px" }}
-                      select
-                      onChange={(e) => {
-                        handleFormChange(e);
-                        setFieldValue(e.target.name, e.target.value, true);
-                      }}
-                      onBlur={handleBlur("model")}
-                      value={values.model}
-                      helperText={touched.model && errors.model}
-                      error={Boolean(touched.model && errors.model)}
-                    >
-                      {modeles.length > 0 &&
-                        modeles?.map((model) => (
-                          <MenuItem key={model.id} value={model.id}>
-                            {model.marque?.nom} {model.nom} [{model.type}]
-                          </MenuItem>
-                        ))}
-                    </TextField>
+                    <Grid container spacing={2}>
+                      {previewImages.map((image, index) => (
+                        <Grid
+                          item
+                          key={index}
+                          className={classes.imageContainer}
+                          sx={{position:"relative"}}
+                        >
+                          <img
+                            src={image.url}
+                            alt="Preview"
+                            className={classes.previewImage}
+                          />
+                          <IconButton
+                            aria-label="Remove"
+                            color="error"
+                            style={{"position":"absolute", "top":5,"right":5}}
+                            onClick={() => handleRemoveImage(index)}
+                          >
+                            <Delete style={{width:16,height:16}}/>
+                          </IconButton>
+                        </Grid>
+                      ))}
+                    </Grid>
+                    
                     <Box
                       sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}
                     ></Box>

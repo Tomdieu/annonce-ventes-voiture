@@ -21,6 +21,7 @@ const Voitures = () => {
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [voitures, setVoitures] = useState([]);
+  const [search,setSearch] = useState()
   useEffect(() => {
     setLoading(true);
     if (userToken) {
@@ -39,7 +40,7 @@ const Voitures = () => {
   }, [userToken]);
   return (
     <Layout>
-      <Box width={"100%"} height={"100%"}>
+      <Box sx={{padding:0,margin:0}} width={"100%"} height={"100%"}>
         <Helmet>
           <meta charSet="utf-8" />
           <title>Dashboard |</title>
@@ -101,7 +102,7 @@ const Voitures = () => {
                   onReload={() => window.location.reload()}
                 />
               </Suspense>
-              <Grid container gap={1} display={"flex"} flexDirection={"row"}>
+              <Grid container width={"100%"} gap={1} display={"flex"} flexDirection={"row"}>
                 {voitures?.map((voiture, key) => (
                   <Grid sm={6} md={3} item>
                     <Voiture voiture={voiture} key={key} />

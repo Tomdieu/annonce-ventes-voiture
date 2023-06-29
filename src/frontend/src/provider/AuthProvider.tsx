@@ -8,28 +8,25 @@ type Props = {
 
 const AuthProvider = (props:Props) => {
   const {children} = props;
-    const [userToken,setUserToken] = useState<string>("")
+    const [userToken,setUserToken] = useState("")
     const [user,setUser] = useState<object>({})
     useEffect(() => {
       if (user) {
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("Auser", JSON.stringify(user));
       }
-    }, [user]);
-  
-    useEffect(() => {
       if (userToken) {
-        localStorage.setItem("userToken", userToken);
+        localStorage.setItem("AuserToken", userToken.trim());
       }
-    }, [userToken]);
+    }, [user,userToken]);
   
     useEffect(() => {
-      const profile = localStorage.getItem("user");
+      const profile = localStorage.getItem("Auser");
       if (profile) {
         setUser(JSON.parse(profile));
       }
-      const token = localStorage.getItem("userToken");
+      const token = localStorage.getItem("AuserToken");
       if (token) {
-        setUserToken(token);
+        setUserToken(token?token:"");
       }
     }, []);
   

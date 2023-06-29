@@ -7,27 +7,44 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class Marque(models.Model):
     nom = models.CharField(max_length=100, unique=True)
+    logo = models.ImageField(upload_to="logo/",null=True,blank=True)
 
     def __str__(self) -> str:
         return self.nom
 
 
 class Modele(models.Model):
-    TYPE = (('electrique','electrique'),('essence','essence'),('diesele','diesele'))
+    TYPE = (
+        ("electrique", "electrique"),
+        ("essence", "essence"),
+        ("diesele", "diesele"),
+    )
     nom = models.CharField(max_length=100)
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE, related_name="models")
-    type = models.CharField(max_length=20,choices=TYPE)
+    type = models.CharField(max_length=20, choices=TYPE)
+
     def __str__(self) -> str:
         return f"{self.nom} [{self.type}]"
 
-    
+
 class Voiture(models.Model):
-
-
+    TYPE = (
+        ("Voiture de tourisme", "Voiture de tourisme"),
+        ("Berline", "Berline"),
+        ("Coupé", "Coupé"),
+        ("Cabriolet", "Cabriolet"),
+        ("Véhicule utilitaire sport (SUV)", "Véhicule utilitaire sport (SUV)"),
+        ("Monospace", "Monospace"),
+        ("Voiture de sport", "Voiture de sport"),
+        ("Voiture électrique", "Voiture électrique"),
+        ("Voiture hybride", "Voiture hybride"),
+        ("Voiture hybride rechargeable", "Voiture hybride rechargeable"),
+    )
     annee = models.IntegerField()
-    prix = models.DecimalField(max_digits=10, decimal_places=2,help_text="in XAF")
+    prix = models.DecimalField(max_digits=10, decimal_places=2, help_text="in XAF")
     description = models.TextField()
     num_chassi = models.CharField(max_length=255)
     km_parcouru = models.IntegerField()
@@ -35,7 +52,7 @@ class Voiture(models.Model):
     proprietaire = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="annonces"
     )
-    
+
     @property
     def main_image(self):
         image = self.images.first()
@@ -43,8 +60,8 @@ class Voiture(models.Model):
         if image:
             if image.photo:
                 return image.photo.url
-            return ''
-        return ''
+            return ""
+        return ""
 
     @property
     def km(self):
@@ -63,8 +80,8 @@ class Annonce(models.Model):
 
     titre = models.CharField(max_length=255)
     description = models.TextField()
-    status = models.CharField(max_length=255, choices=STATUTS, default='en attente')
-    prix = models.DecimalField(max_digits=10, decimal_places=2,help_text="in XAF")
+    status = models.CharField(max_length=255, choices=STATUTS, default="en attente")
+    prix = models.DecimalField(max_digits=10, decimal_places=2, help_text="in XAF")
     voiture = models.ForeignKey(
         Voiture, on_delete=models.CASCADE, related_name="annonces"
     )
