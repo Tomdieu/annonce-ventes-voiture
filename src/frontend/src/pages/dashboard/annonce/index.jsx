@@ -15,7 +15,7 @@ import Layout from "../../../components/dashboard/layouts";
 import { useState, useEffect, Suspense, lazy } from "react";
 import ApiService from "../../../utils/ApiService";
 import { useAuth } from "../../../context/AuthContext";
-import { Add, Search } from "@mui/icons-material";
+import { Add, Delete, Search } from "@mui/icons-material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -36,6 +36,7 @@ const Voitures = () => {
   const [search, setSearch] = useState("");
   const [annonces, setAnnonces] = useState([]);
   const [selected,setSelected] = useState([]);
+  const [action,setAction] = useState("none")
   useEffect(() => {
     setLoading(true);
     if (userToken) {
@@ -114,9 +115,10 @@ const Voitures = () => {
               <Box sx={{mb:2}}>
                 <Box sx={{display:"flex",alignItems:"center",gap:2}}>
                     <Typography>Action</Typography>
-                    <TextField select>
-                        <MenuItem value={"delete"}>
-                            Supprimer
+                    <TextField select value={action} fullWidth sx={{maxWidth:"210px"}} onChange={(e)=>setAction(e.target.value)}>
+                        <MenuItem value="none">----------------------------</MenuItem>
+                        <MenuItem value={"delete"} >
+                            <Typography sx={{color:"#ff0000",alignItems:"center",justifyContent:"space-between"}}> Supprimer</Typography>
                         </MenuItem>
                     </TextField>
                     <Button>Go</Button>
@@ -141,7 +143,7 @@ const Voitures = () => {
                   <Table aria-label="simple table">
                     <TableHead>
                       <TableRow>
-                        <TableCell></TableCell>
+                        <TableCell><Checkbox/></TableCell>
                         <TableCell>ID</TableCell>
                         <TableCell>TITRE</TableCell>
                         <TableCell>PRIX</TableCell>
@@ -161,7 +163,7 @@ const Voitures = () => {
                             }}
                           >
                             <TableCell>
-                                <Checkbox/>
+                                <Checkbox onChange={console.log}/>
                             </TableCell>
                             <TableCell component="th" scope="row">
                               {row.id}
