@@ -23,7 +23,7 @@ coverage==7.1.0
 cryptography==39.0.0
 daphne==4.0.0
 dj-database-url==2.0.0
-Django==4.1.6
+Django
 django-celery-beat==2.4.0
 django-celery-results==2.4.0
 django-cors-headers==3.13.0
