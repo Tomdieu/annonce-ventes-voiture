@@ -10,6 +10,10 @@ core/management/__pycache__
 local_settings.py
 db.sqlite3-journal
 media
+staticfiles
+./staticfiles
+/staticfiles/
+
 
 # If your build process includes running collect
 # static, then you probably don't need or want to include staticfiles/
