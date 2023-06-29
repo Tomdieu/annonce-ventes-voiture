@@ -8,20 +8,6 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      // "@": path.resolve(__dirname, "./src/"),
-      // "components": path.resolve(__dirname, "./src/components"),
-      // "context": path.resolve(__dirname, "./src/context"),
-      // "pages": path.resolve(__dirname, "./src/pages"),
-      // "utils": path.resolve(__dirname, "./src/utils"),
-      // "assets": path.resolve(__dirname, "./src/assets"),
-      // "provider": path.resolve(__dirname, "./src/provider"),
-      // "schema": path.resolve(__dirname, "./src/schema"),
-      // "types": path.resolve(__dirname, "./src/types"),
-
-    },
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
-}})
+  plugins: [react()]
+})
   
