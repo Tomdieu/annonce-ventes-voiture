@@ -2,21 +2,12 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Box, ButtonGroup, IconButton } from "@mui/material";
+import { Box, Divider, IconButton, Paper } from "@mui/material";
 import { VoitureTypes } from "../../types/";
 import { useState } from "react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  CalendarToday,
-  AttachMoney,
-  Feed,
-  RssFeed,
-} from "@mui/icons-material";
+import { ArrowLeft, ArrowRight, Delete } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
-import { FaRoad, FaKey } from "react-icons/fa";
 import millify from "millify";
 
 type Props = {
@@ -26,27 +17,56 @@ type Props = {
 const useStyles = makeStyles((theme) => ({
   btnLeft: {
     position: "absolute",
-    top: "0px",
-    bottom: "0px",
-    left: "0px",
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     zIndex: 99,
+    left: 2,
+    bottom: 0,
+    top: 0,
+    height: "100%",
+    alignItems: "center",
   },
   btnRight: {
     position: "absolute",
-    top: "0px",
-    right: "0px",
-    bottom: "0px",
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     zIndex: 99,
-    width: "40px",
+    right: 2,
+    bottom: 0,
+    top: 0,
+    height: "100%",
+    alignItems: "center",
   },
+  card: {
+    cursor: "pointer",
+    '&:hover': {
+      boxShadow: "0px 0px 10px #b9f0f4",
+      "& > .card-content,.card-action": {
+        backgroundColor: "#b2aeaecc"
+      }
+    }
+  },
+  btnIconContainer: {
+    borderRadius: 8,
+  },
+  priceContainer: {
+    position: "absolute",
+    right: 0,
+    top: -10,
+    p: 0.5,
+    pl: 2,
+    pr: 2,
+    backgroundColor: "#fff",
+  },
+  image: {
+    height: 200,
+    cursor: "pointer",
+    position: "relative",
+    transition: "transform 0.3s ease",
+    "&:hover": {
+      transform: "scale(1.05)",
+      objectFit: "contain"
+
+    },
+    objectFit: "fill"
+
+  }
 }));
 
 export default function Voiture(props: Props) {
@@ -61,7 +81,8 @@ export default function Voiture(props: Props) {
     model,
     num_chassi,
     prix,
-    proprietaire,
+    type_carburant,
+    boite_vitesse,
   } = voiture;
   const handleNextImage = () => {
     if (image >= images.length - 1) {
@@ -78,149 +99,116 @@ export default function Voiture(props: Props) {
     }
   };
   return (
-    <Card sx={{ maxWidth: 400 }}>
-      <Box sx={{ width: "100%", position: "relative" }}>
+    <Card className={classes.card}>
+      <Box
+        sx={{ width: "100%", position: "relative", backgroundColor: "#b9f0f4" }}
+      >
         <Box
+          className={classes.btnLeft}
           sx={{
-            position: "absolute",
-            zIndex: 99,
-            left: 0,
-            bottom: 0,
-            top: 0,
-            height: "100%",
             display: images.length > 1 ? "flex" : "none",
-            alignItems: "center",
           }}
         >
-          <IconButton onClick={handlePreviousImage}>
-            <ArrowLeft />
-          </IconButton>
+          <Paper sx={{ borderRadius: 8 }}>
+            <IconButton onClick={handlePreviousImage}>
+              <ArrowLeft sx={{ color: "#1b54eb" }} />
+            </IconButton>
+          </Paper>
         </Box>
 
         <CardMedia
-          sx={{ height: 200, cursor: "pointer", position: "relative",transition:"transform 0.3s ease",
-          '&:hover':{
-            transform: "scale(1.2)"
-          } }}
+          className={classes.image}
           image={images[image].photo}
           title={model.nom}
-          
         />
         <Box
+          className={classes.btnRight}
           sx={{
-            position: "absolute",
-            zIndex: 99,
-            right: 0,
-            bottom: 0,
-            top: 0,
-            height: "100%",
             display: images.length > 1 ? "flex" : "none",
-            alignItems: "center",
           }}
         >
-          <IconButton onClick={handleNextImage}>
-            <ArrowRight />
-          </IconButton>
+          <Paper sx={{ borderRadius: 8 }}>
+            <IconButton onClick={handleNextImage}>
+              <ArrowRight />
+            </IconButton>
+          </Paper>
         </Box>
       </Box>
 
-      <CardContent>
+      <CardContent className="card-content" sx={{ position: "relative" }}>
+        <Paper
+          className={classes.priceContainer}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              color: "RGB(27, 84, 235)",
+              fontWeight: "400",
+              fontSize: "19px",
+            }}
+          >
+            {millify(prix, { space: true })} XAF
+          </Typography>
+        </Paper>
         <Typography
           gutterBottom
           variant="body2"
           component="div"
           sx={{ fontSize: "20px" }}
         >
-          {model.marque?.nom} {model.nom} [{model.type}]
+          {model.marque?.nom} {model.nom}
         </Typography>
         <Typography variant="body1" color="text.secondary" noWrap>
           {description}
         </Typography>
-        <Box>
+        <Box sx={{ width: "100%" }}>
           <Box
             sx={{
               display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography
-              variant="subtitle2"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                fontSize: "18px",
-              }}
-            >
-              <AttachMoney /> XAF {millify(prix, { space: true })}
-            </Typography>
-            <Typography
-              variant="caption"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                fontSize: "18px",
-                gap:"5px"
-              }}
-            >
-              <CalendarToday /> {annee}
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
+              width: "100%",
               alignItems: "center",
               justifyContent: "space-between",
               flexWrap: "wrap",
-              gap:"5px"
+              "& > *": { fontSize: ".8em" },
             }}
           >
-            <Typography
-              variant="caption"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                fontSize: "18px",
-                gap:"5px"
-              }}
-            >
-              {" "}
-              <FaRoad />
-              {"\t"}
-              {millify(km_parcouru*1000,  {
-  units: ['m', 'km', 'mi', 'ft'],
-  space:true
-})}
+            <Typography color="text.secondary">{annee}</Typography>
+            <Divider orientation="vertical" flexItem />
+            <Typography color="text.secondary">
+              {millify(km_parcouru * 1000, {
+                units: ["m", "km", "mi", "ft"],
+                space: true,
+              })}
             </Typography>
-            <Typography
-              variant="caption"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                fontSize: "18px",
-                gap:"5px"
-              }}
-            >
-              <FaKey /> {num_chassi}
+            <Divider orientation="vertical" flexItem />
+            <Typography color="text.secondary">
+              {type_carburant.toUpperCase()}
+            </Typography>
+            <Divider orientation="vertical" flexItem />
+            <Typography color="text.secondary">
+              {boite_vitesse.toUpperCase()}
             </Typography>
           </Box>
         </Box>
       </CardContent>
-      <CardActions sx={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-        <ButtonGroup size="small">
-
-        <Button size="small" color="info">
-          Detaile
-        </Button>
-        <Button size="small" color="error">
-          Supprimer
-        </Button>
-        </ButtonGroup>
-        <Button startIcon={<RssFeed/>} variant="outlined" size="small">Annonce</Button>
+      <CardActions
+        className="card-action"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Paper sx={{ borderRadius: 8 }}>
+          <IconButton color="error">
+            <Delete />
+          </IconButton>
+        </Paper>
+        <Paper sx={{ borderRadius: 8 }}>
+          <IconButton sx={{ color: "#1b54eb" }}>
+            <Delete />
+          </IconButton>
+        </Paper>
       </CardActions>
     </Card>
   );

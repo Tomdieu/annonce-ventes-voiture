@@ -1,12 +1,10 @@
 export interface _ModeleTypes {
     id: number;
     nom: string;
-    type: "electrique" | "essence" | "diesele",
 }
 export interface ModeleTypes {
     id: number;
     nom: string;
-    type: "electrique" | "essence" | "diesele",
     marque?:_MarqueTypes;
 }
 export interface _MarqueTypes {
@@ -18,7 +16,7 @@ export interface _MarqueTypes {
 export interface MarqueTypes {
     id: number;
     nom: string;
-    modeles?:_ModeleTypes[]
+    modeles:_ModeleTypes[]
 
 }
 
@@ -40,6 +38,7 @@ export interface UserTypes{
 }
 
 export interface VoitureTypes {
+    nombre_de_place: number;
     id:number;
     annee:number;
     prix:number;
@@ -48,5 +47,18 @@ export interface VoitureTypes {
     km_parcouru:number;
     model:ModeleTypes;
     proprietaire:UserTypes;
-    images:ImageTypes[]
+    images:ImageTypes[];
+    boite_vitesse:string;
+    couleur:string;
+    nombre_de_chevaux:string;
+    plaque_immatriculation?:string;
+    type_carburant:string;
+    type_vehicule:string;
+    traction:string;
 }
+
+export interface LocationTypes {
+    label: string;
+    latitude: number;
+    longitude: number;
+  };

@@ -40,20 +40,20 @@ const Voitures = () => {
   }, [userToken]);
   return (
     <Layout>
-      <Box sx={{padding:0,margin:0}} width={"100%"} height={"100%"}>
+      <Box sx={{padding:0,margin:0,backgroundColor:"RGBA(226, 254, 254,.2)"}} width={"100%"} height={"100%"}>
         <Helmet>
           <meta charSet="utf-8" />
           <title>Dashboard | Voiture </title>
         </Helmet>
         <Grid container width={"100%"} height={"100%"}>
-          <Grid item md={12} xs={12} sm={12} p={2}>
-            <Typography variant={"h5"}>Voitures</Typography>
+          <Grid item md={12} xs={12} sm={12} pl={2} pr={2}>
+            {/* <Typography variant={"h5"}>Voitures</Typography> */}
             <Breadcrumbs
               aria-label="breadcrumb"
               sx={{
                 mt: 2,
                 backgroundColor: "#295ad6",
-                p: 1.5,
+                p: 2,
                 borderRadius: 1,
                 color: "#fff",
               }}
@@ -64,6 +64,28 @@ const Voitures = () => {
               <Typography>Voiture</Typography>
             </Breadcrumbs>
             <Box width="100%">
+             <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+              
+              <Box sx={{ mt: 1, mb: 1 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    maxWidth: 400,
+                    justifyContent: "flex-start",
+                    p: 0.5,
+                  }}
+                >
+                  <Search />
+                  <InputBase
+                    sx={{ border: "1px solid #ddd", p: 0.5, borderRadius: 2,minWidth:"300px" }}
+                    fullWidth
+                    placeholder=""
+                  />
+                  <Button variant={"contained"}>Search</Button>
+                </Box>
+              </Box>
               <Box sx={{ mt: 2, borderRadius: 5 }}>
                 <Button
                   onClick={() => setShowPopup(true)}
@@ -74,26 +96,7 @@ const Voitures = () => {
                   Ajouter Une Voiture
                 </Button>
               </Box>
-              <Box sx={{ mt: 1, mb: 1 }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 0.2,
-                    maxWidth: 400,
-                    justifyContent: "flex-start",
-                    p: 0.5,
-                  }}
-                >
-                  <Search />
-                  <InputBase
-                    sx={{ border: "1px solid #ddd", p: 0.5, borderRadius: 2 }}
-                    fullWidth
-                    placeholder=""
-                  />
-                  <Button variant={"contained"}>Search</Button>
-                </Box>
-              </Box>
+             </Box>
               <Suspense fallback={<div>Loading...</div>}>
                 <AddVoiture
                   open={showPopup}
@@ -101,9 +104,9 @@ const Voitures = () => {
                   onReload={() => window.location.reload()}
                 />
               </Suspense>
-              <Grid container width={"100%"} gap={1} display={"flex"} flexDirection={"row"}>
+              <Grid container width={"100%"} gap={2} display={"flex"} p={2} flexDirection={"row"}>
                 {voitures?.map((voiture, key) => (
-                  <Grid sm={6} md={3} item>
+                  <Grid sm={6} md={2.8} item>
                     <Voiture voiture={voiture} key={key} />
                   </Grid>
                 ))}

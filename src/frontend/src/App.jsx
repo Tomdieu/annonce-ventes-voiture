@@ -1,6 +1,6 @@
+import 'mapbox-gl/dist/mapbox-gl.css';
 import React from 'react'
 import AppRoutes from "./routes"
-import Login from './pages/auth/login'
 const App = () => {
   return (
     <AppRoutes/>

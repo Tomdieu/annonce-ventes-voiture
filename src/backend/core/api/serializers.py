@@ -50,15 +50,16 @@ class _ModelSerializer(serializers.ModelSerializer):
 
 class MarqueSerializer(serializers.ModelSerializer):
     modeles:List[_ModelSerializer] = serializers.SerializerMethodField()
-    
+        
     class Meta:
         model = Marque
         fields = '__all__'
 
     def get_modeles(self,obj:Marque)->List[_ModelSerializer]:
-
-        return _ModelSerializer(Modele.objects.filter(marque=obj),many=True).data
-
+        modeles = Modele.objects.filter(marque=obj)
+        if modeles.exists():
+            return _ModelSerializer(modeles,many=True).data 
+        return []
 class PhotVoitureSerializer(serializers.ModelSerializer):
 
     class Meta:

@@ -1,8 +1,13 @@
 from django.contrib import admin
-from .models import Voiture, Annonce, PhotoVoiture, Marque, Modele
+from .models import Voiture, Annonce, PhotoVoiture, Marque, Modele,Serie
 from django.utils.translation import gettext_lazy as _
 # Register your models here.
 
+
+class SerieInlineAdmin(admin.TabularInline):
+
+    model = Serie
+    extra = 0
 
 class ModeleInlineAdmin(admin.TabularInline):
     model = Modele
@@ -23,8 +28,10 @@ class MarqueAdmin(admin.ModelAdmin):
 
 @admin.register(Modele)
 class ModeleAdmin(admin.ModelAdmin):
-    list_display = ("id", "nom",'marque',"type")
+    list_display = ("id", "nom",'marque')
     search_fields = ("nom",'marque__nom',)
+
+    inlines = [SerieInlineAdmin]
 
 
 class PhotoVoitureInline(admin.TabularInline):

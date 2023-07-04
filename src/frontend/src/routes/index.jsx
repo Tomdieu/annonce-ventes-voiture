@@ -11,6 +11,7 @@ import MarquesPage from "../pages/dashboard/marque";
 import ModelesPage from "../pages/dashboard/modele";
 import VoituresPage from "../pages/dashboard/voiture";
 import AnnoncePage from "../pages/dashboard/annonce";
+import VoitureView from "../pages/dashboard/voiture/vehicle";
 
 // import { useAuth } from "../context/AuthContext";
 
@@ -43,6 +44,7 @@ const AppRoutes = () => {
             <Route path="marque/" element={<MarquesPage />} />
             <Route path="modele/" element={<ModelesPage />} />
             <Route path="voiture/" element={<VoituresPage />} />
+            <Route path="voiture/:id/" element={<VoitureView/>}/>
             <Route path="annonce/" element={<AnnoncePage/>}/>
           </Route>
           <Route path="*" element={<h1>Not Found</h1>}></Route>
