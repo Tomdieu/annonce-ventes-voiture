@@ -1,6 +1,7 @@
-import { Box, Button, Typography, Link, IconButton, useMediaQuery } from "@mui/material";
+import { Box, Typography, Link, IconButton } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
+import React from "react";
 
 type Props = {};
 
@@ -8,11 +9,45 @@ const useStyles = makeStyles((theme) => ({
   btnLink: {
     color: "#eef2fc",
     "& :hover": {
-      backgroundColor: "#7898dd",
+      // backgroundColor: "#7898dd",
       color: "#f2f2f3",
     },
   },
+  cutomBtn: {
+    padding: theme.spacing(1),
+    margin: theme.spacing(1),
+    borderRadius: theme.shape.borderRadius,
+    // backgroundColor:"#ffffff40",
+    cursor: "pointer",
+    borderLeft: "5px solid transparent",
+    "&:hover": {
+      backgroundColor: "rgba(255,255,255,.5)",
+    },
+    "& ::selection": {
+      backgroundColor: "transparent"
+    },
+    "&:active": {
+      transform: "scale(.99)",
+      borderLeft: "5px solid #3189fcb8"
+
+    }
+  }
 }));
+
+type CustomButtonProps = {
+  children: React.ReactNode;
+  style?:React.CSSProperties
+}
+
+const CustomButton = (props: CustomButtonProps) => {
+  const { children,style } = props
+  const classes = useStyles()
+  return (
+    <Box  style={style} className={classes.cutomBtn}>
+      <Typography variant="h6" component={'span'}>{children}</Typography>
+    </Box>
+  )
+}
 
 const SideBar = () => {
   const classes = useStyles();
@@ -20,7 +55,7 @@ const SideBar = () => {
     <Box height={"100vh"} maxHeight={"100vh"} overflow={"auto"}>
       <Box
         height={"100%"}
-        sx={{ backgroundColor: "#0c54ed", color: "#f1efef" }}
+        sx={{ backgroundColor: "#0c54ed", color: "#f1efef",display:"flex",flexDirection:"column" }}
       >
         <Box
           sx={{
@@ -28,24 +63,27 @@ const SideBar = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            
           }}
         >
-          <Typography typography={"h5"}>Trix Car Annonce</Typography>
+          <Typography typography={"h4"} fontFamily={"Microsoft Sans Serif"} sx={{cursor:"pointer"}}>Car Annonce</Typography>
           <IconButton>
             <Menu sx={{ height: 32, width: 32, color: "#f7f7f8" }} speed={2} />
           </IconButton>
         </Box>
 
-        <Box sx={{ mt: 6, width: "100%" }}>
-        <Link
+        <Box sx={{ mt: 6, width: "100%",flex:1 }}>
+
+          <Link
             href={"/dashboard/"}
             className={classes.btnLink}
             variant="button"
             sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
           >
-            <Box sx={{ p: 1.2, borderRadius: 1, m: 1 }}>
+            {/* <Box sx={{ p: 1.2, borderRadius: 1, m: 1 }}>
               <Typography variant={"body1"}>Dashboard</Typography>
-            </Box>
+            </Box> */}
+            <CustomButton>Dashboard</CustomButton>
           </Link>
           <Link
             href={"/dashboard/marque/"}
@@ -53,9 +91,8 @@ const SideBar = () => {
             variant="button"
             sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
           >
-            <Box sx={{ p: 1.2, borderRadius: 1, m: 1 }}>
-              <Typography variant={"body1"}>Marque</Typography>
-            </Box>
+            <CustomButton>Marque</CustomButton>
+
           </Link>
           <Link
             href="/dashboard/modele/"
@@ -63,9 +100,8 @@ const SideBar = () => {
             variant="button"
             sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
           >
-            <Box sx={{ p: 1.2, borderRadius: 1, m: 1 }}>
-              <Typography variant={"body1"}>Model</Typography>
-            </Box>
+            <CustomButton>Model</CustomButton>
+
           </Link>
           <Link
             href="/dashboard/voiture/"
@@ -73,9 +109,8 @@ const SideBar = () => {
             variant="button"
             sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
           >
-            <Box sx={{ p: 1.2, borderRadius: 1, m: 1 }}>
-              <Typography variant={"body1"}>Voiture</Typography>
-            </Box>
+            <CustomButton>Voiture</CustomButton>
+
           </Link>
           <Link
             href="/dashboard/annonce/"
@@ -83,9 +118,21 @@ const SideBar = () => {
             variant="button"
             sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
           >
-            <Box sx={{ p: 1.2, borderRadius: 1, m: 1 }}>
+            <CustomButton>Annonce</CustomButton>
+
+            {/* <Box sx={{ p: 1.2, borderRadius: 1, m: 1 }}>
               <Typography variant={"body1"}>Annonce</Typography>
-            </Box>
+            </Box> */}
+          </Link>
+        </Box>
+        <Box>
+        <Link
+            href={"/"}
+            className={classes.btnLink}
+            variant="button"
+            sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
+          >
+            <CustomButton style={{backgroundColor:"#ffffff40"}}>View Site</CustomButton>
           </Link>
         </Box>
       </Box>

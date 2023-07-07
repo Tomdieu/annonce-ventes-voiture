@@ -135,9 +135,9 @@ const Voitures = () => {
               >
                 {voitures?.map((voiture, key) => (
                   <Grid sm={6} md={2.8} item>
-                      <Link href={`/dashboard/voiture/${voiture.id}/`}>
                       <Voiture voiture={voiture} key={key} />
-                  </Link>
+                      {/* <Link href={`/dashboard/voiture/${voiture.id}/`}>
+                  </Link> */}
                     </Grid>
                 ))}
               </Grid>

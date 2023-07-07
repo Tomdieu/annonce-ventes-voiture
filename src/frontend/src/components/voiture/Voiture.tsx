@@ -38,7 +38,19 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       boxShadow: "0px 0px 10px #b9f0f4",
       "& > .card-content,.card-action": {
-        backgroundColor: "#b2aeaecc"
+        backgroundColor: "#bae3fce6",
+      },
+      "& .card-action": {
+        display: "flex"
+      }
+    },
+    "& .card-action": {
+      display: "none"
+    },
+    '& .btn': {
+      borderRadius: 3, backgroundColor: "transparent",
+      '&:hover': {
+        backgroundColor: "rgba(0,0,0,.5)"
       }
     }
   },
@@ -109,9 +121,9 @@ export default function Voiture(props: Props) {
             display: images.length > 1 ? "flex" : "none",
           }}
         >
-          <Paper sx={{ borderRadius: 8 }}>
+          <Paper elevation={0} className={'btn'}>
             <IconButton onClick={handlePreviousImage}>
-              <ArrowLeft sx={{ color: "#1b54eb" }} />
+              <ArrowLeft sx={{ color: "#fff" }} />
             </IconButton>
           </Paper>
         </Box>
@@ -127,15 +139,15 @@ export default function Voiture(props: Props) {
             display: images.length > 1 ? "flex" : "none",
           }}
         >
-          <Paper sx={{ borderRadius: 8 }}>
-            <IconButton onClick={handleNextImage}>
-              <ArrowRight />
+          <Paper elevation={0} className={'btn'}>
+            <IconButton sx={{ backgroundColor: "transparent" }} onClick={handleNextImage}>
+              <ArrowRight sx={{ color: "#fff" }} />
             </IconButton>
           </Paper>
         </Box>
       </Box>
 
-      <CardContent className="card-content" sx={{ position: "relative" }}>
+      <CardContent onClick={()=>window.location.href=`/dashboard/voiture/${voiture.id}/`} className="card-content" sx={{ position: "relative" }}>
         <Paper
           className={classes.priceContainer}
         >
@@ -143,8 +155,9 @@ export default function Voiture(props: Props) {
             variant="h6"
             sx={{
               color: "RGB(27, 84, 235)",
-              fontWeight: "400",
               fontSize: "19px",
+              p: .8,
+              fontFamily: "Comic Sans MS"
             }}
           >
             {millify(prix, { space: true })} XAF
@@ -204,11 +217,11 @@ export default function Voiture(props: Props) {
             <Delete />
           </IconButton>
         </Paper>
-        <Paper sx={{ borderRadius: 8 }}>
+        {/* <Paper sx={{ borderRadius: 8 }}>
           <IconButton sx={{ color: "#1b54eb" }}>
             <Delete />
           </IconButton>
-        </Paper>
+        </Paper> */}
       </CardActions>
     </Card>
   );

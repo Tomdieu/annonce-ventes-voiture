@@ -47,6 +47,7 @@ class VoitureAdmin(admin.ModelAdmin):
     list_display = ("id", "model", "prix", "annee","km", "description", "proprietaire")
     search_fields = ("model__nom","model__marque__nom", "annee", "prix")
     list_filter = ("annee", "model", "prix")
+    readonly_fields = ['date_creation']
 
     inlines= [PhotoVoitureInline,AnnonceInline]
 

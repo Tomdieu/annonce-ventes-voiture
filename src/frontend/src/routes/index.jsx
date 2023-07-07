@@ -12,7 +12,7 @@ import ModelesPage from "../pages/dashboard/modele";
 import VoituresPage from "../pages/dashboard/voiture";
 import AnnoncePage from "../pages/dashboard/annonce";
 import VoitureView from "../pages/dashboard/voiture/vehicle";
-
+import IndexPage from "../pages/"
 // import { useAuth } from "../context/AuthContext";
 
 // Example function to check if the user token exists
@@ -37,6 +37,7 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/">
+          <Route path="" element={<IndexPage/>} />
           <Route path="login/" element={<Login />} />
 
           <Route path="dashboard/" element={<ProtectedRoute />}>

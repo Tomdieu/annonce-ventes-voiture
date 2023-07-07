@@ -91,7 +91,14 @@ class VoitureViewSet(
         return VoitureSerializer
 
     def get_queryset(self):
-        return Voiture.objects.filter(proprietaire=self.request.user)
+        
+        queryset = Voiture.objects.filter(proprietaire=self.request.user)
+
+        limit = self.request.query_params.get("limit", None)
+        if limit:
+            return queryset[:int(limit)]
+
+        return queryset
 
     @action(methods=["POST"], detail=True)
     def add_images(self, request, *args, **kwargs):
@@ -126,6 +133,43 @@ class AnnonceViewSet(
 
         return [permission() for permission in permission_classes]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        return Response(AnnonceListSerializer(instance,context={'request':request}).data, status=status.HTTP_201_CREATED)
+
+    def get_queryset_1(self):
+        request = self.request
+        
+        queryset= Annonce.objects.filter(status = 'validé')
+
+        annee = request.query_params.get("annee", None)
+        prix = request.query_params.get("prix", None)
+        marque = request.query_params.get("marque", None)
+        model = request.query_params.get("model", None)
+        titre = request.query_params.get("titre", None)
+        km = request.query_params.get("km_parcouru", None)
+
+        if titre:
+            queryset = queryset.filter(titre=titre)
+        if annee:
+            queryset = queryset.filter(voiture__annee=annee)
+        if prix:
+            queryset = queryset.filter(prix=prix)
+        if marque:
+            queryset = queryset.filter(voiture__model__marque__nom__icontains=marque)
+        if model:
+            queryset = queryset.filter(voiture__model__nom__icontains=model)
+        if km:
+            queryset = queryset.filter(voiture__km_parcouru=int(km))
+
+        limit = self.request.query_params.get("limit", None)
+        if limit:
+            return queryset[:int(limit)]
+
+        return queryset
+    
     def get_queryset(self):
         request = self.request
         queryset = Annonce.objects.filter(voiture__proprietaire=self.request.user)
@@ -152,14 +196,30 @@ class AnnonceViewSet(
         if km:
             queryset = queryset.filter(voiture__km_parcouru=int(km))
 
+        limit = self.request.query_params.get("limit", None)
+        if limit:
+            return queryset[:int(limit)]
+
         return queryset
 
     @action(methods=["GET"], detail=False)
-    def private(self):
-        queryset = self.get_queryset()
-        queryset = queryset.filter(proprietaire=self.request.user)
+    def public(self,request,*args,**kwargs):
+        queryset = self.get_queryset_1()
         serializer_class = self.get_serializer_class()(queryset, many=True).data
         return Response(serializer_class)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        return Response(AnnonceListSerializer(instance,context={'request':request}).data)
+
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
 
 
 class PhotoVoitureViewSet(

@@ -121,6 +121,11 @@ class Voiture(models.Model):
     proprietaire = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="annonces"
     )
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+
+    class Meta:
+        ordering = ['-date_creation']
 
     @property
     def main_image(self):
@@ -150,7 +155,7 @@ class Annonce(models.Model):
     titre = models.CharField(max_length=255)
     description = models.TextField()
     status = models.CharField(max_length=255, choices=STATUTS, default="en attente")
-    prix = models.DecimalField(max_digits=10, decimal_places=2, help_text="in XAF")
+    prix = models.DecimalField(max_digits=15, decimal_places=2, help_text="in XAF")
     voiture = models.ForeignKey(
         Voiture, on_delete=models.CASCADE, related_name="annonces"
     )

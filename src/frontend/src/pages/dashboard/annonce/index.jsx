@@ -7,7 +7,6 @@ import {
   Button,
   InputBase,
   ButtonGroup,
-  Checkbox,
   TextField,
   MenuItem,
   IconButton,
@@ -16,18 +15,16 @@ import Layout from "../../../components/dashboard/layouts";
 import { useState, useEffect, Suspense, lazy } from "react";
 import ApiService from "../../../utils/ApiService";
 import { useAuth } from "../../../context/AuthContext";
-import { Add, Delete, Search, Cached, InfoOutlined } from "@mui/icons-material";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import { Add, Search, Delete, Refresh, Update } from "@mui/icons-material";
 import Paper from "@mui/material/Paper";
 import { Helmet } from "react-helmet";
 import moment from "moment";
 import millify from "millify";
 
+import { DataGrid } from "@mui/x-data-grid";
+const UpdateAnnonce = lazy(() =>
+  import("../../../components/annonce/UpdateAnnonce")
+);
 const AddAnnonce = lazy(() => import("../../../components/annonce/AddAnnonce"));
 
 const Voitures = () => {
@@ -38,6 +35,72 @@ const Voitures = () => {
   const [annonces, setAnnonces] = useState([]);
   const [selected, setSelected] = useState([]);
   const [action, setAction] = useState("none");
+  const [rows, setRows] = useState([]);
+
+  const [annonceId, setAnnonceId] = useState(null);
+  const [_action, _setAction] = useState("new");
+
+  const columns = [
+    { field: "id", headerName: "ID", width: 70 },
+    { field: "titre", headerName: "Titre", width: 150 },
+    { field: "prix", headerName: "Prix", width: 150 },
+    { field: "voiture", headerName: "Voiture", width: 220 },
+    { field: "description", headerName: "Description", width: 300 },
+    { field: "status", headerName: "Status", width: 120 },
+    { field: "date_creation", headerName: "Date Creation", width: 300 },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 120,
+      renderCell: (params) => (
+        <>
+          <IconButton
+            color="info"
+            onClick={() => handleSelectForUpdate(params.row.id)}
+          >
+            <Update />
+          </IconButton>
+          <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
+            <Delete />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+
+  const handleSelectForUpdate = (annonceId) => {
+    setAnnonceId(annonceId);
+    _setAction("update");
+    setShowPopup(true);
+  };
+
+  useEffect(() => {
+    if (!showPopup) {
+      setAnnonceId(null);
+      _setAction("new");
+    }
+  }, [showPopup]);
+  function loadAnnonceIntoRow() {
+    setRows(
+      annonces.map((annonce) => ({
+        ...annonce,
+        voiture: `${annonce.voiture.model.marque.nom} ${annonce.voiture.model.nom} ${annonce.voiture.annee}`,
+        prix: `${millify(annonce.prix, { space: true })} XAF`,
+        date_creation: moment(annonce.date_creation).format(
+          "D, MMMM  YYYY à h:mm A"
+        ),
+      }))
+    );
+  }
+  useEffect(() => {
+    if (annonces) {
+      loadAnnonceIntoRow();
+    }
+  }, [annonces]);
+  function handleDelete(rowId) {
+    const updatedRows = rows.filter((row) => row.id !== rowId);
+    setRows(updatedRows);
+  }
   useEffect(() => {
     setLoading(true);
     if (userToken) {
@@ -53,6 +116,20 @@ const Voitures = () => {
         .finally(() => setLoading(false));
     }
   }, [userToken]);
+  useEffect(() => {
+    if (search) {
+      setRows((rows) => {
+        return rows.filter(
+          (row) =>
+            row.titre.includes(search) ||
+            row.voiture.includes(search) ||
+            row.description.includes(search)
+        );
+      });
+    } else {
+      loadAnnonceIntoRow();
+    }
+  }, [search]);
   return (
     <Layout>
       <Box sx={{ padding: 0, margin: 0 }} width={"100%"} height={"100%"}>
@@ -68,7 +145,7 @@ const Voitures = () => {
               sx={{
                 mt: 2,
                 backgroundColor: "#295ad6",
-                p:2,
+                p: 2,
                 borderRadius: 1,
                 color: "#fff",
               }}
@@ -100,18 +177,20 @@ const Voitures = () => {
                 >
                   <Search />
                   <ButtonGroup>
-                    <InputBase
-                      sx={{
-                        border: "1px solid #ddd",
-                        p: 0.5,
-                        minWidth: "300px",
-                        mr: 0.5,
-                      }}
-                      fullWidth
-                      placeholder=""
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                    />
+                    <Paper sx={{ mr: 0.5, borderRadius: 2 }}>
+                      <InputBase
+                        sx={{
+                          border: "1px solid #ddd",
+                          p: 0.5,
+                          minWidth: "300px",
+                          mr: 0.5,
+                        }}
+                        fullWidth
+                        placeholder=""
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </Paper>
                     <Button variant={"contained"}>Search</Button>
                   </ButtonGroup>
                 </Box>
@@ -133,7 +212,7 @@ const Voitures = () => {
                     fullWidth
                     sx={{
                       maxWidth: "210px",
-                      p:0
+                      p: 0,
                     }}
                     variant="standard"
                     onChange={(e) => setAction(e.target.value)}
@@ -161,9 +240,18 @@ const Voitures = () => {
               </Box>
               <Suspense fallback={<div>Loading...</div>}>
                 <AddAnnonce
-                  open={showPopup}
+                  open={showPopup && Boolean(_action === "new")}
                   onClose={setShowPopup}
-                  onReload={() => window.location.reload()}
+                  onCreate={(data) => setAnnonces([...annonces, data])}
+                />
+                <UpdateAnnonce
+                  open={showPopup && Boolean(_action === "update")}
+                  onClose={setShowPopup}
+                  annonceId={annonceId}
+                  onUpdate={(data) => {
+                    const olderAnnonces = annonces.filter(_annonce=>_annonce.id!==data.id)
+                    setAnnonces([...olderAnnonces,data])
+                  }}
                 />
               </Suspense>
               <Grid
@@ -172,80 +260,21 @@ const Voitures = () => {
                 gap={1}
                 display={"flex"}
                 flexDirection={"row"}
+                flex={1}
               >
-                <TableContainer component={Paper}>
-                  <Table aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>
-                          <Checkbox />
-                        </TableCell>
-                        <TableCell>ID</TableCell>
-                        <TableCell>TITRE</TableCell>
-                        <TableCell>PRIX</TableCell>
-                        <TableCell>VOITURE</TableCell>
-                        <TableCell>DESCRIPTION</TableCell>
-                        <TableCell>STATUS</TableCell>
-                        <TableCell>CREE LE</TableCell>
-                        <TableCell align="right"></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {annonces.length > 0 &&
-                        annonces?.map((row) => (
-                          <TableRow
-                            key={row.id}
-                            sx={{
-                              "&:last-child td, &:last-child th": { border: 0 },
-                            }}
-                          >
-                            <TableCell>
-                              <Checkbox />
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {row.id}
-                            </TableCell>
-                            <TableCell align="left">{row.titre}</TableCell>
-                            <TableCell>
-                              {millify(row.prix, { space: true })} XAF
-                            </TableCell>
-                            <TableCell align="left">
-                              {row.voiture.model.marque?.nom}{" "}
-                              {row.voiture.model.nom}{" "}
-                              {row.voiture.type_vehicule} [
-                              {row.voiture.type_carburant}]{" "}
-                              {row.voiture.plaque_immatriculation
-                                ? row.voiture.plaque_immatriculation
-                                : row.voiture.num_chassi}
-                            </TableCell>
-                            <TableCell align="left">
-                              <Typography noWrap>
-                                {row.description.length>30? row.description.substring(0,30)+'...' : row.description}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left">{row.status}</TableCell>
-                            <TableCell>
-                              {moment(row.date_creation).format(
-                                "D, MMMM  YYYY à h:mm A"
-                              )}
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                              sx={{
-                                display: "flex",
-                                gap: 2,
-                                justifyContent: "flex-end",
-                              }}
-                            >
-                              <IconButton>
-                                <Delete color="error"/>
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                <Paper sx={{ flex: 1, width: "100%", height: "100%" }}>
+                  <DataGrid
+                    sx={{ width: "100%", height: "100%" }}
+                    rows={rows}
+                    columns={columns}
+                    pageSize={20}
+                    onRowClick={() => {}}
+                    checkboxSelection
+                    onRowSelectionModelChange={(_selected_rows) => {
+                      setSelected(_selected_rows);
+                    }}
+                  />
+                </Paper>
               </Grid>
             </Box>
           </Grid>

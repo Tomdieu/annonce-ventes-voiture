@@ -12,7 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { Save, Restore, Close } from "@mui/icons-material";
+import { Save, Restore, Close, Api } from "@mui/icons-material";
 import { Helmet } from "react-helmet";
 
 import Map, {
@@ -28,7 +28,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import React from "react";
 import axios from "axios";
 import createAnnonceSchema from "../../schema/createAnnonceSchema";
-import { LocationTypes, VoitureTypes } from "../../types/";
+import { AnnonceTypes, LocationTypes, VoitureTypes } from "../../types/";
 import { useAuth } from "../../context/AuthContext";
 import ApiService from "../../utils/ApiService";
 
@@ -76,8 +76,15 @@ const SingletonAddAnnonce = (props: Props) => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [options, setOptions] = useState<LocationTypes[]>([]);
+
   const handleClose = () => {
     onClose(false);
+    setSearchTerm("")
+    setAnnonceLocation({
+      longitude: 0,
+      latitude: 0,
+      zoom: 2,
+    })
   };
 
   useEffect(() => {
@@ -187,10 +194,6 @@ const SingletonAddAnnonce = (props: Props) => {
       maxWidth={maxWidth}
       className={classes.dialog}
     >
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>Dashboard | Annonce </title>
-      </Helmet>
       <Box sx={{ m: 2 }}>
         <IconButton onClick={() => onClose(false)} sx={{ borderRadius: 2 }}>
           <Close />
@@ -201,7 +204,7 @@ const SingletonAddAnnonce = (props: Props) => {
           titre: "",
           description: "",
           prix: 0,
-          voiture: null,
+          voiture: 0,
           latitude: 0.0,
           longitude: 0.0,
           address: "",
@@ -228,10 +231,10 @@ const SingletonAddAnnonce = (props: Props) => {
               const jsonData: FormDataState = {};
 
               for (let [name, value] of formData.entries()) {
-                if(name==="prix"){
+                if (name === "prix") {
                   jsonData[name] = parseInt(value.toString())
                 }
-                else{
+                else {
 
                   jsonData[name] = value;
                 }
@@ -241,11 +244,12 @@ const SingletonAddAnnonce = (props: Props) => {
               jsonData["longitude"] = annonceLocation.longitude;
 
               const jsonString = JSON.stringify(jsonData);
-            
+
               ApiService.createAnnonce(jsonString, userToken)
                 .then((res) => res.json())
                 .then((data) => {
                   console.log(data);
+                  onCreate(data)
                   handleReset(e);
                 })
                 .catch((err) => {
@@ -468,7 +472,7 @@ const SingletonAddAnnonce = (props: Props) => {
                         longitude: e.lngLat.lng,
                       })
                     }
-                    onDragStart={(e) => {}}
+                    onDragStart={(e) => { }}
                     draggable
                     longitude={annonceLocation.longitude}
                     latitude={annonceLocation.latitude}

@@ -46,7 +46,6 @@ const Modeles = () => {
       <Box width={"100%"} height={"100%"}>
         <Grid container width={"100%"} height={"100%"}>
           <Grid item md={12} xs={12} sm={12} p={2}>
-            <Typography variant={"h5"}>Marque</Typography>
             <Breadcrumbs>Marque</Breadcrumbs>
             <Breadcrumbs
               aria-label="breadcrumb"
@@ -61,7 +60,7 @@ const Modeles = () => {
               <Link underline="hover" color="inherit" href="/dashboard">
                 Dashboard
               </Link>
-              <Typography>Modeles</Typography>
+              <Typography>Models</Typography>
             </Breadcrumbs>
             <Box width="100%">
               <Box sx={{ mt: 2, borderRadius: 5 }}>

@@ -18,7 +18,7 @@ export default class ApiService {
     });
     return res;
   }
-//   Voiture
+  //   Voiture
   static async createVoiture(data: FormData, token: string) {
     const url = this.API_URL + "core/voiture/";
     const res = await fetch(url, {
@@ -30,8 +30,9 @@ export default class ApiService {
     });
     return res;
   }
-  static async listVoiture(token: string) {
-    const url = this.API_URL + `core/voiture/`;
+  static async listVoiture(token: string, queryParams: string = "") {
+    let url = this.API_URL + `core/voiture/`;
+    url = queryParams ? url + `?${queryParams}` : url
     const res = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
@@ -104,9 +105,9 @@ export default class ApiService {
     });
     return res;
   }
-  
-// Annonce
-static async createAnnonce(data: any, token: string) {
+
+  // Annonce
+  static async createAnnonce(data: any, token: string) {
     const url = this.API_URL + "core/annonce/";
     const res = await fetch(url, {
       method: "POST",
@@ -118,8 +119,9 @@ static async createAnnonce(data: any, token: string) {
     });
     return res;
   }
-  static async listAnnonce( token: string) {
-    const url = this.API_URL + `core/annonce/`;
+  static async listAnnonce(token: string,queryParams: string = "") {
+    let url = this.API_URL + `core/annonce/`;
+    url = queryParams ? url + `?${queryParams}` : url
     const res = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
@@ -162,9 +164,9 @@ static async createAnnonce(data: any, token: string) {
     return res;
   }
 
-//   Marque
+  //   Marque
 
-static async createMarque(data: any, token: string) {
+  static async createMarque(data: any, token: string) {
     const url = this.API_URL + "core/marque/";
     const res = await fetch(url, {
       method: "POST",
@@ -176,7 +178,7 @@ static async createMarque(data: any, token: string) {
     });
     return res;
   }
-  static async listMarque( token: string) {
+  static async listMarque(token: string) {
     const url = this.API_URL + `core/marque/`;
     const res = await fetch(url, {
       headers: {
@@ -219,8 +221,8 @@ static async createMarque(data: any, token: string) {
     });
     return res;
   }
-//   modele
-static async createModele(data: any, token: string) {
+  //   modele
+  static async createModele(data: any, token: string) {
     const url = this.API_URL + "core/modele/";
     const res = await fetch(url, {
       method: "POST",
@@ -232,7 +234,7 @@ static async createModele(data: any, token: string) {
     });
     return res;
   }
-  static async listModele( token: string) {
+  static async listModele(token: string) {
     const url = this.API_URL + `core/modele/`;
     const res = await fetch(url, {
       headers: {

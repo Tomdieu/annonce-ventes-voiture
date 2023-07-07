@@ -62,3 +62,16 @@ export interface LocationTypes {
     latitude: number;
     longitude: number;
   };
+
+
+export interface AnnonceTypes {
+    titre:string;
+    description:string;
+    status:string;
+    prix:number;
+    voiture:VoitureTypes;
+    latitude:number;
+    longitude:number;
+    address:string;
+    date_creation:string
+}
