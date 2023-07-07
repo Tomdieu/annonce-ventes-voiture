@@ -8,8 +8,8 @@ const Index = () => {
     <Layout>
       <Box>
         <Grid container width={"100%"} height={"100%"}>
-          <Grid item md={3}>
-            <Typography>Dashboard</Typography>
+          <Grid item md={12}>
+            <Typography>Dashboard 1</Typography>
             <Breadcrumbs
               aria-label="breadcrumb"
               sx={{

@@ -79,28 +79,6 @@ class Voiture(models.Model):
         (GAZOIL, 'Gazoil'),
         (HYBRIDE, 'Hybride'),
     ]
-    COLOR_CHOICES = [
-        ('black', 'Black'),
-        ('white', 'White'),
-        ('silver', 'Silver'),
-        ('gray', 'Gray'),
-        ('red', 'Red'),
-        ('blue', 'Blue'),
-        ('green', 'Green'),
-        ('yellow', 'Yellow'),
-        ('orange', 'Orange'),
-        ('brown', 'Brown'),
-        ('beige', 'Beige'),
-        ('purple', 'Purple'),
-        ('pink', 'Pink'),
-        ('gold', 'Gold'),
-        ('bronze', 'Bronze'),
-        ('maroon', 'Maroon'),
-        ('burgundy', 'Burgundy'),
-        ('navy', 'Navy'),
-        ('teal', 'Teal'),
-        ('turquoise', 'Turquoise'),
-    ]
 
     CHOIX_TRACTION = [
         ('AV', 'Traction avant'),
@@ -128,9 +106,7 @@ class Voiture(models.Model):
     km_parcouru = models.PositiveIntegerField(default=0)
     model = models.ForeignKey(Modele, on_delete=models.CASCADE, related_name="voitures")
     nombre_de_place = models.IntegerField(default=2)
-    couleur = models.CharField(max_length=255)
     nombre_de_chevaux = models.PositiveIntegerField()
-    couleur = models.CharField(max_length=20, choices=COLOR_CHOICES,default='black')
     boite_vitesse = models.CharField(max_length=20,choices=BOITE_VITESSE,default=manuelle)
     type_carburant = models.CharField(
         max_length=10,
@@ -161,7 +137,7 @@ class Voiture(models.Model):
         return f"{self.km_parcouru} km"
 
     def __str__(self) -> str:
-        return f"{self.model.marque} {self.model} ({self.annee})"
+        return f"{self.model} ({self.annee})"
 
 
 class Annonce(models.Model):

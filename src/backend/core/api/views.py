@@ -33,6 +33,7 @@ from .serializers import (
     UpdatePhotoVoitureSerializer,
     VoitureListSerializer,
     AnnonceListSerializer,
+    AddBulkPhotoVoitureSerializer,
 )
 
 
@@ -85,10 +86,23 @@ class VoitureViewSet(
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
             return VoitureListSerializer
+        if self.action in ["add_images"]:
+            return AddBulkPhotoVoitureSerializer
         return VoitureSerializer
 
     def get_queryset(self):
         return Voiture.objects.filter(proprietaire=self.request.user)
+
+    @action(methods=["POST"], detail=True)
+    def add_images(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        voiture = self.get_object()
+        return Response(
+            VoitureListSerializer(voiture,context={'request':request}).data,
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class AnnonceViewSet(

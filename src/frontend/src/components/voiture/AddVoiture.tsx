@@ -23,7 +23,7 @@ import { makeStyles } from "@mui/styles";
 import { Formik, Form } from "formik";
 import arrayToFileList from "../../utils/arrayToFileList"
 import createVoitureSchema from "../../schema/createVoitureSchema";
-import { TYPE_BOITE_CHOICES, TYPE_CARBURANT_CHOICES, TYPE_VEHICULE_CHOICES,TYPE_TRACTION } from "./data";
+import { TYPE_BOITE_CHOICES, TYPE_CARBURANT_CHOICES, TYPE_VEHICULE_CHOICES, TYPE_TRACTION } from "./data";
 
 const useStyles = makeStyles((theme: { spacing: (arg0: number) => any; }) => ({
   imageContainer: {
@@ -214,9 +214,7 @@ const SingletonAddVoiture = (props: Props) => {
           errors,
           touched,
           handleBlur,
-          setFieldValue,
-          handleChange
-        }) => (
+          setFieldValue }) => (
           <Form
             id="form"
             method="post"
@@ -257,7 +255,7 @@ const SingletonAddVoiture = (props: Props) => {
                 flexDirection: "row",
                 width: "100%",
                 mt: 5,
-                p:5
+                p: 5
               }}
               container
             >
@@ -360,9 +358,10 @@ const SingletonAddVoiture = (props: Props) => {
 
                 <Box sx={{ width: "100%", display: "flex", gap: 1 }}>
                   <TextField
-                    label="Nombre de chevaux" 
+                    label="Nombre de chevaux"
                     type="number"
                     name="nombre_de_chevaux"
+                    value={values.nombre_de_chevaux}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
                       handleFormChange(e);
                       setFieldValue(e.target.name, e.target.value, true);
@@ -370,6 +369,20 @@ const SingletonAddVoiture = (props: Props) => {
                     onBlur={handleBlur("nombre_de_chevaux")}
                     helperText={touched.nombre_de_chevaux && errors.nombre_de_chevaux}
                     error={Boolean(touched.nombre_de_chevaux && errors.nombre_de_chevaux)}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Nombre de place"
+                    type="number"
+                    name="nombre_de_place"
+                    value={values.nombre_de_place}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+                      handleFormChange(e);
+                      setFieldValue(e.target.name, e.target.value, true);
+                    }}
+                    onBlur={handleBlur("nombre_de_place")}
+                    helperText={touched.nombre_de_place && errors.nombre_de_place}
+                    error={Boolean(touched.nombre_de_place && errors.nombre_de_place)}
                     fullWidth
                   />
                   <TextField
@@ -503,7 +516,7 @@ const SingletonAddVoiture = (props: Props) => {
                   />
                 </Box>
                 <Box sx={{ width: "100%", display: "flex", gap: 1 }}>
-                <TextField
+                  <TextField
                     id="vehicle-type"
                     select
                     label="Vehicle Type"
@@ -525,22 +538,22 @@ const SingletonAddVoiture = (props: Props) => {
                     ))}
                   </TextField>
                   <TextField
-                  id="plaque_immatriculation"
-                  name="plaque_immatriculation"
-                  label="# D'imatriculation du vehicule"
-                  type="text"
-                  fullWidth
-                  variant="outlined"
-                  sx={{ fontSize: "28px" }}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-                    handleFormChange(e);
-                    setFieldValue(e.target.name, e.target.value, true);
-                  }}
-                  onBlur={handleBlur("plaque_immatriculation")}
-                  value={values.plaque_immatriculation}
-                  helperText={touched.plaque_immatriculation && errors.plaque_immatriculation}
-                  error={Boolean(touched.plaque_immatriculation && errors.plaque_immatriculation)}
-                />
+                    id="plaque_immatriculation"
+                    name="plaque_immatriculation"
+                    label="# D'imatriculation du vehicule"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    sx={{ fontSize: "28px" }}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+                      handleFormChange(e);
+                      setFieldValue(e.target.name, e.target.value, true);
+                    }}
+                    onBlur={handleBlur("plaque_immatriculation")}
+                    value={values.plaque_immatriculation}
+                    helperText={touched.plaque_immatriculation && errors.plaque_immatriculation}
+                    error={Boolean(touched.plaque_immatriculation && errors.plaque_immatriculation)}
+                  />
                 </Box>
 
 
@@ -616,14 +629,14 @@ const SingletonAddVoiture = (props: Props) => {
                     const files = event.target.files;
                     setImages((_images: FileList | null) => {
                       let updatedImages: File[] = [];
-                      if (_images){
-                        for(let i=0;i<_images?.length;i++){
+                      if (_images) {
+                        for (let i = 0; i < _images?.length; i++) {
                           updatedImages.push(_images[i])
                         }
                       }
-                      if(files){
+                      if (files) {
 
-                        for(let i=0;i<files?.length;i++){
+                        for (let i = 0; i < files?.length; i++) {
                           updatedImages.push(files[i])
                         }
                       }

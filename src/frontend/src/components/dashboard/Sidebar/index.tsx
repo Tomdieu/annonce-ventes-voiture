@@ -37,6 +37,16 @@ const SideBar = () => {
         </Box>
 
         <Box sx={{ mt: 6, width: "100%" }}>
+        <Link
+            href={"/dashboard/"}
+            className={classes.btnLink}
+            variant="button"
+            sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
+          >
+            <Box sx={{ p: 1.2, borderRadius: 1, m: 1 }}>
+              <Typography variant={"body1"}>Dashboard</Typography>
+            </Box>
+          </Link>
           <Link
             href={"/dashboard/marque/"}
             className={classes.btnLink}

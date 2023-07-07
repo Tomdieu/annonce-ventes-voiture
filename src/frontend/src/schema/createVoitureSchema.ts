@@ -7,4 +7,12 @@ export default yup.object().shape({
     prix: yup.number().required("Prix du vehicule obligatoire").min(0, "le prix ne doit pas etre < 0 XAF"),
     description: yup.string().required("Description obligatoire"),
     modele: yup.string().required("Modele du vehicule obligatoire"),
+    couleur:yup.string().required("Couleur obligatoire"),
+    nombre_de_place:yup.number().min(2,'Une voiture a minimum deux place').required("Nombre de place obligatoire"),
+    nombre_de_chevaux:yup.number().required("Nombre de chevaux obligatoire"),
+    type_carburant:yup.string().required("Type carburant obligatoire"),
+    type_vehicule:yup.string().required("Type vehicule obligatoire"),
+    boite_vitesse:yup.string().required("Boite de voitesse obligatoire"),
+    plaque_immatriculation:yup.string(),
+    traction:yup.string().required("Type traction obligatoire")
 })

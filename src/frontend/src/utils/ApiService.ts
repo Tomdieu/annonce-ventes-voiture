@@ -56,7 +56,28 @@ export default class ApiService {
       method: "PATCH",
       body: data,
       headers: {
-        "Content-Type": "application/json",
+        Authorization: `token ${token}`,
+      },
+    });
+    return res;
+  }
+  static async updateVoitureImage(imageId: number, data: any, token: string) {
+    const url = this.API_URL + `core/image-voiture/${imageId}/`;
+    const res = await fetch(url, {
+      method: "PATCH",
+      body: data,
+      headers: {
+        Authorization: `token ${token}`,
+      },
+    });
+    return res;
+  }
+  static async addVoitureImage(voitureId: number, data: any, token: string) {
+    const url = this.API_URL + `core/voiture/${voitureId}/add_images/`;
+    const res = await fetch(url, {
+      method: "POST",
+      body: data,
+      headers: {
         Authorization: `token ${token}`,
       },
     });
@@ -73,6 +94,17 @@ export default class ApiService {
     });
     return res;
   }
+  static async deleteVoitureImage(id: number, token: string) {
+    const url = this.API_URL + `core/image-voiture/${id}/`;
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        Authorization: `token ${token}`,
+      },
+    });
+    return res;
+  }
+  
 // Annonce
 static async createAnnonce(data: any, token: string) {
     const url = this.API_URL + "core/annonce/";

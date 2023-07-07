@@ -6,21 +6,6 @@ from core.models import Marque,Modele,Voiture,Annonce,PhotoVoiture
 
 from accounts.api.serializers import UserSerializer
 
-class MultipleIMageField(serializers.ListField):
-    def to_internal_value(self,data):
-        if not instance(data,list):
-            raise serializers.ValidationError("Invalid data type, expected a list of images.")
-
-        ret =[]
-        for item in data:
-            image_serializer = serializers.ImageField()
-            validated_image = image_serializer.to_internal_value(item)
-            ret.append(validated_image)
-
-    def to_representation(self,value):
-        image_serializer = serializers.ImageField()
-        return [image_serializer.to_representation(item) for item in value]
-
 class _MarqueSerializer(serializers.ModelSerializer):
    
     class Meta:
@@ -125,4 +110,25 @@ class UpdatePhotoVoitureSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PhotoVoiture
-        fields = ('photo',)
+        fields = ('id','photo',)
+
+class AddBulkPhotoVoitureSerializer(serializers.ModelSerializer):
+    images = serializers.ListField(
+        child=serializers.ImageField(allow_empty_file=False, use_url=False),
+        write_only=True
+    )
+    class Meta:
+        model = PhotoVoiture
+        exclude = ('photo',)
+
+    def create(self, validated_data):
+        print(validated_data)
+        photos = validated_data.pop('images')
+        # voiture = validated_data.get('voiture',None)
+        voiture = validated_data['voiture']
+        
+        if photos:
+            for image in photos:
+                PhotoVoiture.objects.create(voiture = voiture, photo = image)
+        return voiture
+        
