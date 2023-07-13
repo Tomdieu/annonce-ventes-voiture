@@ -5,7 +5,7 @@ export interface _ModeleTypes {
 export interface ModeleTypes {
     id: number;
     nom: string;
-    marque?:_MarqueTypes;
+    marque:_MarqueTypes;
 }
 export interface _MarqueTypes {
     id: number;
@@ -34,7 +34,7 @@ export interface UserTypes{
     last_name:string;
     phone_1:string;
     phone_2:string;
-    usename:string;
+    username:string;
 }
 
 export interface VoitureTypes {

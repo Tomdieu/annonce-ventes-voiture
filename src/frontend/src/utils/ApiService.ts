@@ -119,6 +119,17 @@ export default class ApiService {
     });
     return res;
   }
+
+  static async listAnnonces(queryParams: string = "") {
+    let url = this.API_URL + `core/annonces/`;
+    url = queryParams ? url + `?${queryParams}` : url
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return res;
+  }
   static async listAnnonce(token: string,queryParams: string = "") {
     let url = this.API_URL + `core/annonce/`;
     url = queryParams ? url + `?${queryParams}` : url
@@ -126,6 +137,15 @@ export default class ApiService {
       headers: {
         "Content-Type": "application/json",
         Authorization: `token ${token}`,
+      },
+    });
+    return res;
+  }
+  static async getAnnonces(id: number) {
+    const url = this.API_URL + `core/annonces/${id}/`;
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
       },
     });
     return res;

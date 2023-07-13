@@ -1,17 +1,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-// import path from "path";
-import dotenv from 'dotenv';
-// import tsconfigPaths from "vite-tsconfig-paths";
-// import nodeResolve from "@rollup/plugin-node-resolve";
-
-// import commonjs from "@rollup/plugin-commonjs";
-
-// https://vitejs.dev/config/
-// dotenv.config({
-//   path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env',
-// });
 
 export default defineConfig({
-  plugins: [react()]
+  plugins: [react()],
+  server: {
+    watch: {
+      usePolling: true,
+    },
+    host: true, // needed for the Docker Container port mapping to work
+    strictPort: true,
+    port: 3000, // you can replace this port with any port
+  }
 })

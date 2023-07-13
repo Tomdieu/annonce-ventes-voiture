@@ -1,0 +1,19 @@
+# Ignore development and version control files
+.git
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+env
+*.env
+*.log
+
+# Ignore Django specific files
+staticfiles
+media
+db.sqlite3
+
+# Ignore other unnecessary files and directories
+node_modules
+*.swp
+*.swo
