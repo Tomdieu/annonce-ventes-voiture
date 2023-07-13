@@ -1,23 +1,24 @@
-# Base image
+# Use an official Node.js runtime as the base image
 FROM node:14-alpine
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
-
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
+# Copy the package.json and package-lock.json files to the working directory
+COPY package*.json ./
 
-# Copy package.json and yarn.lock to the working directory
-COPY package.json package-lock.json ./
-
-
-# Install dependencies
-RUN npm install --save --force --silent
+# Install app dependencies
+RUN npm install --force --silent
 
 # Copy the entire project to the working directory
 COPY . .
 
+# # Build the app
+# RUN npm run build
+
+# Expose the port that the app will run on
 EXPOSE 3000
 
-# Set the command to run the app using the serve command
-CMD ["npm", "run", "dev"]
+# Define the command to run the app
+CMD [ "npm", "run", "dev" ]
