@@ -1,15 +1,14 @@
 # Use an official Node.js runtime as the base image
-FROM node:14-alpine
+FROM node:18-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+
 # Copy the package.json and package-lock.json files to the working directory
 COPY package*.json ./
 
 # Install app dependencies
-RUN npm install --force --silent
+RUN npm install --force
 
 # Copy the entire project to the working directory
 COPY . .

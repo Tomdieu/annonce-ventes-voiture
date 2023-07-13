@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     watch: {
-      usePolling: true,
+      usePolling: false,
     },
     host: true, // needed for the Docker Container port mapping to work
     port: 3000, // you can replace this port with any port

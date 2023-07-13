@@ -41,7 +41,7 @@ const IndexPage = () => {
           bottom: 0,
           top: 0,
           position: "static",
-          backgroundColor: "#2e6ee5e6",
+          // backgroundColor: "#2e6ee5e6",
           color: "#fff",
           display:"flex",
           backgroundColor:"#fff"
