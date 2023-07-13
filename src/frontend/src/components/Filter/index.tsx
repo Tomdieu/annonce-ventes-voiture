@@ -1,7 +1,8 @@
 import React from "react"
 
-import { Box, Checkbox, Typography, FormControl, FormLabel, RadioGroup, FormControlLabel,Radio} from "@mui/material"
+import { Box, Checkbox, Typography, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material"
 
+import { BiUpArrowAlt } from "react-icons/bi";
 
 interface FilterProps {
 
@@ -9,8 +10,8 @@ interface FilterProps {
 
 const Filter: React.FC<FilterProps> = (props: FilterProps) => {
     return (
-        <Box sx={(theme) => ({ display: "flex", flex: 1,backgroundColor:"rgba(0,0,0,.2)",padding:theme.spacing(.5) })}>
-            <Box sx={(theme)=>({padding:theme.spacing(1),width:"100%",borderRadius:theme.shape.borderRadius})}>
+        <Box sx={(theme) => ({ display: "flex", flex: 1, backgroundColor: "rgba(0,0,0,.2)", padding: theme.spacing(.5) })}>
+            <Box sx={(theme) => ({ padding: theme.spacing(1), width: "100%", borderRadius: theme.shape.borderRadius })}>
                 <Typography color="text.secondary">Trier</Typography>
                 <Box>
                     <FormControl>
@@ -18,11 +19,11 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                         <RadioGroup
                             aria-labelledby="demo-controlled-radio-buttons-group"
                             name="controlled-radio-buttons-group"
-                            // value={value}
-                            // onChange={handleChange}
+                        // value={value}
+                        // onChange={handleChange}
                         >
                             <FormControlLabel value="recent" control={<Radio />} label="Plus Recents" />
-                            <FormControlLabel value="prix-desc" control={<Radio />} label="Prix" />
+                            <FormControlLabel value="prix-desc" control={<Radio />} label={<Typography><BiUpArrowAlt size={24} /> Prix</Typography>} />
                             <FormControlLabel value="prix-asc" control={<Radio />} label="Prix" />
 
                         </RadioGroup>

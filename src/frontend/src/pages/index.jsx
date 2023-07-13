@@ -70,7 +70,7 @@ const IndexPage = () => {
           </Typography>
           <Grid container spacing={1} flex={1}>
             {annonces?.map((annonce)=>(
-              <Grid item md={3} sm={5} xs={12} key={annonce.id}>
+              <Grid item md={3} sm={6} xs={12} key={annonce.id}>
                 <Annonce annonce={annonce}/>
               </Grid>
             ))}
