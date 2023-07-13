@@ -9,8 +9,8 @@ interface FilterProps {
 
 const Filter: React.FC<FilterProps> = (props: FilterProps) => {
     return (
-        <Box sx={(theme) => ({ display: "flex", flex: 1, height: '100%', width: '100%',backgroundColor:"#fff",padding:theme.spacing(1) })}>
-            <Box sx={(theme)=>({padding:theme.spacing(1)})}>
+        <Box sx={(theme) => ({ display: "flex", flex: 1,backgroundColor:"rgba(0,0,0,.2)",padding:theme.spacing(.5) })}>
+            <Box sx={(theme)=>({padding:theme.spacing(1),width:"100%",borderRadius:theme.shape.borderRadius})}>
                 <Typography color="text.secondary">Trier</Typography>
                 <Box>
                     <FormControl>
@@ -21,9 +21,9 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                             // value={value}
                             // onChange={handleChange}
                         >
-                            <FormControlLabel value="female" control={<Radio />} label="Plus Recents" />
-                            <FormControlLabel value="male" control={<Radio />} label="Prix" />
-                            <FormControlLabel value="male" control={<Radio />} label="Prix" />
+                            <FormControlLabel value="recent" control={<Radio />} label="Plus Recents" />
+                            <FormControlLabel value="prix-desc" control={<Radio />} label="Prix" />
+                            <FormControlLabel value="prix-asc" control={<Radio />} label="Prix" />
 
                         </RadioGroup>
                     </FormControl>

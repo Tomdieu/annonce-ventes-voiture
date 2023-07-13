@@ -43,6 +43,8 @@ const IndexPage = () => {
           position: "static",
           backgroundColor: "#2e6ee5e6",
           color: "#fff",
+          display:"flex",
+          backgroundColor:"#fff"
         }}
         padding={0}
         margin={0}
