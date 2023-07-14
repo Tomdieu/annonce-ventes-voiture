@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # Install project dependencies
-RUN yarn install --force
+RUN yarn install --force --latest
 
 # Copy the entire project to the working directory
 COPY . .
