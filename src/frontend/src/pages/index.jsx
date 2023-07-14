@@ -29,9 +29,9 @@ const IndexPage = () => {
     >
       <Grid
         item
-        md={2.5}
+        md={2}
         sm={3}
-        lg={2.5}
+        lg={2}
         xs={2}
         height={"100%"}
         maxHeight={"100vh"}
@@ -53,9 +53,9 @@ const IndexPage = () => {
       </Grid>
       <Grid
         item
-        md={9.5}
+        md={10}
         sm={9}
-        lg={9.5}
+        lg={10}
         xs={10}
         maxHeight={"100vh"}
         overflow={"auto"}
@@ -70,7 +70,7 @@ const IndexPage = () => {
           </Typography>
           <Grid container spacing={1} flex={1}>
             {annonces?.map((annonce)=>(
-              <Grid item md={3} sm={6} xs={12} key={annonce.id}>
+              <Grid item lg={3} md={4} sm={6} xs={12} key={annonce.id}>
                 <Annonce annonce={annonce}/>
               </Grid>
             ))}

@@ -12,7 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { Save, Restore, Close, Api } from "@mui/icons-material";
+import { Save, Restore, Close } from "@mui/icons-material";
 import { Helmet } from "react-helmet";
 
 import Map, {

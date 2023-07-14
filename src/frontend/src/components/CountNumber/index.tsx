@@ -1,10 +1,9 @@
-import React from "react";
 
-import { Box, Paper, Typography, ButtonBase, Divider } from "@mui/material";
+import { Box, Typography, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import millify from "millify";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme:Theme) => ({
     container: {
         width: 250,
         height: 250,

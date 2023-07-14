@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Box, Divider, IconButton, Paper } from "@mui/material";
-import { VoitureTypes } from "../../types/";
+import { VoitureTypes } from "../../types";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Delete } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";

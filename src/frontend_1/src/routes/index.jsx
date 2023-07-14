@@ -13,7 +13,7 @@ import ModelesPage from "../pages/dashboard/modele";
 import VoituresPage from "../pages/dashboard/voiture";
 import AnnoncePage from "../pages/dashboard/annonce";
 import VoitureView from "../pages/dashboard/voiture/vehicle";
-import IndexPage from "../pages/";
+import IndexPage from "../pages";
 
 // Example function to check if the user token exists
 const checkUserTokenExists = () => {

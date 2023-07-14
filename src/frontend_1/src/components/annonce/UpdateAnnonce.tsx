@@ -28,7 +28,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import React from "react";
 import axios from "axios";
 import createAnnonceSchema from "../../schema/createAnnonceSchema";
-import { AnnonceTypes, LocationTypes, VoitureTypes } from "../../types/";
+import { AnnonceTypes, LocationTypes, VoitureTypes } from "../../types";
 import { useAuth } from "../../context/AuthContext";
 import ApiService from "../../utils/ApiService";
 
