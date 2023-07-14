@@ -12,7 +12,7 @@ import {
   Theme,
   TextField,
 } from "@mui/material";
-
+import { EvStation, LocalGasStation } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 import { BiUpArrowAlt, BiDownArrowAlt } from "react-icons/bi";
@@ -20,6 +20,8 @@ import { useAuth } from "../../context/AuthContext.js";
 import ApiService from "../../utils/ApiService.js";
 import { MarqueTypes, ModeleTypes } from "../../types/index.js";
 import { TbManualGearbox } from "react-icons/tb";
+
+import HybridIcon from "../../images/hybride.svg";
 
 interface FilterProps {
   onPriceFilter: (filter: "asc" | "desc") => void;
@@ -152,7 +154,9 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
           <Typography sx={{ ml: 2 }} variant="h6">
             Marque
           </Typography>
-          <Box sx={{ maxHeight: "600px",overflow:"auto",overflowX:"hidden" }}>
+          <Box
+            sx={{ maxHeight: "600px", overflow: "auto", overflowX: "hidden" }}
+          >
             <FormControl sx={{ flex: 1, display: "flex", pr: 1 }}>
               {marques?.map((marque) => (
                 <FormControlLabel
@@ -174,8 +178,10 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
           <Typography sx={{ ml: 2 }} variant="h6">
             Modele
           </Typography>
-          <Box sx={{ maxHeight: "600px",overflow:"auto",overflowX:"hidden" }}>
-          <FormControl sx={{ flex: 1, display: "flex", pr: 1 }}>
+          <Box
+            sx={{ maxHeight: "600px", overflow: "auto", overflowX: "hidden" }}
+          >
+            <FormControl sx={{ flex: 1, display: "flex", pr: 1 }}>
               {marques?.map((modele) => (
                 <FormControlLabel
                   labelPlacement="start"
@@ -248,7 +254,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                   }}
                   label={
                     <Typography sx={{ display: "flex", alignItems: "center" }}>
-                      <BiUpArrowAlt size={24} /> Essence
+                      <LocalGasStation /> Essence
                     </Typography>
                   }
                 />
@@ -263,7 +269,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                   }}
                   label={
                     <Typography sx={{ display: "flex", alignItems: "center" }}>
-                      <BiUpArrowAlt size={24} /> Gazoil
+                      <LocalGasStation /> Gazoil
                     </Typography>
                   }
                 />
@@ -278,7 +284,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                   }}
                   label={
                     <Typography sx={{ display: "flex", alignItems: "center" }}>
-                      <BiUpArrowAlt size={24} /> ELectrique
+                      <EvStation /> ELectrique
                     </Typography>
                   }
                 />
@@ -293,7 +299,7 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
                   }}
                   label={
                     <Typography sx={{ display: "flex", alignItems: "center" }}>
-                      <BiUpArrowAlt size={24} /> Hybride
+                      <LocalGasStation />+<EvStation /> Hybride
                     </Typography>
                   }
                 />
