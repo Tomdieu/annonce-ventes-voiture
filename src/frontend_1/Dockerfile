@@ -13,6 +13,8 @@ RUN yarn install --latest --force
 # Copy the entire project to the working directory
 COPY . .
 
+RUN npx browserslist@latest --update-db
+
 # Build the TypeScript React project
 RUN yarn build
 
