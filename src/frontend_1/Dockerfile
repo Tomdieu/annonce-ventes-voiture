@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as the base image
-FROM node:17-alpine
+FROM node:18-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # Install project dependencies
-RUN yarn install --force --latest
+RUN yarn install --latest --force
 
 # Copy the entire project to the working directory
 COPY . .
