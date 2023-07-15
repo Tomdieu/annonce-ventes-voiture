@@ -13,10 +13,12 @@ RUN yarn install --latest --force
 # Copy the entire project to the working directory
 COPY . .
 
+RUN npm install -g npm@9.8.0
+
 RUN npx browserslist@latest --update-db
 
 # Build the TypeScript React project
-RUN yarn build
+# RUN yarn build
 
 # Expose the desired port (change the port number if needed)
 EXPOSE 3000
