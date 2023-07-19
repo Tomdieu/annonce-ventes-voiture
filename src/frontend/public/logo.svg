@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="500mm"
+   height="500mm"
+   viewBox="0 0 500 500"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   sodipodi:docname="annonce-ventes.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.33345764"
+     inkscape:cx="1234.0398"
+     inkscape:cy="971.63764"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-weight:bold;font-size:7.05556px;font-family:'Adobe Fan Heiti Std';-inkscape-font-specification:'Adobe Fan Heiti Std Bold Italic';fill:#ff2a2a;stroke-width:1.15226"
+       x="150.75629"
+       y="236.44933"
+       id="text1516"><tspan
+         sodipodi:role="line"
+         id="tspan1514"
+         style="stroke-width:1.15226"></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-weight:bold;font-size:7.05556px;font-family:'Adobe Fan Heiti Std';-inkscape-font-specification:'Adobe Fan Heiti Std Bold Italic';fill:#ff2a2a;stroke-width:1.15226"
+       x="161.86464"
+       y="253.9053"
+       id="text1520"><tspan
+         sodipodi:role="line"
+         id="tspan1518"
+         style="stroke-width:1.15226"></tspan></text>
+    <g
+       aria-label="A"
+       id="text1524"
+       style="font-style:italic;font-weight:bold;font-size:211.035px;font-family:'Adobe Fan Heiti Std';-inkscape-font-specification:'Adobe Fan Heiti Std Bold Italic';fill:#2a87ff;stroke-width:2.29765" />
+    <g
+       aria-label="V"
+       id="text1738"
+       style="font-style:italic;font-weight:bold;font-size:209.417px;font-family:'Adobe Fan Heiti Std';-inkscape-font-specification:'Adobe Fan Heiti Std Bold Italic';fill:#2a87ff;stroke-width:2.28003"
+       transform="translate(92.040675,-38.085797)" />
+    <path
+       id="path1904"
+       style="fill:#212730;fill-opacity:1;stroke-width:2.72317"
+       d="M 186.19816,53.34813 150.51402,59.939053 33.807002,441.48074 H 93.158233 L 126.07565,329.2626 h 116.7063 L 269.68798,417.00017 297.15184,314.1998 260.89339,189.26127 221.33641,59.939053 Z m 249.37191,0.03998 -30.74739,9.887103 -53.45217,178.171747 c -8.72308,28.27472 -21.5314,64.39036 -32.24702,98.49182 l -27.46386,97.55833 51.79204,4.39423 122.7413,-378.616127 z m -254.03963,64.68292 50.52015,166.8029 h -96.99792 l 30.42401,-100.24824 c 5.75162,-20.79427 11.0871,-44.96262 16.05376,-66.5546 z"
+       sodipodi:nodetypes="cccccccccccccccccccccccc" />
+  </g>
+</svg>

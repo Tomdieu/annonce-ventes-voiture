@@ -1,12 +1,14 @@
-import 'mapbox-gl/dist/mapbox-gl.css';
-
-import Routes from './routes'
+import "mapbox-gl/dist/mapbox-gl.css";
+import { Analytics } from "@vercel/analytics/react";
+import Routes from "./routes";
 
 function App() {
-
   return (
-    <Routes/>
-  )
+    <>
+      <Routes />
+      <Analytics />
+    </>
+  );
 }
 
-export default App
+export default App;
