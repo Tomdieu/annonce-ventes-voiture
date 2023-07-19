@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable */
 import {
   Dialog,
   Button,
@@ -47,7 +47,6 @@ type Props = {
 };
 type FormDataState = { [key: string]: FormDataEntryValue | number };
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const GEOAPIFY_API_KEY = import.meta.env.VITE_GEOAPIFY_KEY;
 
 const viewport = {
@@ -192,7 +191,6 @@ const UpdateAnnonce = (props: Props) => {
     try {
       if (value.length >= 3) {
         const response = await axios.get<GeoapifyResponse>(
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           `https://api.geoapify.com/v1/geocode/autocomplete?text=${value}&limit=5&apiKey=${GEOAPIFY_API_KEY}`
         );
         const data: LocationTypes[] = response.data.features.map((feature) => ({
@@ -329,7 +327,6 @@ const UpdateAnnonce = (props: Props) => {
                 <TextField
                   label="Titre"
                   name="titre"
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                   value={values.titre}
                   onChange={handleChange("titre")}
                   onBlur={handleBlur("titre")}
@@ -341,7 +338,6 @@ const UpdateAnnonce = (props: Props) => {
                 <TextField
                   label="Voiture"
                   name="voiture"
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                   value={values.voiture}
                   onChange={handleChange("voiture")}
                   onBlur={handleBlur("voiture")}
