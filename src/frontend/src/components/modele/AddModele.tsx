@@ -13,13 +13,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import ApiService from "../../utils/ApiService";
-import { MarqueTypes } from "../../types";
+import { MarqueTypes, ModeleTypes } from "../../types";
 import { Save, Close } from "@mui/icons-material";
 
 type Props = {
   open: boolean;
   onClose: (value: boolean) => void;
-  onCreate: (data: any) => void;
+  onCreate: (data: ModeleTypes) => void;
 };
 
 const types = ["electrique", "essence", "diesele"];
@@ -40,16 +40,16 @@ const AddModel = (props: Props) => {
 
         ApiService.listMarque(userToken)
         .then((res) => res.json())
-        .then((data) => setMarques(data))
+        .then((data:MarqueTypes[]) => setMarques(data))
         .catch((err) => console.log(err))
         .finally(() => setLoading(false));
     }
-  }, []);
+  }, [userToken]);
 
   const createModele = () => {
     ApiService.createModele(JSON.stringify({nom,type,marque}), userToken)
       .then((res) => res.json())
-      .then((data) => onCreate(data))
+      .then((data) => onCreate(data as ModeleTypes))
       .catch((err) => console.log(err))
       .finally(() => onClose(false));
   };

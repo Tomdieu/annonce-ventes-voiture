@@ -6,10 +6,12 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import ApiService from "../../utils/ApiService";
+import { MarqueTypes } from "../../types";
+
 type Props = {
   open: boolean;
   onClose: (value: boolean) => void;
-  onCreate: (data: any) => void;
+  onCreate: (data: MarqueTypes) => void;
 };
 
 const AddMarque = (props: Props) => {
@@ -20,7 +22,7 @@ const AddMarque = (props: Props) => {
   const createMarque = () => {
     ApiService.createMarque(JSON.stringify({nom}), userToken)
       .then((res) => res.json())
-      .then((data) => onCreate(data))
+      .then((data:MarqueTypes) => onCreate(data))
       .catch((err) => console.log(err))
       .finally(() => onClose(false));
   };

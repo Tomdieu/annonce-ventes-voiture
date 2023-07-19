@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Dialog,
   Button,
@@ -13,7 +15,6 @@ import {
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { Save, Restore, Close } from "@mui/icons-material";
-import { Helmet } from "react-helmet";
 
 import Map, {
   Marker,
@@ -22,34 +23,27 @@ import Map, {
   MapRef,
 } from "react-map-gl";
 import { Formik, Form } from "formik";
-
-import Slide from "@mui/material/Slide";
-import { TransitionProps } from "@mui/material/transitions";
 import React from "react";
 import axios from "axios";
 import createAnnonceSchema from "../../schema/createAnnonceSchema";
-import { AnnonceTypes, LocationTypes, VoitureTypes } from "../../types/";
+import {
+  LocationTypes,
+  VoitureTypes,
+  AnnonceTypes,
+  GeoapifyResponse,
+  FetchError,
+} from "../../types/";
 import { useAuth } from "../../context/AuthContext";
 import ApiService from "../../utils/ApiService";
-
+import Transition from "../Transition";
 import { useStyles } from "./styles";
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 type Props = {
   open: boolean;
   onClose: (value: boolean) => void;
-  onCreate: (data: any) => void;
+  onCreate: (data: AnnonceTypes) => void;
 };
 type FormDataState = { [key: string]: FormDataEntryValue | number };
-
-const GEOAPIFY_API_KEY = import.meta.env.VITE_GEOAPIFY_KEY;
 
 const viewport = {
   width: 500,
@@ -59,9 +53,9 @@ const viewport = {
   zoom: 3,
 };
 
-const SingletonAddAnnonce = (props: Props) => {
+const AddAnnonce = (props: Props) => {
   const { open, onClose, onCreate } = props;
-  const fullWidth: boolean = true;
+  const fullWidth = true;
   const classes = useStyles();
   const maxWidth = "lg";
   const mapRef = useRef<MapRef>();
@@ -79,12 +73,12 @@ const SingletonAddAnnonce = (props: Props) => {
 
   const handleClose = () => {
     onClose(false);
-    setSearchTerm("")
+    setSearchTerm("");
     setAnnonceLocation({
       longitude: 0,
       latitude: 0,
       zoom: 2,
-    })
+    });
   };
 
   useEffect(() => {
@@ -101,7 +95,7 @@ const SingletonAddAnnonce = (props: Props) => {
     if (userToken) {
       ApiService.listVoiture(userToken)
         .then((res) => res.json())
-        .then((data) => setVoitures(data))
+        .then((data: VoitureTypes[]) => setVoitures(data))
         .catch((err) => console.log(err));
     }
   }, [userToken]);
@@ -115,7 +109,7 @@ const SingletonAddAnnonce = (props: Props) => {
       const { longitude, latitude } = annonceLocation;
       const getPlaceName = async () => {
         try {
-          const response = await axios.get(
+          const response = await axios.get<GeoapifyResponse>(
             `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=aedf3186d09b474abd1a8808eaf0bcc1`
           );
           const { formatted } = response.data.features[0].properties;
@@ -125,7 +119,7 @@ const SingletonAddAnnonce = (props: Props) => {
         }
       };
 
-      getPlaceName();
+      getPlaceName().catch((err) => console.log(err));
     }
   }, [annonceLocation]);
 
@@ -147,26 +141,22 @@ const SingletonAddAnnonce = (props: Props) => {
     };
 
     getLocation();
-  }, []);
+  }, [annonceLocation]);
 
   const handleSearch = async (event: React.SyntheticEvent<Element, Event>) => {
-    const value = event.target.value;
+    const value = (event.target as HTMLInputElement).value;
     setSearchTerm(value);
 
     try {
       if (value.length >= 3) {
-        const response = await axios.get(
+        const response = await axios.get<GeoapifyResponse>(
           `https://api.geoapify.com/v1/geocode/autocomplete?text=${value}&limit=5&apiKey=aedf3186d09b474abd1a8808eaf0bcc1`
         );
-        const data: LocationTypes[] = response.data.features.map(
-          (feature: {
-            properties: { formatted: any; lat: any; lon: any };
-          }) => ({
-            label: feature.properties.formatted,
-            latitude: feature.properties.lat,
-            longitude: feature.properties.lon,
-          })
-        );
+        const data: LocationTypes[] = response.data.features.map((feature) => ({
+          label: feature.properties.formatted,
+          latitude: feature.properties.lat,
+          longitude: feature.properties.lon,
+        }));
         setOptions(data);
       }
     } catch (error) {
@@ -177,7 +167,6 @@ const SingletonAddAnnonce = (props: Props) => {
   const geolocateControlRef = React.useCallback(
     (ref: { trigger: () => void }) => {
       if (ref) {
-        // Activate as soon as the control is loaded
         ref.trigger();
       }
     },
@@ -226,16 +215,13 @@ const SingletonAddAnnonce = (props: Props) => {
             onSubmit={(e) => {
               e.preventDefault();
 
-
               const formData = new FormData(e.currentTarget);
               const jsonData: FormDataState = {};
 
-              for (let [name, value] of formData.entries()) {
+              for (const [name, value] of formData.entries()) {
                 if (name === "prix") {
-                  jsonData[name] = parseInt(value.toString())
-                }
-                else {
-
+                  jsonData[name] = parseInt(value.toString());
+                } else {
                   jsonData[name] = value;
                 }
               }
@@ -247,12 +233,12 @@ const SingletonAddAnnonce = (props: Props) => {
 
               ApiService.createAnnonce(jsonString, userToken)
                 .then((res) => res.json())
-                .then((data) => {
+                .then((data: AnnonceTypes) => {
                   console.log(data);
-                  onCreate(data)
+                  onCreate(data);
                   handleReset(e);
                 })
-                .catch((err) => {
+                .catch((err: FetchError) => {
                   console.log(err.message);
                   console.log(err);
                 })
@@ -301,7 +287,7 @@ const SingletonAddAnnonce = (props: Props) => {
                   onChange={handleChange("titre")}
                   onBlur={handleBlur("titre")}
                   error={Boolean(touched.titre && errors.titre)}
-                  helperText={touched.titre && errors.titre}
+                  helperText={touched.titre && errors.titre.toString()}
                   fullWidth
                 />
 
@@ -312,7 +298,7 @@ const SingletonAddAnnonce = (props: Props) => {
                   onChange={handleChange("voiture")}
                   onBlur={handleBlur("voiture")}
                   error={Boolean(touched.voiture && errors.voiture)}
-                  helperText={touched.voiture && errors.voiture}
+                  helperText={touched.voiture && errors.voiture.toString()}
                   fullWidth
                   select
                 >
@@ -336,7 +322,7 @@ const SingletonAddAnnonce = (props: Props) => {
                   onChange={handleChange("prix")}
                   onBlur={handleBlur("prix")}
                   error={Boolean(touched.prix && errors.prix)}
-                  helperText={touched.prix && errors.prix}
+                  helperText={touched.prix && errors.prix.toString()}
                   fullWidth
                 />
                 <TextField
@@ -348,7 +334,9 @@ const SingletonAddAnnonce = (props: Props) => {
                   onChange={handleChange("description")}
                   onBlur={handleBlur("description")}
                   error={Boolean(touched.description && errors.description)}
-                  helperText={touched.description && errors.description}
+                  helperText={
+                    touched.description && errors.description.toString()
+                  }
                   fullWidth
                 />
                 <Autocomplete
@@ -356,15 +344,11 @@ const SingletonAddAnnonce = (props: Props) => {
                   options={options}
                   getOptionLabel={(option: { label: string }) => option.label}
                   inputValue={searchTerm}
-                  onInputChange={(
-                    e: React.SyntheticEvent<Element, Event>,
-                    v: any,
-                    r: any
-                  ) => {
-                    handleSearch(e);
+                  onInputChange={(e: React.SyntheticEvent<Element, Event>) => {
+                    handleSearch(e).catch((err) => console.log(err));
                   }}
                   onChange={(
-                    e: React.SyntheticEvent<Element, Event>,
+                    _e: React.SyntheticEvent<Element, Event>,
                     value: LocationTypes
                   ) => {
                     setSearchTerm(value ? value.label : "");
@@ -395,7 +379,9 @@ const SingletonAddAnnonce = (props: Props) => {
                     onChange={handleChange("latitude")}
                     onBlur={handleBlur("latitude")}
                     error={Boolean(touched.latitude && errors.latitude)}
-                    helperText={touched.latitude && errors.latitude}
+                    helperText={
+                      Boolean(touched.latitude) && errors.latitude.toString()
+                    }
                   />
                   <TextField
                     label="Longitude"
@@ -406,7 +392,9 @@ const SingletonAddAnnonce = (props: Props) => {
                     onChange={handleChange("longitude")}
                     onBlur={handleBlur("longitude")}
                     error={Boolean(touched.longitude && errors.longitude)}
-                    helperText={touched.longitude && errors.longitude}
+                    helperText={
+                      touched.longitude && errors.longitude.toString()
+                    }
                   />
                 </Box>
                 <Box
@@ -472,7 +460,6 @@ const SingletonAddAnnonce = (props: Props) => {
                         longitude: e.lngLat.lng,
                       })
                     }
-                    onDragStart={(e) => { }}
                     draggable
                     longitude={annonceLocation.longitude}
                     latitude={annonceLocation.latitude}
@@ -488,6 +475,4 @@ const SingletonAddAnnonce = (props: Props) => {
   );
 };
 
-const AddAnnonce = (props: Props) => <SingletonAddAnnonce {...props} />;
-
-export default (props: Props) => <AddAnnonce {...props} />;
+export default AddAnnonce;

@@ -64,7 +64,7 @@ const Annonce: React.FC<Props> = (props: Props) => {
         </Typography>
         <Typography variant="body2" color="textSecondary">
           Voiture : {annonce.voiture.model.marque.nom}{" "}
-          {annonce.voiture.model.nom} {annonce.voiture.anneee}
+          {annonce.voiture.model.nom} {annonce.voiture.annee}
         </Typography>
         <Typography variant="body2" color="textSecondary">
           Prix: {annonce.prix} FCFA

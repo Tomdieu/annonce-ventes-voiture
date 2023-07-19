@@ -1,6 +1,6 @@
 export default class ApiService {
   static API_URL = "http://localhost:8000/api/";
-  static async login(data: any) {
+  static async login(data: string) {
     const url = this.API_URL + "accounts/login/";
     const res = await fetch(url, {
       method: "POST",
@@ -9,7 +9,7 @@ export default class ApiService {
     });
     return res;
   }
-  static async register(data: any) {
+  static async register(data: string) {
     const url = this.API_URL + "accounts/register/";
     const res = await fetch(url, {
       method: "POST",
@@ -30,7 +30,7 @@ export default class ApiService {
     });
     return res;
   }
-  static async listVoiture(token: string, queryParams: string = "") {
+  static async listVoiture(token: string, queryParams = "") {
     let url = this.API_URL + `core/voiture/`;
     url = queryParams ? url + `?${queryParams}` : url
     const res = await fetch(url, {
@@ -51,7 +51,7 @@ export default class ApiService {
     });
     return res;
   }
-  static async updateVoiture(id: number, data: any, token: string) {
+  static async updateVoiture(id: number, data: FormData, token: string) {
     const url = this.API_URL + `core/voiture/${id}/`;
     const res = await fetch(url, {
       method: "PATCH",
@@ -62,7 +62,7 @@ export default class ApiService {
     });
     return res;
   }
-  static async updateVoitureImage(imageId: number, data: any, token: string) {
+  static async updateVoitureImage(imageId: number, data: FormData, token: string) {
     const url = this.API_URL + `core/image-voiture/${imageId}/`;
     const res = await fetch(url, {
       method: "PATCH",
@@ -73,7 +73,7 @@ export default class ApiService {
     });
     return res;
   }
-  static async addVoitureImage(voitureId: number, data: any, token: string) {
+  static async addVoitureImage(voitureId: number, data: FormData, token: string) {
     const url = this.API_URL + `core/voiture/${voitureId}/add_images/`;
     const res = await fetch(url, {
       method: "POST",
@@ -107,7 +107,7 @@ export default class ApiService {
   }
 
   // Annonce
-  static async createAnnonce(data: any, token: string) {
+  static async createAnnonce(data: string, token: string) {
     const url = this.API_URL + "core/annonce/";
     const res = await fetch(url, {
       method: "POST",
@@ -120,7 +120,7 @@ export default class ApiService {
     return res;
   }
 
-  static async listAnnonces(queryParams: string = "") {
+  static async listAnnonces(queryParams = "") {
     let url = this.API_URL + `core/annonces/`;
     url = queryParams ? url + `?${queryParams}` : url
     const res = await fetch(url, {
@@ -130,7 +130,7 @@ export default class ApiService {
     });
     return res;
   }
-  static async listAnnonce(token: string,queryParams: string = "") {
+  static async listAnnonce(token: string, queryParams = "") {
     let url = this.API_URL + `core/annonce/`;
     url = queryParams ? url + `?${queryParams}` : url
     const res = await fetch(url, {
@@ -160,7 +160,7 @@ export default class ApiService {
     });
     return res;
   }
-  static async updateAnnonce(id: number, data: any, token: string) {
+  static async updateAnnonce(id: number, data: string, token: string) {
     const url = this.API_URL + `core/annonce/${id}/`;
     const res = await fetch(url, {
       method: "PATCH",
@@ -186,7 +186,7 @@ export default class ApiService {
 
   //   Marque
 
-  static async createMarque(data: any, token: string) {
+  static async createMarque(data: string, token: string) {
     const url = this.API_URL + "core/marque/";
     const res = await fetch(url, {
       method: "POST",
@@ -218,7 +218,7 @@ export default class ApiService {
     });
     return res;
   }
-  static async updateMarque(id: number, data: any, token: string) {
+  static async updateMarque(id: number, data: string, token: string) {
     const url = this.API_URL + `core/marque/${id}/`;
     const res = await fetch(url, {
       method: "PATCH",
@@ -242,7 +242,7 @@ export default class ApiService {
     return res;
   }
   //   modele
-  static async createModele(data: any, token: string) {
+  static async createModele(data: string, token: string) {
     const url = this.API_URL + "core/modele/";
     const res = await fetch(url, {
       method: "POST",
@@ -274,7 +274,7 @@ export default class ApiService {
     });
     return res;
   }
-  static async updateModele(id: number, data: any, token: string) {
+  static async updateModele(id: number, data: string, token: string) {
     const url = this.API_URL + `core/modele/${id}/`;
     const res = await fetch(url, {
       method: "PATCH",

@@ -1,12 +1,12 @@
 {
-  "name": "annonce-ventes",
+  "name": "front",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host --port=3000",
+    "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 1000",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --no-error-on-unmatched-pattern",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -15,12 +15,11 @@
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.11.9",
     "@mui/material": "^5.11.9",
-    "@mui/styles": "^5.11.9",
+    "@mui/styles": "^5.14.0",
     "@mui/types": "^7.2.3",
     "@mui/x-data-grid": "^6.9.2",
     "@types/node": "^18.13.0",
     "axios": "^1.4.0",
-    "emoji-picker-react": "^4.4.7",
     "formik": "^2.2.9",
     "mapbox-gl": "^2.15.0",
     "millify": "^6.1.0",
@@ -32,20 +31,19 @@
     "react-map-gl": "^7.0.25",
     "react-router-dom": "^6.8.1",
     "sweetalert2": "^11.7.16",
-    "vite-tsconfig-paths": "^4.0.5",
     "yup": "^1.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
     "@types/react-helmet": "^6.1.6",
-    "@vitejs/plugin-react": "^3.1.0",
-    "typescript": "^4.9.5",
-    "vite": "^4.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "@vitejs/plugin-react": "^4.0.1",
     "eslint": "^8.44.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.1",
-    "@typescript-eslint/eslint-plugin": "^5.61.0",
-    "@typescript-eslint/parser": "^5.61.0"
+    "typescript": "^5.0.2",
+    "vite": "^4.4.0"
   }
 }

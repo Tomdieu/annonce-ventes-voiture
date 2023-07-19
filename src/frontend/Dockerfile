@@ -1,23 +1,34 @@
-# Use an official Node.js runtime as the base image
-FROM node:17-alpine
+# Use a smaller base image like Node.js Alpine
+FROM node:14-alpine as build-stage
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files to the working directory
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install app dependencies
-RUN npm install --force
+# Install dependencies
+RUN npm ci --only=production
 
-# Copy the entire project to the working directory
+# Copy the rest of the project files
 COPY . .
 
-# # Build the app
-# RUN npm run build
+# Build the React app
+RUN npm run build
 
-# Expose the port that the app will run on
+# Use a minimal base image for the final production image
+FROM node:14-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy only necessary files from the build-stage image
+COPY --from=build-stage /app/build ./build
+COPY --from=build-stage /app/package.json .
+COPY --from=build-stage /app/node_modules ./node_modules
+
+# Expose the desired port (if needed)
 EXPOSE 3000
 
-# Define the command to run the app
-CMD [ "npm", "run", "dev" ]
+# Start the application
+CMD ["npm", "start"]

@@ -5,7 +5,6 @@ import {
   Checkbox,
   Typography,
   FormControl,
-  FormLabel,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -18,29 +17,31 @@ import { makeStyles } from "@mui/styles";
 import { BiUpArrowAlt, BiDownArrowAlt } from "react-icons/bi";
 import { useAuth } from "../../context/AuthContext.js";
 import ApiService from "../../utils/ApiService.js";
-import { MarqueTypes, ModeleTypes } from "../../types/index.js";
+import { MarqueTypes, _ModeleTypes, FetchError } from "../../types/index.js";
 import { TbManualGearbox } from "react-icons/tb";
 
-import HybridIcon from "../../images/hybride.svg";
+import { BOITEVITESSES, CARBURANTS } from "./data";
 
-interface FilterProps {
-  onPriceFilter: (filter: "asc" | "desc") => void;
+// import HybridIcon from "../../images/hybride.svg";
+
+type FilterProps = {
+  onPriceFilter: (filter: string) => void;
   onRecentFilter: (recent: boolean) => void;
-  onMarqueSelected: (marque: string) => void;
-  onModeleSelected: (modele: string) => void;
-  onKilometrageSelected: () => void;
-  onTransmissionSelected: (transmission: string) => void;
+  onMarqueSelected: (marques: string[]) => void;
+  onModeleSelected: (modele: string[]) => void;
+  onKilometrageMaxSelected: (km_max: number | null) => void;
+  onBoiteVitesseSelected: (boiteVitesse: string) => void;
   onTypeCarburantSelected: (typeCarburant: string) => void;
-  onPriceMin: (price: number) => void;
-  onPriceMax: (price: number) => void;
-}
+  onPriceMin: (price: number | null) => void;
+  onPriceMax: (price: number | null) => void;
+};
 
 const useStyles = makeStyles((theme: Theme) => ({
   boxFilter: {
     backgroundColor: "rgba(0,0,0,.3)",
     padding: theme.spacing(1),
     borderRadius: 5,
-    "&:last": {
+    "&:last-child": {
       marginBottom: theme.spacing(1),
     },
   },
@@ -63,40 +64,84 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Filter: React.FC<FilterProps> = (props: FilterProps) => {
-  //   const {
-  //     onPriceFilter,
-  //     onRecentFilter,
-  //     onPriceMax,
-  //     onPriceMin,
-  //     onTypeCarburantSelected,
-  //     onKilometrageSelected,
-  //     onMarqueSelected,
-  //     onModeleSelected,
-  //     onTransmissionSelected,
-  //   } = props;
+const Filter: React.FC<FilterProps> = ({
+  onPriceFilter,
+  onRecentFilter,
+  onPriceMax,
+  onPriceMin,
+  onTypeCarburantSelected,
+  onKilometrageMaxSelected,
+  onMarqueSelected,
+  onModeleSelected,
+  onBoiteVitesseSelected,
+}) => {
   const classes = useStyles();
-  const [marques, setMarques] = useState<MarqueTypes>([]);
-  const [modeles, setModeles] = useState<ModeleTypes>([]);
+  const [marques, setMarques] = useState<MarqueTypes[]>([]);
+  const [modeles, setModeles] = useState<_ModeleTypes[]>([]);
   const [selectedMarques, setSelectedMarques] = useState<string[]>([]);
   const [selectedModeles, setSelectedModeles] = useState<string[]>([]);
+
   const { userToken } = useAuth();
+
   useEffect(() => {
     if (userToken) {
       ApiService.listMarque(userToken)
         .then((res) => res.json())
-        .then((data) => {
+        .then((data: MarqueTypes[]) => {
           setMarques(data);
         })
-        .catch((err) => console.log(err.message));
+        .catch((err: FetchError) => console.log(err.message));
       ApiService.listModele(userToken)
         .then((res) => res.json())
-        .then((data) => {
+        .then((data: _ModeleTypes[]) => {
           setModeles(data);
         })
-        .catch((err) => console.log(err.message));
+        .catch((err: FetchError) => console.log(err.message));
     }
   }, [userToken]);
+  useEffect(() => {
+    if (selectedMarques.length > 0) {
+      const lesMarquesSelectioner = selectedMarques?.map((_marque) => {
+        if (_marque) {
+          const marquesFiltres = marques?.find((marque) =>
+            marque.nom.match(_marque)
+          );
+          return marquesFiltres;
+        }
+        return null;
+      });
+      if (!lesMarquesSelectioner) {
+        setModeles([]);
+      }
+      const lesModeles = lesMarquesSelectioner
+        .map((marque) => {
+          if (marque) {
+            return marque.modeles;
+          }
+          return [];
+        })
+        .flat();
+      lesModeles.sort((a, b) => {
+        if (a.nom < b.nom) {
+          return -1; // a should be placed before b
+        }
+        if (a.nom > b.nom) {
+          return 1; // b should be placed before a
+        }
+        return 0; // the order remains unchanged
+      });
+      setModeles(lesModeles);
+    }
+  }, [selectedMarques, marques]);
+  useEffect(
+    () => onMarqueSelected(selectedMarques),
+    [selectedMarques, onMarqueSelected]
+  );
+  useEffect(() => {
+    if (selectedModeles) {
+      return onModeleSelected(selectedModeles);
+    }
+  }, [onModeleSelected, selectedModeles]);
   return (
     <Box className={classes.root}>
       <Box className={classes.wrapper}>
@@ -105,18 +150,23 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
             <Typography variant="h6" sx={{ ml: 2 }}>
               Trier
             </Typography>
-            <RadioGroup>
-              <FormControlLabel
-                labelPlacement="start"
-                value="recent"
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-                control={<Checkbox color="info" />}
-                label="Plus Recents"
-              />
+            <FormControlLabel
+              labelPlacement="start"
+              value="recent"
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+              control={
+                <Checkbox
+                  color="info"
+                  onChange={(_, checked) => onRecentFilter(Boolean(checked))}
+                />
+              }
+              label="Plus Recents"
+            />
+            <RadioGroup onChange={(e) => onPriceFilter(e.target.value)}>
               <FormControlLabel
                 labelPlacement="start"
                 value="prix-desc"
@@ -161,7 +211,26 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
               {marques?.map((marque) => (
                 <FormControlLabel
                   labelPlacement="start"
-                  control={<Checkbox color="info" />}
+                  control={
+                    <Checkbox
+                      color="info"
+                      value={marque.nom}
+                      onChange={(e, checked) => {
+                        if (checked) {
+                          setSelectedMarques((_marque) => [
+                            ..._marque,
+                            e.target.value,
+                          ]);
+                        } else {
+                          setSelectedMarques(
+                            selectedMarques.filter(
+                              (__marque) => __marque !== e.target.value
+                            )
+                          );
+                        }
+                      }}
+                    />
+                  }
                   sx={{
                     width: "100%",
                     display: "flex",
@@ -182,10 +251,29 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
             sx={{ maxHeight: "600px", overflow: "auto", overflowX: "hidden" }}
           >
             <FormControl sx={{ flex: 1, display: "flex", pr: 1 }}>
-              {marques?.map((modele) => (
+              {modeles?.map((modele) => (
                 <FormControlLabel
                   labelPlacement="start"
-                  control={<Checkbox color="info" />}
+                  control={
+                    <Checkbox
+                      color="info"
+                      value={modele.nom}
+                      onChange={(e, checked) => {
+                        if (checked) {
+                          setSelectedModeles([
+                            ...selectedModeles,
+                            e.target.value,
+                          ]);
+                        } else {
+                          setSelectedModeles(
+                            selectedModeles.filter(
+                              (_modele) => _modele !== modele.nom
+                            )
+                          );
+                        }
+                      }}
+                    />
+                  }
                   sx={{
                     width: "100%",
                     display: "flex",
@@ -210,6 +298,14 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
               color="success"
               type="number"
               sx={(theme) => ({ borderRadius: theme.shape.borderRadius })}
+              onChange={(e) => {
+                const km = Number(e.target.value);
+                if (km) {
+                  onKilometrageMaxSelected(km);
+                } else {
+                  onKilometrageMaxSelected(null);
+                }
+              }}
             />
           </Box>
         </Box>
@@ -225,6 +321,14 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
               color="success"
               type="number"
               sx={(theme) => ({ borderRadius: theme.shape.borderRadius })}
+              onChange={(e) => {
+                const price = Number(e.target.value);
+                if (price>0) {
+                  onPriceMin(price);
+                } else {
+                  onPriceMin(null);
+                }
+              }}
             />
             <TextField
               label="prix max"
@@ -233,6 +337,15 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
               color="success"
               type="number"
               sx={(theme) => ({ borderRadius: theme.shape.borderRadius })}
+              onChange={(e) => {
+                const price = Number(e.target.value);
+                console.log(price)
+                if (price>0) {
+                  onPriceMax(price);
+                } else {
+                  onPriceMin(null);
+                }
+              }}
             />
           </Box>
         </Box>
@@ -242,108 +355,49 @@ const Filter: React.FC<FilterProps> = (props: FilterProps) => {
           </Typography>
           <Box>
             <FormControl sx={{ flex: 1, display: "flex", pr: 1 }}>
-              <RadioGroup>
-                <FormControlLabel
-                  labelPlacement="start"
-                  value="essence"
-                  control={<Radio color="info" />}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                  label={
-                    <Typography sx={{ display: "flex", alignItems: "center" }}>
-                      <LocalGasStation /> Essence
-                    </Typography>
-                  }
-                />
-                <FormControlLabel
-                  labelPlacement="start"
-                  value="gazoil"
-                  control={<Radio color="info" />}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                  label={
-                    <Typography sx={{ display: "flex", alignItems: "center" }}>
-                      <LocalGasStation /> Gazoil
-                    </Typography>
-                  }
-                />
-                <FormControlLabel
-                  labelPlacement="start"
-                  value="electrique"
-                  control={<Radio color="info" />}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                  label={
-                    <Typography sx={{ display: "flex", alignItems: "center" }}>
-                      <EvStation /> ELectrique
-                    </Typography>
-                  }
-                />
-                <FormControlLabel
-                  labelPlacement="start"
-                  value="hybride"
-                  control={<Radio color="info" />}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                  label={
-                    <Typography sx={{ display: "flex", alignItems: "center" }}>
-                      <LocalGasStation />+<EvStation /> Hybride
-                    </Typography>
-                  }
-                />
+              <RadioGroup
+                onChange={(e) => onTypeCarburantSelected(e.target.value)}
+              >
+                {CARBURANTS.map((carburant) => (
+                  <FormControlLabel
+                    labelPlacement="start"
+                    value={carburant.value}
+                    key={carburant.value}
+                    control={<Radio color="info" />}
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                    label={carburant.label}
+                  />
+                ))}
               </RadioGroup>
             </FormControl>
           </Box>
         </Box>
         <Box className={classes.boxFilter}>
           <Typography sx={{ ml: 2 }} variant="h6" gutterBottom>
-            Transmission
+            Boite Vitesse
           </Typography>
           <Box>
             <FormControl sx={{ flex: 1, display: "flex", pr: 1 }}>
-              <RadioGroup>
-                <FormControlLabel
-                  labelPlacement="start"
-                  value="manuelle"
-                  control={<Radio color="info" />}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                  label={
-                    <Typography sx={{ display: "flex", alignItems: "center" }}>
-                      <TbManualGearbox size={24} /> Manual
-                    </Typography>
-                  }
-                />
-                <FormControlLabel
-                  labelPlacement="start"
-                  value="automatic"
-                  control={<Radio color="info" />}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                  label={
-                    <Typography sx={{ display: "flex", alignItems: "center" }}>
-                      <BiUpArrowAlt size={24} /> Automatic
-                    </Typography>
-                  }
-                />
+              <RadioGroup
+                onChange={(e) => onBoiteVitesseSelected(e.target.value)}
+              >
+                {BOITEVITESSES.map((boitevitesse) => (
+                  <FormControlLabel
+                    labelPlacement="start"
+                    value={boitevitesse.value}
+                    control={<Radio color="info" />}
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                    label={boitevitesse.label}
+                  />
+                ))}
               </RadioGroup>
             </FormControl>
           </Box>

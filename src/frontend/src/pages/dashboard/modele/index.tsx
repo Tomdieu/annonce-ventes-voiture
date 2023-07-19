@@ -32,7 +32,7 @@ const Modeles = () => {
     if (userToken) {
       ApiService.listModele(userToken)
         .then((res) => res.json())
-        .then((data) => {
+        .then((data:ModeleTypes[]) => {
           setModeles(data);
         })
         .catch((err) => {

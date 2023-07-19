@@ -1,22 +1,15 @@
 import React from "react"
-import { Dialog, TransitionProps, Slide, Box, Paper, Button, Typography, Divider } from "@mui/material"
+import { Dialog, Box, Paper, Button, Typography, Divider,Theme } from "@mui/material"
 
 import { makeStyles } from "@mui/styles";
 import ApiService from "../../utils/ApiService";
 import { useAuth } from "../../context/AuthContext";
-import { VoitureTypes } from "types";
+import { FetchError,VoitureTypes,ImageTypes } from "../../types";
 
-const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-        children: React.ReactElement;
-    },
-    ref: React.Ref<unknown>
-) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+import Transition from '../Transition'
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme:Theme) => ({
     container: {
         width: "800px",
         height: "700px",
@@ -51,10 +44,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-type ImagesTypes = {
-    id: number;
-    photo: string;
-}
 
 type Props = {
     open: boolean;
@@ -63,11 +52,11 @@ type Props = {
     voitureId: number;
     photoId?: number | null;
     oldImage?: string | null;
-    onUpdateImage: (imageId: number, image: ImagesTypes) => void;
-    onNewImages: (images: ImagesTypes[]) => void;
+    onUpdateImage: (imageId: number, image: ImageTypes) => void;
+    onNewImages: (voiture: VoitureTypes) => void;
 }
 
-type ImageTypes = {
+type PreviewImageTypes = {
     url: string;
 }
 
@@ -77,7 +66,7 @@ const PreviewImage = (props: Props) => {
     const { open, multiple, onClose, voitureId, photoId, oldImage, onUpdateImage, onNewImages } = props
     const classes = useStyles()
     const [images, setImages] = React.useState<FileList | null>(null)
-    const [previewImages, setPreviewImages] = React.useState<ImageTypes[]>([])
+    const [previewImages, setPreviewImages] = React.useState<PreviewImageTypes[]>([])
     const { userToken } = useAuth()
     function handleClose() {
         setPreviewImages([])
@@ -125,11 +114,10 @@ const PreviewImage = (props: Props) => {
 
             ApiService.updateVoitureImage(Number(photoId), formData, userToken)
             .then(res => res.json())
-            .then(data => {
+            .then((data:ImageTypes) => {
                 console.log(data)
                 handleClose()
                 onUpdateImage(Number(photoId), data);
-                // window.location.reload()
             }).catch(err => console.log(err))
         }
     }
@@ -144,13 +132,11 @@ const PreviewImage = (props: Props) => {
             })
             ApiService.addVoitureImage(voitureId, formData, userToken)
             .then(res => res.json())
-            .then(data => {
+            .then((data:VoitureTypes) => {
                 console.log(data)
                 handleClose()
-                const response: VoitureTypes = data;
-                onNewImages(response.images)
-                // window.location.reload()
-            }).catch(err => console.log(err))
+                onNewImages(data)
+            }).catch((err:FetchError) => console.log(err))
         }
     }
     return (

@@ -32,7 +32,7 @@ const Marques = () => {
     if (userToken) {
       ApiService.listMarque(userToken)
         .then((res) => res.json())
-        .then((data) => {
+        .then((data:MarqueTypes[]) => {
           setMarques(data);
         })
         .catch((err) => {

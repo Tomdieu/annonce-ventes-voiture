@@ -1,11 +1,9 @@
-import { Box, Typography, Link, IconButton } from "@mui/material";
+import { Box, Typography, Link, IconButton,Theme } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import React from "react";
 
-type Props = {};
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme:Theme) => ({
   btnLink: {
     color: "#eef2fc",
     "& :hover": {
@@ -80,9 +78,6 @@ const SideBar = () => {
             variant="button"
             sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
           >
-            {/* <Box sx={{ p: 1.2, borderRadius: 1, m: 1 }}>
-              <Typography variant={"body1"}>Dashboard</Typography>
-            </Box> */}
             <CustomButton>Dashboard</CustomButton>
           </Link>
           <Link

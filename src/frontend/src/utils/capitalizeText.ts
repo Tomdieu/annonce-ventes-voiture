@@ -1,3 +1,3 @@
-export default function capitalizeText(text:string) {
+export default function capitalizeText(text: string) {
   return text.replace(/\b\w/g, (match) => match.toUpperCase());
 }

@@ -1,17 +1,10 @@
-import React from "react"
-import { Dialog, TransitionProps, Slide, Box, Button, Typography, Divider } from "@mui/material"
+import { Dialog, Box, Button, Typography, Divider } from "@mui/material"
 
 import ApiService from "../../utils/ApiService";
 import { useAuth } from "../../context/AuthContext";
 
-const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-        children: React.ReactElement;
-    },
-    ref: React.Ref<unknown>
-) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+import Transition from '../Transition'
+
 
 type Props = {
     open: boolean;
@@ -29,7 +22,6 @@ const ConfirmDelete = (props:Props) =>{
     }
     function handleDelete(){
         ApiService.deleteVoitureImage(photoId,userToken).then(()=>{
-            // window.location.reload()
             onDelete(photoId)
             handleClose()
         }).catch(err=>console.log(err))
