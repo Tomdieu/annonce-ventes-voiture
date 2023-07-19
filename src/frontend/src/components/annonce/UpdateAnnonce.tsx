@@ -341,7 +341,7 @@ const UpdateAnnonce = (props: Props) => {
                 <TextField
                   label="Voiture"
                   name="voiture"
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                   value={values.voiture}
                   onChange={handleChange("voiture")}
                   onBlur={handleBlur("voiture")}

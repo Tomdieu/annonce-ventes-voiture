@@ -11,14 +11,12 @@ import {
   Theme,
   TextField,
 } from "@mui/material";
-import { EvStation, LocalGasStation } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 
 import { BiUpArrowAlt, BiDownArrowAlt } from "react-icons/bi";
 import { useAuth } from "../../context/AuthContext.js";
 import ApiService from "../../utils/ApiService.js";
 import { MarqueTypes, _ModeleTypes, FetchError } from "../../types/index.js";
-import { TbManualGearbox } from "react-icons/tb";
 
 import { BOITEVITESSES, CARBURANTS } from "./data";
 

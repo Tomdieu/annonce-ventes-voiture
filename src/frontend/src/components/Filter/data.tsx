@@ -1,7 +1,6 @@
 import { Typography } from "@mui/material";
 import { LocalGasStation, EvStation } from "@mui/icons-material";
 import { TbManualGearbox } from "react-icons/tb";
-import { BiUpArrowAlt } from "react-icons/bi";
 
 type CarburantTypes = {
   label: JSX.Element | string;

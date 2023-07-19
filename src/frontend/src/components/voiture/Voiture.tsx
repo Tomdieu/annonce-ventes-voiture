@@ -1,9 +1,8 @@
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Box, Divider, IconButton, Paper,Theme } from "@mui/material";
+import { Box, Divider, IconButton, Paper } from "@mui/material";
 import { VoitureTypes } from "../../types/";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Delete } from "@mui/icons-material";
@@ -14,7 +13,7 @@ type Props = {
   voiture: VoitureTypes;
 };
 
-const useStyles = makeStyles((theme:Theme) => ({
+const useStyles = makeStyles(() => ({
   btnLeft: {
     position: "absolute",
     zIndex: 99,
