@@ -120,7 +120,7 @@ const AddVoiture = (props: Props) => {
 
   useEffect(() => {
     if (userToken) {
-      ApiService.listMarque(userToken)
+      ApiService.listMarque()
         .then((res) => res.json())
         .then((data: MarqueTypes[]) => {
           console.log(data);

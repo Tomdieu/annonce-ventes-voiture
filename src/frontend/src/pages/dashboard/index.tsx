@@ -82,14 +82,14 @@ const Dashboard = () => {
         .catch((err:FetchError) => console.log(err.message));
 
       const fetchMarque = async () => {
-        const res = await ApiService.listMarque(userToken);
+        const res = await ApiService.listMarque();
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const data:[] = await res.json();
         setNumMarque(data.length);
       };
 
       const fetchModele = async () => {
-        const res = await ApiService.listModele(userToken);
+        const res = await ApiService.listModele();
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const data:[] = await res.json();
         setNumModele(data.length);

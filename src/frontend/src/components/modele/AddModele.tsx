@@ -36,15 +36,12 @@ const AddModel = (props: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if(userToken) {
-
-        ApiService.listMarque(userToken)
+    ApiService.listMarque()
         .then((res) => res.json())
         .then((data:MarqueTypes[]) => setMarques(data))
         .catch((err) => console.log(err))
         .finally(() => setLoading(false));
-    }
-  }, [userToken]);
+  }, []);
 
   const createModele = () => {
     ApiService.createModele(JSON.stringify({nom,type,marque}), userToken)

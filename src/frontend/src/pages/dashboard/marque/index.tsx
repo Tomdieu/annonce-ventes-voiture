@@ -11,7 +11,6 @@ import {
 import Layout from "../../../components/dashboard/layouts";
 import { useState, useEffect } from "react";
 import ApiService from "../../../utils/ApiService";
-import { useAuth } from "../../../context/AuthContext";
 import { Add, Search } from "@mui/icons-material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -25,12 +24,10 @@ import { MarqueTypes } from "../../../types";
 
 const Marques = () => {
   const [marques, setMarques] = useState<MarqueTypes[]>([]);
-  const { userToken } = useAuth();
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false)
   useEffect(() => {
-    if (userToken) {
-      ApiService.listMarque(userToken)
+    ApiService.listMarque()
         .then((res) => res.json())
         .then((data:MarqueTypes[]) => {
           setMarques(data);
@@ -39,9 +36,7 @@ const Marques = () => {
           console.log(err);
         })
         .finally(() => setLoading(false));
-    }
-    
-  }, [userToken]);
+  }, []);
   return (
     <Layout>
       <Box sx={{padding:0,margin:0}} width={"100%"} height={"100%"}>

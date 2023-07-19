@@ -30,7 +30,7 @@ const Modeles = () => {
   const [showPopup, setShowPopup] = useState(false)
   useEffect(() => {
     if (userToken) {
-      ApiService.listModele(userToken)
+      ApiService.listModele()
         .then((res) => res.json())
         .then((data:ModeleTypes[]) => {
           setModeles(data);

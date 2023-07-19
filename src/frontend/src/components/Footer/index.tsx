@@ -3,15 +3,18 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: "100%",
     padding: theme.spacing(2),
     minHeight: "300px",
-    backgroundColor: "#000",
+    display:"flex",
+    backgroundColor: "#167df3",
     marginTop: theme.spacing(2),
     color: "#fff",
-    borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0px 0px`,
+    flexDirection:"column",
+    borderRadius:theme.shape.borderRadius,
+    // borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0px 0px`,
     "& .footer-content": {
       display: "flex",
+      flex:1,
       width:"100%",
       alignItems:'center',
       gap: theme.spacing(1),
@@ -27,7 +30,8 @@ const useStyles = makeStyles((theme: Theme) => ({
           "& li": {
             "& a": {
               textDecoration: "none",
-              color: "RGB(49, 114, 221)",
+              // color: "RGB(49, 114, 221)",
+              color:"#fff",
               fontSize:"1.3rem"
             },
           },
@@ -53,7 +57,7 @@ const Footer = () => {
       <Box className="footer-content">
         <div className="footer-logo">
           {/* Insérez ici votre logo */}
-          <img src="/logo-blue.png" alt="Logo" />
+          <img src="/logo-white.png" alt="Logo" />
         </div>
         <div className="footer-links">
           <ul>
@@ -72,7 +76,7 @@ const Footer = () => {
       </Box>
       <Box className="footer-bottom">
         <div className="container">
-          <p>Tous droits réservés &copy; {new Date().getFullYear()}</p>
+          <p>Tous droits réservés ivantom &copy; {new Date().getFullYear()}</p>
         </div>
       </Box>
     </Box>

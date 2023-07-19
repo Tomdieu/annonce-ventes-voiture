@@ -70,7 +70,7 @@ const VoitureView = () => {
     }
   }, [userToken, id]);
   useEffect(() => {
-    ApiService.listMarque(userToken)
+    ApiService.listMarque()
       .then((res) => res.json())
       .then((data:MarqueTypes[]) => setMarques(data))
       .catch((err:FetchError) => console.log(err.message));
@@ -95,15 +95,13 @@ const VoitureView = () => {
     }
   }, [marque, marques, modeles]);
   useEffect(() => {
-    if (userToken) {
-      ApiService.listMarque(userToken)
+    ApiService.listMarque()
         .then((res) => res.json())
         .then((data:MarqueTypes[]) => {
           setMarques(data);
         })
         .catch((e:FetchError) => console.log(e.message));
-    }
-  }, [userToken]);
+  }, []);
   const handleSelectImage = (imageId:number, photo:string) => {
     setPhotoId(imageId);
     setImage(photo);

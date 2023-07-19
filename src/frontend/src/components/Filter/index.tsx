@@ -14,7 +14,6 @@ import {
 import { makeStyles } from "@mui/styles";
 
 import { BiUpArrowAlt, BiDownArrowAlt } from "react-icons/bi";
-import { useAuth } from "../../context/AuthContext.js";
 import ApiService from "../../utils/ApiService.js";
 import { MarqueTypes, _ModeleTypes, FetchError } from "../../types/index.js";
 
@@ -79,24 +78,20 @@ const Filter: React.FC<FilterProps> = ({
   const [selectedMarques, setSelectedMarques] = useState<string[]>([]);
   const [selectedModeles, setSelectedModeles] = useState<string[]>([]);
 
-  const { userToken } = useAuth();
-
   useEffect(() => {
-    if (userToken) {
-      ApiService.listMarque(userToken)
+    ApiService.listMarque()
         .then((res) => res.json())
         .then((data: MarqueTypes[]) => {
           setMarques(data);
         })
         .catch((err: FetchError) => console.log(err.message));
-      ApiService.listModele(userToken)
+      ApiService.listModele()
         .then((res) => res.json())
         .then((data: _ModeleTypes[]) => {
           setModeles(data);
         })
         .catch((err: FetchError) => console.log(err.message));
-    }
-  }, [userToken]);
+  }, []);
   useEffect(() => {
     if (selectedMarques.length > 0) {
       const lesMarquesSelectioner = selectedMarques?.map((_marque) => {

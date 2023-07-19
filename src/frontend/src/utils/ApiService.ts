@@ -198,12 +198,11 @@ export default class ApiService {
     });
     return res;
   }
-  static async listMarque(token: string) {
+  static async listMarque() {
     const url = this.API_URL + `core/marque/`;
     const res = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `token ${token}`,
       },
     });
     return res;
@@ -254,12 +253,11 @@ export default class ApiService {
     });
     return res;
   }
-  static async listModele(token: string) {
+  static async listModele() {
     const url = this.API_URL + `core/modele/`;
     const res = await fetch(url, {
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `token ${token}`,
+        "Content-Type": "application/json"
       },
     });
     return res;
