@@ -12,6 +12,11 @@ type ResponseType = {
   token: string;
 };
 
+type UserLoginType = {
+  username:string;
+  password:string
+}
+
 const Login = () => {
   const date = new Date();
 
@@ -31,7 +36,7 @@ const Login = () => {
       <Grid item width={"500px"} component={Paper}>
         <Formik
           initialValues={{ username: "", password: "" }}
-          onSubmit={(e) => {
+          onSubmit={(e:UserLoginType) => {
             console.log(e);
             ApiService.login(JSON.stringify(e))
               .then((res) => res.json())
@@ -74,6 +79,7 @@ const Login = () => {
                 required
                 name="password"
                 type={"passwod"}
+                
                 value={values.password}
                 onChange={handleChange("password")}
                 onBlur={handleBlur("password")}

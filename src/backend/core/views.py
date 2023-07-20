@@ -1,9 +1,8 @@
 from django.shortcuts import render
 
-from django.views.generic import TemplateView
-
 # Create your views here.
 
-class ReactApp(TemplateView):
-
+def react_frontend(request,url,*args,**kwargs):
     template_name = "build/index.html"
+
+    return render(request,template_name)

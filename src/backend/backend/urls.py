@@ -23,7 +23,7 @@ from drf_yasg import openapi
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import RedirectView
 
-from core.views import ReactApp
+from core.views import react_frontend
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -100,4 +100,4 @@ urlpatterns += staticfiles_urlpatterns()
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += re_path(r'^(?P<url>.*)$', ReactApp.as_view()),
+urlpatterns += re_path(r'^(?P<url>.*)$', react_frontend),

@@ -157,8 +157,9 @@ const Dashboard = () => {
                   gap: 3,
                   p: 2,
                   flexWrap: "wrap",
-                  alignItems: "flex-start",
-                  justifyContent: "space-between",
+                  width:'100%',
+                  // alignItems: "flex-start",
+                  // justifyContent: "space-between",
                 }}
               >
                 <CountNumber text={"Marques"} count={numMarque} />

@@ -4,7 +4,7 @@ export default class ApiService {
     const url = this.API_URL + "accounts/login/";
     const res = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "*/*" },
       body: data,
     });
     return res;
@@ -13,7 +13,7 @@ export default class ApiService {
     const url = this.API_URL + "accounts/register/";
     const res = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "*/*" },
       body: data,
     });
     return res;
