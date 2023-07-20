@@ -27,10 +27,10 @@ SECRET_KEY = "django-insecure-dp!viq9=s21qetvdk0bk$!w4k(a0+y2pq*+awtg*&@f1nsq*a(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','.vercel.app', '.now.sh']
+ALLOWED_HOSTS = ["*", ".vercel.app", ".now.sh"]
 
 # Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Application definition
 
@@ -41,20 +41,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-
     # Local apps
-    'accounts',
+    "accounts",
     "core",
-
-
     # THird party apps
-
-    'drf_yasg',
-    'rest_framework',
-    'corsheaders',
+    "drf_yasg",
+    "rest_framework",
+    "corsheaders",
     "rest_framework.authtoken",
-
     # "storages",
 ]
 
@@ -71,12 +65,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "backend.urls"
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = "accounts.User"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "frontend/"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -137,9 +131,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles', 'static')
+STATIC_URL = "assets/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static/",
+    BASE_DIR / "frontend/build/static/",
+    BASE_DIR / "frontend/build/",
+]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles", "static")
 
 
 MEDIA_URL = "/media/"
@@ -175,15 +173,14 @@ REDOC_SETTINGS = {
 }
 
 
-
 # aws settings
 
-AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME')
-AWS_S3_SIGNATURE_NAME = 's3v4'
-AWS_S3_FILE_OVERWRITE=False
-AWS_DEFAULT_ACL= None
-AWS_S3_VERIFY=True
+AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME")
+AWS_S3_SIGNATURE_NAME = "s3v4"
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_VERIFY = True
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

@@ -3,4 +3,4 @@
   publish  = "/dist"
 
 [dev]
-  command = "npm run preview"
+  command = "npm run dev"

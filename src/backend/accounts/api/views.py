@@ -18,17 +18,23 @@ from django.contrib.auth import authenticate, login
 
 from django.contrib.auth import get_user_model
 
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 
 User = get_user_model()
 
 
 class AuthenticationViewSet(GenericViewSet, CreateAPIView):
-    # permission_classes = [AllowAny]
+    def get_permissions(self):
+        permission_classes = []
+        if self.action in ["create"]:
+            permission_classes = [AllowAny]
+
+        return [permission() for permission in permission_classes]
 
     serializer_class = AuthenticationSerializer
 
     def create(self, request, *args, **kwargs):
+        print("XXXX")
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         username = request.data.get("username")
@@ -57,6 +63,8 @@ class AuthenticationViewSet(GenericViewSet, CreateAPIView):
 class UserRegistrationViewSet(GenericViewSet, CreateModelMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+    
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer_class()(data=request.data)

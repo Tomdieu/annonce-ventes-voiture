@@ -39,7 +39,6 @@
     "@types/react-helmet": "^6.1.6",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
-    "@vercel/analytics": "^1.0.1",
     "@vitejs/plugin-react": "^4.0.1",
     "eslint": "^8.44.0",
     "eslint-plugin-react-hooks": "^4.6.0",

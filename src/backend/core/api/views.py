@@ -205,6 +205,7 @@ class AnnoncesViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             return AnnonceListSerializer
 
     def get_permissions(self):
+        permission_classes = []
         if self.action in ["list", "retrieve"]:
             permission_classes = [AllowAny]
 
