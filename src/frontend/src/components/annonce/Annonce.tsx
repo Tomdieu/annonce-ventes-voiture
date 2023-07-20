@@ -56,7 +56,12 @@ const Annonce: React.FC<Props> = (props: Props) => {
       <CardContent
         sx={{
           position: "relative",
-          backgroundColor: "rgba(0,0,0,.3)",
+          // backgroundColor: "rgba(0,0,0,.3)",
+          backgroundColor:"RGB(49, 114, 221)",
+          color:"#ddd",
+          '& > *':{
+            color:"#ddd"
+          }
         }}
       >
         <Typography variant="h5" component="h2">
@@ -112,6 +117,9 @@ const Annonce: React.FC<Props> = (props: Props) => {
             alignItems: "center",
             justifyContent: "space-between",
             flexWrap: "wrap",
+            '& > *':{
+              color:"#fff"
+            }
           }}
         >
           <Typography variant="body2" color="text.secondary">

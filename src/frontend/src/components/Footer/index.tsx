@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
     minHeight: "300px",
     display:"flex",
-    backgroundColor: "#167df3",
+    backgroundColor: "RGB(49, 114, 221)",
     marginTop: theme.spacing(2),
     color: "#fff",
     flexDirection:"column",

@@ -35,7 +35,8 @@ type FilterProps = {
 
 const useStyles = makeStyles((theme: Theme) => ({
   boxFilter: {
-    backgroundColor: "rgba(0,0,0,.3)",
+    // backgroundColor: "rgba(0,0,0,.3)",
+    backgroundColor:"RGB(49, 114, 221)",
     padding: theme.spacing(1),
     borderRadius: 5,
     "&:last-child": {
@@ -85,12 +86,12 @@ const Filter: React.FC<FilterProps> = ({
           setMarques(data);
         })
         .catch((err: FetchError) => console.log(err.message));
-      ApiService.listModele()
-        .then((res) => res.json())
-        .then((data: _ModeleTypes[]) => {
-          setModeles(data);
-        })
-        .catch((err: FetchError) => console.log(err.message));
+      // ApiService.listModele()
+      //   .then((res) => res.json())
+      //   .then((data: _ModeleTypes[]) => {
+      //     setModeles(data);
+      //   })
+      //   .catch((err: FetchError) => console.log(err.message));
   }, []);
   useEffect(() => {
     if (selectedMarques.length > 0) {
