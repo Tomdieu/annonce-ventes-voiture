@@ -6,9 +6,12 @@ import Filter from "../components/Filter";
 
 import { AnnonceTypes, FetchError } from "../types";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
+import Loading from "../components/loading";
 
 const IndexPage = () => {
   const [annonces, setAnnonces] = useState<AnnonceTypes[]>([]);
+  const [loading, setLoading] = useState(false);
   const [filterAnnonce, setFilterAnnonce] = useState<AnnonceTypes[]>([]);
   const [recents, setRecents] = useState<boolean>();
   const [priceFilter, setPriceFilter] = useState<string>();
@@ -21,10 +24,12 @@ const IndexPage = () => {
   const [priceMax, setPriceMax] = useState<number | null>();
 
   useEffect(() => {
+    setLoading(true);
     ApiService.listAnnonces()
       .then((res) => res.json())
       .then((data: AnnonceTypes[]) => setAnnonces(data))
-      .catch((err: FetchError) => console.log(err.message));
+      .catch((err: FetchError) => console.log(err.message))
+      .finally(() => setLoading(false));
   }, []);
   useEffect(() => {
     if (annonces) {
@@ -188,6 +193,9 @@ const IndexPage = () => {
         overflow={"auto"}
         sx={{ backgroundColor: "#e6f5fee6", p: 2 }}
       >
+        <Box sx={{ mb: 10, position: "relative" }}>
+          <Header />
+        </Box>
         <Box flex={1}>
           <Typography
             variant={"h4"}
@@ -196,14 +204,19 @@ const IndexPage = () => {
           >
             Annonce des voitures
           </Typography>
-          <Grid container spacing={1} flex={1}>
-            {filterAnnonce?.map((annonce) => (
-              <Grid item lg={3} md={4} sm={6} xs={12} key={annonce.id}>
-                <Annonce annonce={annonce} />
-              </Grid>
-            ))}
-          </Grid>
-          <Footer/>
+          {loading ? (
+            <Loading />
+          ) : (
+            <Grid container spacing={1} flex={1}>
+              {filterAnnonce?.map((annonce) => (
+                <Grid item lg={3} md={4} sm={6} xs={12} key={annonce.id}>
+                  <Annonce annonce={annonce} />
+                </Grid>
+              ))}
+            </Grid>
+          )}
+
+          <Footer />
         </Box>
       </Grid>
     </Grid>

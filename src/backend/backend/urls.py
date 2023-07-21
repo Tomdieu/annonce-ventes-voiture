@@ -89,7 +89,10 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls"), name="api-auth"),
     
     path("logo.png", RedirectView.as_view(url=settings.STATIC_URL + "logo.png")),
+    path("bg.svg", RedirectView.as_view(url=settings.STATIC_URL + "bg.svg")),
+    path("rav4.png", RedirectView.as_view(url=settings.STATIC_URL + "rav4.png")),
     path("logo.svg", RedirectView.as_view(url=settings.STATIC_URL + "logo.svg")),
+    
     path(
         "logo-white.png",
         RedirectView.as_view(url=settings.STATIC_URL + "logo-white.png"),

@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: "300px",
     display:"flex",
     backgroundColor: "RGB(49, 114, 221)",
-    marginTop: theme.spacing(2),
+    // marginTop: theme.spacing(2),
     color: "#fff",
     flexDirection:"column",
     borderRadius:theme.shape.borderRadius,
