@@ -10,12 +10,14 @@ export interface ModeleTypes {
 export interface _MarqueTypes {
     id: number;
     nom: string;
+    logo:string;
 
 }
 
 export interface MarqueTypes {
     id: number;
     nom: string;
+    logo:string;
     modeles: _ModeleTypes[]
 
 }

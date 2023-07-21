@@ -22,6 +22,7 @@ const IndexPage = () => {
   const [kmMax, setKmMax] = useState<number>();
   const [priceMin, setPriceMin] = useState<number | null>();
   const [priceMax, setPriceMax] = useState<number | null>();
+  const [year, setYear] = useState<number | null>();
 
   useEffect(() => {
     setLoading(true);
@@ -138,6 +139,17 @@ const IndexPage = () => {
     }
   }, [annonces, priceMax]);
 
+  useEffect(() => {
+    if (year) {
+      const annonceParAnnee = annonces.filter(
+        (annonce) => annonce.voiture.annee === year
+      );
+      setFilterAnnonce(annonceParAnnee);
+    } else {
+      setFilterAnnonce(annonces);
+    }
+  }, [year, annonces]);
+
   return (
     <Grid
       container
@@ -181,6 +193,7 @@ const IndexPage = () => {
           onPriceMin={setPriceMin}
           onTypeCarburantSelected={setTypeCarburant}
           onBoiteVitesseSelected={setBoiteVitesse}
+          onYear={setYear}
         />
       </Grid>
       <Grid

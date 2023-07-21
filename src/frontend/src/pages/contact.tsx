@@ -27,7 +27,18 @@ const ContactPage = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Handle form submission logic here
+    const formData = new FormData(event.target as HTMLFormElement);
+    const name = formData.get("name").toString();
+    const email = formData.get("email").toString();
+    const message = formData.get("message").toString();
+
+    const mailtoLink = `mailto:ivan.tomdieu@gmail.com?subject=New message from ${encodeURIComponent(
+      name
+    )}&body=${encodeURIComponent(
+      message
+    )}%0D%0A%0D%0AFrom: ${encodeURIComponent(email)}`;
+
+    window.location.href = mailtoLink;
   };
 
   return (
@@ -39,9 +50,16 @@ const ContactPage = () => {
         Contact Us
       </Typography>
       <form className={classes.form} onSubmit={handleSubmit}>
-        <TextField label="Name" variant="outlined" required />
-        <TextField label="Email" variant="outlined" required type="email" />
+        <TextField name="name" label="Name" variant="outlined" required />
         <TextField
+          name="email"
+          label="Email"
+          variant="outlined"
+          required
+          type="email"
+        />
+        <TextField
+          name="message"
           label="Message"
           variant="outlined"
           required
@@ -52,7 +70,7 @@ const ContactPage = () => {
           Submit
         </Button>
       </form>
-      <Box sx={{mb:5}}></Box>
+      <Box sx={{ mb: 5 }}></Box>
       <Footer />
     </Box>
   );

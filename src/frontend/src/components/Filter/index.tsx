@@ -10,6 +10,7 @@ import {
   Radio,
   Theme,
   TextField,
+  ButtonBase,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -18,6 +19,8 @@ import ApiService from "../../utils/ApiService.js";
 import { MarqueTypes, _ModeleTypes, FetchError } from "../../types/index.js";
 
 import { BOITEVITESSES, CARBURANTS } from "./data";
+
+import { RotateLeft } from "@mui/icons-material";
 
 // import HybridIcon from "../../images/hybride.svg";
 
@@ -31,12 +34,13 @@ type FilterProps = {
   onTypeCarburantSelected: (typeCarburant: string) => void;
   onPriceMin: (price: number | null) => void;
   onPriceMax: (price: number | null) => void;
+  onYear: (year: number | null) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
   boxFilter: {
     // backgroundColor: "rgba(0,0,0,.3)",
-    backgroundColor:"RGB(49, 114, 221)",
+    backgroundColor: "RGB(49, 114, 221)",
     padding: theme.spacing(1),
     borderRadius: 5,
     "&:last-child": {
@@ -60,6 +64,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
     flex: 1,
   },
+  input: {
+    borderRadius: theme.shape.borderRadius,
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#ccc",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#fff",
+    },
+    "& .MuiInputBase-input": {
+      color: "#fff",
+    },
+  },
 }));
 
 const Filter: React.FC<FilterProps> = ({
@@ -72,6 +88,7 @@ const Filter: React.FC<FilterProps> = ({
   onMarqueSelected,
   onModeleSelected,
   onBoiteVitesseSelected,
+  onYear,
 }) => {
   const classes = useStyles();
   const [marques, setMarques] = useState<MarqueTypes[]>([]);
@@ -81,17 +98,11 @@ const Filter: React.FC<FilterProps> = ({
 
   useEffect(() => {
     ApiService.listMarque()
-        .then((res) => res.json())
-        .then((data: MarqueTypes[]) => {
-          setMarques(data);
-        })
-        .catch((err: FetchError) => console.log(err.message));
-      // ApiService.listModele()
-      //   .then((res) => res.json())
-      //   .then((data: _ModeleTypes[]) => {
-      //     setModeles(data);
-      //   })
-      //   .catch((err: FetchError) => console.log(err.message));
+      .then((res) => res.json())
+      .then((data: MarqueTypes[]) => {
+        setMarques(data);
+      })
+      .catch((err: FetchError) => console.log(err.message));
   }, []);
   useEffect(() => {
     if (selectedMarques.length > 0) {
@@ -136,9 +147,62 @@ const Filter: React.FC<FilterProps> = ({
       return onModeleSelected(selectedModeles);
     }
   }, [onModeleSelected, selectedModeles]);
+
+  const [priceFilter, setPriceFilter] = useState("");
+  const [year,setYear] = useState('')
+  const [marque,setMarque] = useState('')
+  const [modele,setModele] = useState('')
+  const [km,setKm] = useState('')
+  const [minPrice,setMinPrice] = useState('')
+  const [maxPrice,setMaxPrice] = useState('')
+  const [carburant,setCarburant] = useState('')
+  const [boiteVitesse,setBoiteVitesse] = useState('') 
+
+  // const [formData, setFormData] = useState({
+  //   priceFilter: '',
+  //   year: '',
+  //   marque: '',
+  //   modele: '',
+  //   km: '',
+  //   minPrice: '',
+  //   maxPrice: '',
+  //   carburant: '',
+  //   boiteVitesse: '',
+  // });
+
+  // const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = event.target;
+  //   setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  // };
+
+
+  const handleReset = () => {
+    onPriceFilter("");
+    setPriceFilter(null);
+    setYear('')
+    onYear(null)
+  };
+
   return (
     <Box className={classes.root}>
       <Box className={classes.wrapper}>
+        <Box>
+          <ButtonBase title="Renitialiser" onClick={handleReset}>
+            <Box
+              sx={{
+                backgroundColor: "RGB(49, 114, 221)",
+                color: "#fff",
+                p: 1.2,
+                borderRadius: 1,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {/* <Typography>Renitialiser</Typography> */}
+              <RotateLeft />
+            </Box>
+          </ButtonBase>
+        </Box>
         <Box className={classes.boxFilter}>
           <FormControl sx={{ flex: 1, display: "flex", pr: 1 }}>
             <Typography variant="h6" sx={{ ml: 2 }}>
@@ -155,16 +219,39 @@ const Filter: React.FC<FilterProps> = ({
               control={
                 <Checkbox
                   color="info"
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#fff", // Change this to the desired checked color
+                    },
+                  }}
                   onChange={(_, checked) => onRecentFilter(Boolean(checked))}
                 />
               }
               label="Plus Recents"
             />
-            <RadioGroup onChange={(e) => onPriceFilter(e.target.value)}>
+            <RadioGroup
+              id="price-filter"
+              value={priceFilter}
+              name="price-filter"
+              onChange={(e) => {
+                setPriceFilter(e.target.value);
+                onPriceFilter(e.target.value);
+              }}
+            >
               <FormControlLabel
                 labelPlacement="start"
                 value="prix-desc"
-                control={<Radio color="info" />}
+                control={
+                  <Radio
+                    color="info"
+                    sx={{
+                      "&.Mui-checked": {
+                        color: "#fff", // Change this to the desired checked color
+                      },
+                    }}
+                    // name="price-filter"
+                  />
+                }
                 sx={{
                   width: "100%",
                   display: "flex",
@@ -184,7 +271,17 @@ const Filter: React.FC<FilterProps> = ({
                   display: "flex",
                   justifyContent: "space-between",
                 }}
-                control={<Radio color="info" />}
+                control={
+                  <Radio
+                    color="info"
+                    sx={{
+                      "&.Mui-checked": {
+                        color: "#fff", // Change this to the desired checked color
+                      },
+                    }}
+                    // name="price-filter"
+                  />
+                }
                 label={
                   <span style={{ display: "flex", alignItems: "center" }}>
                     <BiDownArrowAlt size={24} /> Prix
@@ -194,6 +291,31 @@ const Filter: React.FC<FilterProps> = ({
             </RadioGroup>
           </FormControl>
         </Box>
+        <Box className={classes.boxFilter}>
+          <Typography sx={{ ml: 2 }} variant="h6">
+            Annee
+          </Typography>
+          <Box sx={{ flex: 1, display: "flex", pr: 1, ml: 2 }}>
+            <TextField
+              fullWidth
+              placeholder="annee production"
+              color="info"
+              type="number"
+              className={classes.input}
+              value={year}
+              onChange={(e) => {
+                const year = e.target.value;
+                setYear(year)
+                if (year) {
+                  onYear(Number(year));
+                } else {
+                  onYear(null);
+                }
+              }}
+            />
+          </Box>
+        </Box>
+
         <Box className={classes.boxFilter}>
           <Typography sx={{ ml: 2 }} variant="h6">
             Marque
@@ -209,6 +331,11 @@ const Filter: React.FC<FilterProps> = ({
                     <Checkbox
                       color="info"
                       value={marque.nom}
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#fff", // Change this to the desired checked color
+                        },
+                      }}
                       onChange={(e, checked) => {
                         if (checked) {
                           setSelectedMarques((_marque) => [
@@ -252,6 +379,11 @@ const Filter: React.FC<FilterProps> = ({
                     <Checkbox
                       color="info"
                       value={modele.nom}
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#fff", // Change this to the desired checked color
+                        },
+                      }}
                       onChange={(e, checked) => {
                         if (checked) {
                           setSelectedModeles([
@@ -286,12 +418,11 @@ const Filter: React.FC<FilterProps> = ({
           </Typography>
           <Box sx={{ flex: 1, display: "flex", pr: 1, ml: 2 }}>
             <TextField
-              label="km max"
               fullWidth
               placeholder="km max"
-              color="success"
+              color="info"
               type="number"
-              sx={(theme) => ({ borderRadius: theme.shape.borderRadius })}
+              className={classes.input}
               onChange={(e) => {
                 const km = Number(e.target.value);
                 if (km) {
@@ -309,15 +440,14 @@ const Filter: React.FC<FilterProps> = ({
           </Typography>
           <Box sx={{ flex: 1, display: "flex", pr: 1, ml: 2, gap: 1 }}>
             <TextField
-              label="Prix min"
               fullWidth
               placeholder="prix min"
-              color="success"
+              color="info"
               type="number"
-              sx={(theme) => ({ borderRadius: theme.shape.borderRadius })}
+              className={classes.input}
               onChange={(e) => {
                 const price = Number(e.target.value);
-                if (price>0) {
+                if (price > 0) {
                   onPriceMin(price);
                 } else {
                   onPriceMin(null);
@@ -325,16 +455,15 @@ const Filter: React.FC<FilterProps> = ({
               }}
             />
             <TextField
-              label="prix max"
               fullWidth
               placeholder="prix max"
-              color="success"
+              color="info"
               type="number"
-              sx={(theme) => ({ borderRadius: theme.shape.borderRadius })}
+              className={classes.input}
               onChange={(e) => {
                 const price = Number(e.target.value);
-                console.log(price)
-                if (price>0) {
+                console.log(price);
+                if (price > 0) {
                   onPriceMax(price);
                 } else {
                   onPriceMin(null);
@@ -357,7 +486,16 @@ const Filter: React.FC<FilterProps> = ({
                     labelPlacement="start"
                     value={carburant.value}
                     key={carburant.value}
-                    control={<Radio color="info" />}
+                    control={
+                      <Radio
+                        color="info"
+                        sx={{
+                          "&.Mui-checked": {
+                            color: "#fff", // Change this to the desired checked color
+                          },
+                        }}
+                      />
+                    }
                     sx={{
                       width: "100%",
                       display: "flex",
@@ -383,7 +521,16 @@ const Filter: React.FC<FilterProps> = ({
                   <FormControlLabel
                     labelPlacement="start"
                     value={boitevitesse.value}
-                    control={<Radio color="info" />}
+                    control={
+                      <Radio
+                        color="info"
+                        sx={{
+                          "&.Mui-checked": {
+                            color: "#fff", // Change this to the desired checked color
+                          },
+                        }}
+                      />
+                    }
                     sx={{
                       width: "100%",
                       display: "flex",

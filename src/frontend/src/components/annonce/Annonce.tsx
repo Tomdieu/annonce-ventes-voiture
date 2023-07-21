@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   card: {
     marginBottom: theme.spacing(1),
     cursor: "pointer",
+    width:"100%"
   },
   media: {
     height: 0,
