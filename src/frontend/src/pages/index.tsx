@@ -1,239 +1,144 @@
-import { Grid, Box, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
-import ApiService from "../utils/ApiService";
-import Annonce from "../components/annonce/Annonce";
-import Filter from "../components/Filter";
+import {
+  Box,
+  Theme
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
-import { AnnonceTypes, FetchError } from "../types";
-import Footer from "../components/Footer";
 import Header from "../components/Header";
-import Loading from "../components/loading";
+import Footer from "../components/Footer";
+import { AnnonceSection, HeroSection, MarqueSection } from "../components/Sections";
 
-const IndexPage = () => {
-  const [annonces, setAnnonces] = useState<AnnonceTypes[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [filterAnnonce, setFilterAnnonce] = useState<AnnonceTypes[]>([]);
-  const [recents, setRecents] = useState<boolean>();
-  const [priceFilter, setPriceFilter] = useState<string>();
-  const [marquesSelectionner, setMarquesSelectionner] = useState<string[]>([]);
-  const [modelesSelectionner, setModelesSelectionner] = useState<string[]>([]);
-  const [typeCarburant, setTypeCarburant] = useState<string>();
-  const [boiteVitesse, setBoiteVitesse] = useState<string>();
-  const [kmMax, setKmMax] = useState<number>();
-  const [priceMin, setPriceMin] = useState<number | null>();
-  const [priceMax, setPriceMax] = useState<number | null>();
-  const [year, setYear] = useState<number | null>();
 
-  useEffect(() => {
-    setLoading(true);
-    ApiService.listAnnonces()
-      .then((res) => res.json())
-      .then((data: AnnonceTypes[]) => setAnnonces(data))
-      .catch((err: FetchError) => console.log(err.message))
-      .finally(() => setLoading(false));
-  }, []);
-  useEffect(() => {
-    if (annonces) {
-      setFilterAnnonce(annonces);
-    }
-  }, [annonces]);
-  useEffect(() => {
-    if (recents) {
-      filterAnnonce.sort(function (a, b) {
-        return (
-          new Date(a.date_creation).getTime() -
-          new Date(b.date_creation).getTime()
-        );
-      });
-    } else {
-      filterAnnonce.sort(function (a, b) {
-        return (
-          new Date(b.date_creation).getTime() -
-          new Date(a.date_creation).getTime()
-        );
-      });
-    }
-  }, [annonces, filterAnnonce, recents]);
-  useEffect(() => {
-    if (priceFilter) {
-      if (priceFilter === "prix-asc") {
-        filterAnnonce.sort(function (a, b) {
-          return b.prix - a.prix;
-        });
-      } else {
-        filterAnnonce.sort(function (a, b) {
-          return b.prix - a.prix;
-        });
-      }
-    }
-  }, [filterAnnonce, priceFilter]);
-  useEffect(() => {
-    if (marquesSelectionner.length > 0) {
-      const annonceParModeles = annonces.filter((annonce) =>
-        marquesSelectionner.includes(annonce.voiture.model.marque.nom)
-      );
-      setFilterAnnonce(annonceParModeles);
-    } else {
-      setFilterAnnonce(annonces);
-    }
-  }, [annonces, marquesSelectionner]);
-  useEffect(() => {
-    if (modelesSelectionner.length > 0) {
-      const annonceParModeles = annonces.filter((annonce) =>
-        modelesSelectionner.includes(annonce.voiture.model.nom)
-      );
-      setFilterAnnonce(annonceParModeles);
-    } else {
-      setFilterAnnonce(annonces);
-    }
-  }, [annonces, modelesSelectionner]);
-  useEffect(() => {
-    if (typeCarburant) {
-      const annonceParTypeCarburant = annonces.filter(
-        (annonce) => annonce.voiture.type_carburant === typeCarburant
-      );
-      setFilterAnnonce(annonceParTypeCarburant);
-    }
-  }, [annonces, typeCarburant]);
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    width: "100vw",
+    height: "100vh",
+    overflowX: "hidden",
+  },
+  heroSection: {
+    height: "800px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    overflow: "hidden",
+    width: "100%",
+    backgroundColor: "rgba(255, 255, 255, 0.15)",
+    backdropFilter: "blur(10px)",
+    borderRadius: "10px",
+    boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+    color: "#fff",
+    // padding: "20px",
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: "-10px",
+      left: "-10px",
+      right: "-10px",
+      bottom: "-10px",
+      background: "linear-gradient(315deg, #ffffff, #d7e1ec)",
+      zIndex: "-1",
+      filter: "blur(40px)",
+    },
+    marginTop: theme.spacing(2.5),
+    // backgroundColor: "rgba(0,0,0,.30)",
+  },
+  leftPart: {
+    color: "#fff",
+    padding: theme.spacing(4),
+    width: "100%",
+    position: "relative",
+    textAlign: "center",
+  },
+  rightPart: {
+    width: "100%",
+    position: "relative",
+    "& img": {
+      minWidth: "100%",
+      height: "auto",
+      display: "block",
+      top: 0,
+      left: 0,
+      bottom: 0,
+      width: "100%",
+      transform: "scale(2)",
+      //   right: 0,
+      zIndex: 99,
+      [theme.breakpoints.down("md")]: {
+        transform: "scale(10)",
+      },
+      [theme.breakpoints.down("lg")]: {
+        transform: "scale(3)",
+      },
+    },
+  },
+  svgBackground: {
+    position: "absolute",
+    top: 0,
+    left: "-10%",
+    zIndex: 50,
+  },
+  btn: {
+    padding: theme.spacing(1),
+    display: "flex",
+    alignItems: "center",
+    borderRadius: 20,
+    color: "#eee",
+    backgroundColor: "RGB(49, 114, 221)",
+    "& .icon": {
+      display: "none",
+    },
+    "&:hover .icon": {
+      display: "inline-block",
+    },
+  },
+  customBtn: {
+    padding: theme.spacing(2),
+    backgroundColor: "RGB(49, 114, 221)",
+    borderRadius: 30,
+    display: "flex",
+    alignItems: "center",
+    gap: 1,
+    "& .icon": {
+      display: "none",
+    },
+    "&:hover .icon": {
+      display: "inline-block",
+    },
+  },
+  link: {
+    "&:hover *": {
+      color: "#ccc",
+    },
+  },
+  slider: {
+    gap: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(8),
+    // backgroundColor:"RGB(49, 114, 221)"
+  },
+}));
 
-  useEffect(() => {
-    if (boiteVitesse) {
-      const annonceParboiteVitesse = annonces.filter(
-        (annonce) => annonce.voiture.boite_vitesse === boiteVitesse
-      );
-      setFilterAnnonce(annonceParboiteVitesse);
-    }
-  }, [annonces, boiteVitesse]);
-
-  useEffect(() => {
-    if (kmMax) {
-      console.log({ kmMax });
-      const annonceParKmMax = annonces.filter(
-        (annonce) => annonce.voiture.km_parcouru <= kmMax
-      );
-      setFilterAnnonce(annonceParKmMax);
-    } else {
-      setFilterAnnonce(annonces);
-    }
-  }, [annonces, kmMax]);
-
-  useEffect(() => {
-    if (priceMin) {
-      const annonceParPrixMin = annonces.filter(
-        (annonce) => annonce.prix >= priceMin
-      );
-      setFilterAnnonce(annonceParPrixMin);
-    } else {
-      setFilterAnnonce(annonces);
-    }
-  }, [annonces, priceMin]);
-  useEffect(() => {
-    console.log({ priceMax });
-    if (priceMax) {
-      const annonceParPrixMax = annonces.filter(
-        (annonce) => annonce.prix <= priceMax
-      );
-      setFilterAnnonce(annonceParPrixMax);
-    } else {
-      setFilterAnnonce(annonces);
-    }
-  }, [annonces, priceMax]);
-
-  useEffect(() => {
-    if (year) {
-      const annonceParAnnee = annonces.filter(
-        (annonce) => annonce.voiture.annee === year
-      );
-      setFilterAnnonce(annonceParAnnee);
-    } else {
-      setFilterAnnonce(annonces);
-    }
-  }, [year, annonces]);
+const HomePage = () => {
+  const classes = useStyles();
+  
 
   return (
-    <Grid
-      container
-      height={"100vh"}
-      width={"100vw"}
-      maxHeight={"100vh"}
-      overflow={"auto"}
-      position={"relative"}
-      padding={0}
-      margin={0}
-    >
-      <Grid
-        item
-        md={2}
-        sm={3}
-        lg={2}
-        xs={2}
-        height={"100%"}
-        maxHeight={"100vh"}
-        overflow={"auto"}
-        sx={{
-          left: 0,
-          bottom: 0,
-          top: 0,
-          position: "static",
-          // backgroundColor: "#2e6ee5e6",
-          color: "#fff",
-          display: "flex",
-          backgroundColor: "#fff",
-        }}
-        padding={0}
-        margin={0}
-      >
-        <Filter
-          onPriceFilter={setPriceFilter}
-          onRecentFilter={setRecents}
-          onMarqueSelected={setMarquesSelectionner}
-          onModeleSelected={setModelesSelectionner}
-          onKilometrageMaxSelected={setKmMax}
-          onPriceMax={setPriceMax}
-          onPriceMin={setPriceMin}
-          onTypeCarburantSelected={setTypeCarburant}
-          onBoiteVitesseSelected={setBoiteVitesse}
-          onYear={setYear}
-        />
-      </Grid>
-      <Grid
-        item
-        md={10}
-        sm={9}
-        lg={10}
-        xs={10}
-        maxHeight={"100vh"}
-        overflow={"auto"}
-        sx={{ backgroundColor: "#e6f5fee6", p: 2 }}
-      >
-        <Box sx={{ mb: 10, position: "relative" }}>
-          <Header />
-        </Box>
-        <Box flex={1}>
-          <Typography
-            variant={"h4"}
-            sx={{ color: "#2794e7e0", textShadow: "2px 0px 3px #98caf0e0" }}
-            gutterBottom
-          >
-            Annonce des voitures
-          </Typography>
-          {loading ? (
-            <Loading />
-          ) : (
-            <Grid container spacing={1} flex={1}>
-              {filterAnnonce?.map((annonce) => (
-                <Grid item lg={3} md={4} sm={6} xs={12} key={annonce.id}>
-                  <Annonce annonce={annonce} />
-                </Grid>
-              ))}
-            </Grid>
-          )}
+    <Box className={classes.container}>
+      <Header />
 
-          <Footer />
-        </Box>
-      </Grid>
-    </Grid>
+      <HeroSection />
+      <AnnonceSection/>
+      <Box sx={{ml:2,mr:2,mb:5}}>
+
+      <MarqueSection />
+      </Box>
+      
+      <Box sx={{ ml: 2, mr: 2 }}>
+        <Footer />
+      </Box>
+    </Box>
   );
 };
 
-export default IndexPage;
+export default HomePage;

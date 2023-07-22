@@ -69,7 +69,8 @@ export interface AnnonceTypes {
   latitude: number;
   longitude: number;
   address: string;
-  date_creation: string
+  date_creation: string;
+  similar_ads?:AnnonceTypes[]
 }
 
 export type LocationTypes =  {

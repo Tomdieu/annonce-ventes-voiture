@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Button, Theme } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Theme, AppBarProps } from "@mui/material";
 
 import { makeStyles } from "@mui/styles";
 
@@ -37,12 +37,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
   },
 }));
-
-const Header = () => {
+type HeaderProps = AppBarProps;
+const Header = (props:HeaderProps) => {
   const classes = useStyles();
-
+  const {...others} = props;
   return (
-    <AppBar sx={{backgroundColor:"RGBA(49, 114, 221,9)"}} position="absolute" className={classes.header}>
+    <AppBar {...others} sx={{backgroundColor:"RGBA(49, 114, 221,9)"}} position="absolute" className={classes.header}>
       <Toolbar>
         <Typography
           variant="h6"

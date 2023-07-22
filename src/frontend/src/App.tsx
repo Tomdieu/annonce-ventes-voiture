@@ -14,9 +14,10 @@ import ModelesPage from "./pages/dashboard/modele";
 import VoituresPage from "./pages/dashboard/voiture";
 import AnnoncePage from "./pages/dashboard/annonce";
 import VoitureView from "./pages/dashboard/voiture/vehicle";
-import IndexPage from "./pages";
+import HomePage from "./pages/";
 import ContactPage from "./pages/contact";
-import HomePage from "./pages/home";
+import AnnoncesPage from "./pages/annonces";
+import AnnonceDetailPage from "./pages/annonce-detail";
 
 // Example function to check if the user token exists
 const checkUserTokenExists = () => {
@@ -49,7 +50,9 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login/" element={<Login />} />
         <Route path="/contact/" element={<ContactPage/>} />
-        <Route path="/annonces/" element={<IndexPage/>} />
+        <Route path="/annonces/" element={<AnnoncesPage/>} />
+        <Route path="/annonces/:id/" element={<AnnonceDetailPage/>} />
+
 
         <Route path="/dashboard/" element={<ProtectedRoute />}>
           <Route path="" element={<DashboardPage />} />

@@ -10,6 +10,7 @@ import {
   Theme,
   Box,
   Divider,
+  CardProps,
 } from "@mui/material";
 import millify from "millify";
 import { makeStyles } from "@mui/styles";
@@ -18,7 +19,7 @@ import { TbManualGearbox } from "react-icons/tb";
 import { BsClock } from "react-icons/bs";
 type Props = {
   annonce: AnnonceTypes;
-};
+} & CardProps;
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -41,11 +42,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Annonce: React.FC<Props> = (props: Props) => {
-  const { annonce } = props;
+  const { annonce,...others } = props;
   const classes = useStyles();
 
   return (
-    <Card key={annonce.titre} className={classes.card}>
+    <Card {...others} key={annonce.titre} className={classes.card}>
       <CardMedia
         className={classes.media}
         image={annonce.voiture.images[0]?.photo} // Assuming the first image represents the car

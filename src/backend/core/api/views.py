@@ -21,6 +21,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from rest_framework.decorators import action
 
+from django.db.models import Q
+
 from core.models import Marque, Modele, Voiture, Annonce, PhotoVoiture
 
 from .serializers import (
@@ -241,6 +243,22 @@ class AnnoncesViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             return queryset[: int(limit)]
 
         return queryset
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+
+        # Get similar advertisements based on some criteria, e.g., same model and year
+        similar_ads = Annonce.objects.filter(
+            Q(voiture__model=instance.voiture.model) |
+            Q(voiture__annee=instance.voiture.annee)
+        ).exclude(pk=instance.pk)
+
+        # Modify the serializer data to include similar_ads
+        data = serializer.data
+        data["similar_ads"] = AnnonceListSerializer(similar_ads, many=True).data
+
+        return Response(data)
 
 
 class PhotoVoitureViewSet(

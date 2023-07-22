@@ -95,7 +95,7 @@ const Filter: React.FC<FilterProps> = ({
   const [modeles, setModeles] = useState<_ModeleTypes[]>([]);
   const [selectedMarques, setSelectedMarques] = useState<string[]>([]);
   const [selectedModeles, setSelectedModeles] = useState<string[]>([]);
-
+  const [recent, setRecent] = useState(false);
   useEffect(() => {
     ApiService.listMarque()
       .then((res) => res.json())
@@ -148,46 +148,56 @@ const Filter: React.FC<FilterProps> = ({
     }
   }, [onModeleSelected, selectedModeles]);
 
-  const [priceFilter, setPriceFilter] = useState("");
-  const [year,setYear] = useState('')
-  const [marque,setMarque] = useState('')
-  const [modele,setModele] = useState('')
-  const [km,setKm] = useState('')
-  const [minPrice,setMinPrice] = useState('')
-  const [maxPrice,setMaxPrice] = useState('')
-  const [carburant,setCarburant] = useState('')
-  const [boiteVitesse,setBoiteVitesse] = useState('') 
+  const [formData, setFormData] = useState({
+    priceFilter: "",
+    year: "",
+    km: "",
+    minPrice: "",
+    maxPrice: "",
+    carburant: "",
+    boiteVitesse: "",
+  });
 
-  // const [formData, setFormData] = useState({
-  //   priceFilter: '',
-  //   year: '',
-  //   marque: '',
-  //   modele: '',
-  //   km: '',
-  //   minPrice: '',
-  //   maxPrice: '',
-  //   carburant: '',
-  //   boiteVitesse: '',
-  // });
-
-  // const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = event.target;
-  //   setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-  // };
-
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
 
   const handleReset = () => {
     onPriceFilter("");
-    setPriceFilter(null);
-    setYear('')
-    onYear(null)
+    onYear(null);
+    setSelectedMarques([]);
+    setSelectedModeles([]);
+    setRecent(false);
+    setFormData({
+      priceFilter: "",
+      year: "",
+      km: "",
+      minPrice: "",
+      maxPrice: "",
+      carburant: "",
+      boiteVitesse: "",
+    });
   };
 
   return (
     <Box className={classes.root}>
       <Box className={classes.wrapper}>
-        <Box>
-          <ButtonBase title="Renitialiser" onClick={handleReset}>
+        <Box sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems:'center',
+              width: "100%",
+              cursor:"pointer"
+            }}>
+              <img src={"/logo-blue.png"} style={{ width: 32,height:32 }} />
+          <ButtonBase
+            title="Renitialiser"
+            onClick={handleReset}
+            
+          >
             <Box
               sx={{
                 backgroundColor: "RGB(49, 114, 221)",
@@ -224,17 +234,23 @@ const Filter: React.FC<FilterProps> = ({
                       color: "#fff", // Change this to the desired checked color
                     },
                   }}
-                  onChange={(_, checked) => onRecentFilter(Boolean(checked))}
+                  name="recent"
+                  value={recent}
+                  checked={recent}
+                  onChange={(_e, checked) => {
+                    setRecent(checked);
+                    onRecentFilter(Boolean(checked));
+                  }}
                 />
               }
               label="Plus Recents"
             />
             <RadioGroup
               id="price-filter"
-              value={priceFilter}
-              name="price-filter"
+              value={formData.priceFilter}
+              name="priceFilter"
               onChange={(e) => {
-                setPriceFilter(e.target.value);
+                handleChange(e);
                 onPriceFilter(e.target.value);
               }}
             >
@@ -249,7 +265,6 @@ const Filter: React.FC<FilterProps> = ({
                         color: "#fff", // Change this to the desired checked color
                       },
                     }}
-                    // name="price-filter"
                   />
                 }
                 sx={{
@@ -279,7 +294,6 @@ const Filter: React.FC<FilterProps> = ({
                         color: "#fff", // Change this to the desired checked color
                       },
                     }}
-                    // name="price-filter"
                   />
                 }
                 label={
@@ -301,11 +315,12 @@ const Filter: React.FC<FilterProps> = ({
               placeholder="annee production"
               color="info"
               type="number"
+              name="year"
               className={classes.input}
-              value={year}
+              value={formData.year}
               onChange={(e) => {
                 const year = e.target.value;
-                setYear(year)
+                handleChange(e);
                 if (year) {
                   onYear(Number(year));
                 } else {
@@ -336,16 +351,18 @@ const Filter: React.FC<FilterProps> = ({
                           color: "#fff", // Change this to the desired checked color
                         },
                       }}
-                      onChange={(e, checked) => {
-                        if (checked) {
-                          setSelectedMarques((_marque) => [
-                            ..._marque,
+                      checked={selectedMarques.includes(marque.nom)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedMarques((prevSelectedMarques) => [
+                            ...prevSelectedMarques,
                             e.target.value,
                           ]);
                         } else {
-                          setSelectedMarques(
-                            selectedMarques.filter(
-                              (__marque) => __marque !== e.target.value
+                          setSelectedMarques((prevSelectedMarques) =>
+                            prevSelectedMarques.filter(
+                              (selectedMarque) =>
+                                selectedMarque !== e.target.value
                             )
                           );
                         }
@@ -384,6 +401,7 @@ const Filter: React.FC<FilterProps> = ({
                           color: "#fff", // Change this to the desired checked color
                         },
                       }}
+                      checked={selectedModeles.includes(modele.nom)}
                       onChange={(e, checked) => {
                         if (checked) {
                           setSelectedModeles([
@@ -422,8 +440,11 @@ const Filter: React.FC<FilterProps> = ({
               placeholder="km max"
               color="info"
               type="number"
+              name="km"
               className={classes.input}
+              value={formData.km}
               onChange={(e) => {
+                handleChange(e);
                 const km = Number(e.target.value);
                 if (km) {
                   onKilometrageMaxSelected(km);
@@ -444,8 +465,11 @@ const Filter: React.FC<FilterProps> = ({
               placeholder="prix min"
               color="info"
               type="number"
+              name="minPrice"
               className={classes.input}
+              value={formData.minPrice}
               onChange={(e) => {
+                handleChange(e);
                 const price = Number(e.target.value);
                 if (price > 0) {
                   onPriceMin(price);
@@ -459,8 +483,11 @@ const Filter: React.FC<FilterProps> = ({
               placeholder="prix max"
               color="info"
               type="number"
+              name="maxPrice"
               className={classes.input}
+              value={formData.maxPrice}
               onChange={(e) => {
+                handleChange(e);
                 const price = Number(e.target.value);
                 console.log(price);
                 if (price > 0) {
@@ -479,7 +506,12 @@ const Filter: React.FC<FilterProps> = ({
           <Box>
             <FormControl sx={{ flex: 1, display: "flex", pr: 1 }}>
               <RadioGroup
-                onChange={(e) => onTypeCarburantSelected(e.target.value)}
+                name="carburant"
+                value={formData.carburant}
+                onChange={(e) => {
+                  handleChange(e);
+                  onTypeCarburantSelected(e.target.value);
+                }}
               >
                 {CARBURANTS.map((carburant) => (
                   <FormControlLabel
@@ -515,7 +547,12 @@ const Filter: React.FC<FilterProps> = ({
           <Box>
             <FormControl sx={{ flex: 1, display: "flex", pr: 1 }}>
               <RadioGroup
-                onChange={(e) => onBoiteVitesseSelected(e.target.value)}
+                name="boiteVitesse"
+                value={formData.boiteVitesse}
+                onChange={(e) => {
+                  handleChange(e);
+                  onBoiteVitesseSelected(e.target.value);
+                }}
               >
                 {BOITEVITESSES.map((boitevitesse) => (
                   <FormControlLabel
