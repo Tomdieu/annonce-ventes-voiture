@@ -2,7 +2,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Box, Divider, IconButton, Paper } from "@mui/material";
+import { Box, ButtonBase, Divider, IconButton, Paper } from "@mui/material";
 import { VoitureTypes } from "../../types/";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Delete } from "@mui/icons-material";
@@ -48,10 +48,9 @@ const useStyles = makeStyles(() => ({
       position: "absolute",
       right: "5px",
       top: "5px",
-      zIndex:9999,
+      zIndex: 9999,
       backgroundColor: "rgba(171,171,171,.5)",
-      borderRadius:"50%"
-
+      borderRadius: "50%",
     },
     "& .btn": {
       borderRadius: 3,
@@ -153,9 +152,11 @@ export default function Voiture(props: Props) {
           </Paper>
         </Box>
         <Box className="delete-btn">
-          <IconButton color="error">
-            <Delete />
-          </IconButton>
+          <ButtonBase sx={{ borderRadius: 5 }}>
+            <Box sx={{ color: "#e73232", p: 1, borderRadius: 5,backgroundColor:"rgba(171,171,171,.6)" }}>
+              <Delete />
+            </Box>
+          </ButtonBase>
         </Box>
       </Box>
 
@@ -198,23 +199,23 @@ export default function Voiture(props: Props) {
               alignItems: "center",
               justifyContent: "space-between",
               flexWrap: "wrap",
-              "& > *": { fontSize: ".8em" },
+              "& > .text": { fontSize: ".75em" },
             }}
           >
-            <Typography color="text.secondary">{annee}</Typography>
+            <Typography className="text" color="text.secondary">{annee}</Typography>
             <Divider orientation="vertical" flexItem />
-            <Typography color="text.secondary">
+            <Typography className="text" color="text.secondary">
               {millify(km_parcouru * 1000, {
                 units: ["m", "km", "mi", "ft"],
                 space: true,
               })}
             </Typography>
             <Divider orientation="vertical" flexItem />
-            <Typography color="text.secondary">
+            <Typography className="text" color="text.secondary">
               {type_carburant.toUpperCase()}
             </Typography>
             <Divider orientation="vertical" flexItem />
-            <Typography color="text.secondary">
+            <Typography className="text" color="text.secondary">
               {boite_vitesse.toUpperCase()}
             </Typography>
           </Box>

@@ -5,7 +5,7 @@ import {
   Routes,
   BrowserRouter,
   Navigate,
-  Outlet,
+  Outlet
 } from "react-router-dom";
 import Login from "./pages/auth/login";
 import DashboardPage from "./pages/dashboard";
@@ -18,6 +18,8 @@ import HomePage from "./pages/";
 import ContactPage from "./pages/contact";
 import AnnoncesPage from "./pages/annonces";
 import AnnonceDetailPage from "./pages/annonce-detail";
+import RegisterPage from "./pages/auth/register";
+import AnnonceDetailDashboardPage from "./pages/dashboard/annonce/annonce";
 
 // Example function to check if the user token exists
 const checkUserTokenExists = () => {
@@ -49,6 +51,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login/" element={<Login />} />
+        <Route path="/register/" element={<RegisterPage />} />
+
         <Route path="/contact/" element={<ContactPage/>} />
         <Route path="/annonces/" element={<AnnoncesPage/>} />
         <Route path="/annonces/:id/" element={<AnnonceDetailPage/>} />
@@ -61,6 +65,9 @@ const App = () => {
           <Route path="voiture/" element={<VoituresPage />} />
           <Route path="voiture/:id/" element={<VoitureView />} />
           <Route path="annonce/" element={<AnnoncePage />} />
+          <Route path="annonce/:annonceId/" element={<AnnonceDetailDashboardPage />} />
+
+          
         </Route>
         <Route path="*" element={<h1>Not Found</h1>}></Route>
       </Routes>

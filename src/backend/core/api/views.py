@@ -256,7 +256,7 @@ class AnnoncesViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
         # Modify the serializer data to include similar_ads
         data = serializer.data
-        data["similar_ads"] = AnnonceListSerializer(similar_ads, many=True).data
+        data["similar_ads"] = AnnonceListSerializer(similar_ads, many=True,context={'request':request}).data
 
         return Response(data)
 

@@ -18,6 +18,11 @@ export default class ApiService {
     });
     return res;
   }
+  static async checkUser(username:string){
+    const url = this.API_URL + `accounts/check-user/?username=${username}`;
+    return await fetch(url)
+
+  }
   //   Voiture
   static async createVoiture(data: FormData, token: string) {
     const url = this.API_URL + "core/voiture/";
@@ -257,7 +262,7 @@ export default class ApiService {
     const url = this.API_URL + `core/modele/`;
     const res = await fetch(url, {
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "*/*"
       },
     });
     return res;

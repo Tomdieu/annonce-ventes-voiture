@@ -6,7 +6,7 @@ import {
   Link,
   Button,
   InputBase,
-  Paper
+  Paper,
 } from "@mui/material";
 import Layout from "../../../components/dashboard/layouts";
 import { useState, useEffect, Suspense, lazy } from "react";
@@ -15,7 +15,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { Add, Search } from "@mui/icons-material";
 import Voiture from "../../../components/voiture/Voiture";
 import { Helmet } from "react-helmet";
-import {VoitureTypes} from '../../../types';
+import { VoitureTypes } from "../../../types";
 import Loading from "../../../components/loading";
 const AddVoiture = lazy(() => import("../../../components/voiture/AddVoiture"));
 
@@ -24,13 +24,14 @@ const Voitures = () => {
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [voitures, setVoitures] = useState<VoitureTypes[]>([]);
-  // const [search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<string>("");
+  const [filterCars, setFilterCars] = useState<VoitureTypes[]>([]);
   useEffect(() => {
     setLoading(true);
     if (userToken) {
       ApiService.listVoiture(userToken)
         .then((res) => res.json())
-        .then((data:VoitureTypes[]) => {
+        .then((data: VoitureTypes[]) => {
           console.log("Data");
           console.log(data);
           setVoitures(data);
@@ -41,9 +42,30 @@ const Voitures = () => {
         .finally(() => setLoading(false));
     }
   }, [userToken]);
-  if(loading){
-    return <Loading />
-  }
+
+  useEffect(() => {
+    if (voitures.length > 0) {
+      setFilterCars(voitures);
+    }
+  }, [voitures]);
+
+  useEffect(() => {
+    if (search) {
+      const voitureFiltre = voitures.filter(
+        (voiture) =>
+          voiture.annee.toString().includes(search) ||
+          voiture.model.marque.nom.toLowerCase().includes(search) ||
+          voiture.model.nom.toLowerCase().includes(search) ||
+          voiture.num_chassi.toLowerCase().includes(search) ||
+          voiture.type_vehicule.toLowerCase().includes(search) ||
+          voiture.type_carburant.toLowerCase().includes(search)
+      );
+      setFilterCars(voitureFiltre);
+    } else {
+      setFilterCars(voitures);
+    }
+  }, [search, voitures]);
+
   return (
     <Layout>
       <Box
@@ -96,19 +118,26 @@ const Voitures = () => {
                     }}
                   >
                     <Search />
-                    <Paper sx={{display:'flex',alignItems:"center",borderRadius:3}}>
-
-                    <InputBase
+                    <Paper
                       sx={{
-                        border: "1px solid #ddd",
-                        p: 0.5,
-                        borderRadius: 2,
-                        minWidth: "300px",
+                        display: "flex",
+                        alignItems: "center",
+                        borderRadius: 3,
                       }}
-                      fullWidth
-                      placeholder="Search..."
+                    >
+                      <InputBase
+                        sx={{
+                          border: "1px solid #ddd",
+                          p: 0.5,
+                          borderRadius: 2,
+                          minWidth: "300px",
+                        }}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        fullWidth
+                        placeholder="Search..."
                       />
-                      </Paper>
+                    </Paper>
                     <Button variant={"contained"}>Search</Button>
                   </Box>
                 </Box>
@@ -126,25 +155,35 @@ const Voitures = () => {
               <Suspense fallback={<div>Loading...</div>}>
                 <AddVoiture
                   open={showPopup}
-                  onClose={setShowPopup} 
-                  onCreate={(nouvelleVoiture)=>setVoitures([...voitures,nouvelleVoiture])}/>
+                  onClose={setShowPopup}
+                  onCreate={(nouvelleVoiture) =>
+                    setVoitures([...voitures, nouvelleVoiture])
+                  }
+                />
               </Suspense>
-              <Grid
-                container
-                width={"100%"}
-                gap={2}
-                display={"flex"}
-                p={2}
-                flexDirection={"row"}
-              >
-                {voitures?.map((voiture, key) => (
-                  <Grid sm={6} md={2.8} item>
-                      <Voiture voiture={voiture} key={key} />
-                      {/* <Link href={`/dashboard/voiture/${voiture.id}/`}>
-                  </Link> */}
+              {loading ? (
+                <Loading sx={{ height: "100%" }} />
+              ) : (
+                <Grid
+                  container
+                  width={"100%"}
+                  gap={2}
+                  display={"flex"}
+                  p={2}
+                  flexDirection={"row"}
+                >
+                  {filterCars?.map((voiture, key) => (
+                    <Grid sm={6} md={2.8} item>
+                      <a
+                        style={{ textDecoration: "none" }}
+                        href={`/dashboard/voiture/${voiture.id}/`}
+                      >
+                        <Voiture voiture={voiture} key={key} />
+                      </a>
                     </Grid>
-                ))}
-              </Grid>
+                  ))}
+                </Grid>
+              )}
             </Box>
           </Grid>
         </Grid>

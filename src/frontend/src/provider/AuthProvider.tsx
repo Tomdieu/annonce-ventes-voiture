@@ -9,7 +9,7 @@ type Props = {
 const AuthProvider = (props: Props) => {
   const { children } = props;
   const [userToken, setUserToken] = useState("");
-  const [user, setUser] = useState<UserTypes | null>(null); // Make user nullable
+  const [user, setUser] = useState<UserTypes>(null); // Make user nullable
 
   useEffect(() => {
     if (user) {

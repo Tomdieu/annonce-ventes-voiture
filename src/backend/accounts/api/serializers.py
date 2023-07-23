@@ -13,5 +13,5 @@ class AuthenticationSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id','username', 'email','first_name','last_name', 'phone_1','phone_2','address', 'password']
+        fields = ['id','username', 'email','first_name','last_name', 'phone_1','phone_2','address', 'password','is_staff','is_superuser']
         extra_kwargs = {"password": {"write_only": True},"confirm_password":{"write_only":True,"required":True}}

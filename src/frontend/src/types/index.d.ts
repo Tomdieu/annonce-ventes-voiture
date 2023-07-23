@@ -15,10 +15,10 @@ export interface _MarqueTypes {
 }
 
 export interface MarqueTypes {
-    id: number;
+    id?: number;
     nom: string;
-    logo:string;
-    modeles: _ModeleTypes[]
+    logo?:string;
+    modeles?: _ModeleTypes[]
 
 }
 
@@ -37,6 +37,15 @@ export interface UserTypes {
     phone_1: string;
     phone_2: string;
     username: string;
+    is_staff:boolean;
+    is_admin:boolean;
+}
+
+export interface LoginRegisterTypes {
+  data:UserTypes;
+  token:string;
+  success:boolean;
+  message?:string;
 }
 
 export type VoitureTypes =  {
