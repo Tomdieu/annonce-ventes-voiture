@@ -125,7 +125,7 @@ const Marques = () => {
                       className={classes.marqueContainer}
                       flexDirection="column"
                     >
-                      {user.is_admin && user.is_staff && (
+                      {user.is_superuser && user.is_staff && (
                         <Box className="btnBox">
                           <ButtonBase
                             sx={{

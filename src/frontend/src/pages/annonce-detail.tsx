@@ -116,7 +116,7 @@ const AnnonceDetailPage = () => {
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, [id, viewport]);
+  }, []);
 
   useEffect(() => {
     if (loading === false) {
@@ -316,7 +316,6 @@ const AnnonceDetailPage = () => {
                 </Grid>
               ))}
             </Grid>
-            Divi
           </Box>
         </Box>
       )}

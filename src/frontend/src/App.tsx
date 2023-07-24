@@ -20,6 +20,7 @@ import AnnoncesPage from "./pages/annonces";
 import AnnonceDetailPage from "./pages/annonce-detail";
 import RegisterPage from "./pages/auth/register";
 import AnnonceDetailDashboardPage from "./pages/dashboard/annonce/annonce";
+import NotFound from "./components/NotFound";
 
 // Example function to check if the user token exists
 const checkUserTokenExists = () => {
@@ -69,7 +70,7 @@ const App = () => {
 
           
         </Route>
-        <Route path="*" element={<h1>Not Found</h1>}></Route>
+        <Route path="*" element={<NotFound/>}></Route>
       </Routes>
     </BrowserRouter>
   );

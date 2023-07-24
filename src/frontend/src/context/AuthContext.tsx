@@ -6,6 +6,7 @@ type AuthContextType = {
   setUserToken: React.Dispatch<React.SetStateAction<string>>;
   user: UserTypes;
   setUser: React.Dispatch<React.SetStateAction<UserTypes>>;
+  logoutUser:()=>void;
 };
 
 const AuthContext = React.createContext<AuthContextType>(null);

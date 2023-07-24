@@ -1,7 +1,5 @@
 import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
-import { useNavigate } from "react-router-dom";
-
 import ApiService from "../../utils/ApiService";
 import { useAuth } from "../../context/AuthContext";
 import { UserTypes } from "../../types";
@@ -21,8 +19,6 @@ type UserLoginType = {
 
 const Login = () => {
   const date = new Date();
-
-  const navigate = useNavigate();
 
   const { setUserToken, setUser } = useAuth();
 
@@ -73,7 +69,7 @@ const Login = () => {
                     showConfirmButton: false,
                     timer: 5000,
                   });
-                  return navigate("/dashboard/");
+                  window.location.href = "/dashboard/";
                 } else {
                   void Swal.fire({
                     toast: true,
@@ -134,10 +130,11 @@ const Login = () => {
               />
 
               <Button type="submit" size="large" variant="contained">
-                Login
+                Connexion
               </Button>
               <Typography textAlign={"center"}>
-                Vous n'avez pas de compte ? <a href="#">Inscrivez-vous</a>
+                Vous n'avez pas de compte ?{" "}
+                <a href="/register">Inscrivez-vous</a>
               </Typography>
               <Typography textAlign={"center"}>
                 Copyright &copy; 2021 - {date.getFullYear()}

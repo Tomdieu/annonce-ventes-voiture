@@ -1,59 +1,84 @@
-import { Box, Typography, Link, IconButton,Theme } from "@mui/material";
-import { Menu } from "@mui/icons-material";
+import {
+  Box,
+  Typography,
+  Link,
+  IconButton,
+  Theme,
+  BoxProps,
+} from "@mui/material";
+import { Menu, LogoutRounded } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import React from "react";
+import { useLocation } from "react-router-dom"; // Assuming you are using React Router
+import { useAuth } from "../../../context/AuthContext";
 
-const useStyles = makeStyles((theme:Theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   btnLink: {
     color: "#eef2fc",
     "& :hover": {
-      // backgroundColor: "#7898dd",
       color: "#f2f2f3",
     },
   },
-  cutomBtn: {
+  customBtn: {
     padding: theme.spacing(1),
     margin: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
-    // backgroundColor:"#ffffff40",
     cursor: "pointer",
     borderLeft: "5px solid transparent",
     "&:hover": {
-      backgroundColor: "rgba(255,255,255,.5)",
+      backgroundColor: "rgba(255, 255, 255, .5)",
     },
-    "& ::selection": {
-      backgroundColor: "transparent"
+    "&::selection": {
+      backgroundColor: "transparent",
     },
     "&:active": {
       transform: "scale(.99)",
-      borderLeft: "5px solid #3189fcb8"
-
-    }
-  }
+      borderLeft: "5px solid #3189fcb8",
+    },
+  },
 }));
 
 type CustomButtonProps = {
   children: React.ReactNode;
-  style?:React.CSSProperties
-}
+  style?: React.CSSProperties;
+} & BoxProps;
 
 const CustomButton = (props: CustomButtonProps) => {
-  const { children,style } = props
-  const classes = useStyles()
+  const { children, style, ...others } = props;
+  const classes = useStyles();
   return (
-    <Box  style={style} className={classes.cutomBtn}>
-      <Typography variant="h6" component={'span'}>{children}</Typography>
+    <Box style={style} className={classes.customBtn} {...others}>
+      <Typography variant="h6" component="span">
+        {children}
+      </Typography>
     </Box>
-  )
-}
+  );
+};
+
+const routes = [
+  { path: "/dashboard/", label: "Dashboard" },
+  { path: "/dashboard/marque/", label: "Marque" },
+  { path: "/dashboard/modele/", label: "Model" },
+  { path: "/dashboard/voiture/", label: "Voiture" },
+  { path: "/dashboard/annonce/", label: "Annonce" },
+];
 
 const SideBar = () => {
   const classes = useStyles();
+  const location = useLocation();
+
+  const { logoutUser } = useAuth();
+
   return (
-    <Box height={"100vh"} maxHeight={"100vh"} overflow={"auto"}>
+    <Box height="100vh" maxHeight="100vh" overflow="auto">
       <Box
-        height={"100%"}
-        sx={{ backgroundColor: "#0c54ed", color: "#f1efef",display:"flex",flexDirection:"column" }}
+        height="100%"
+        sx={{
+          backgroundColor: "#0c54ed",
+          color: "#f1efef",
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
         <Box
           sx={{
@@ -61,73 +86,76 @@ const SideBar = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            
           }}
         >
-          <Typography typography={"h4"} fontFamily={"Microsoft Sans Serif"} sx={{cursor:"pointer"}}>Car Annonce</Typography>
+          <Typography
+            typography="h5"
+            // fontFamily="Microsoft Sans Serif"
+            sx={{ cursor: "pointer" }}
+          >
+            Annonce Ventes
+            {/* <img src={"/logo-white.png"} style={{width:32,height:32}}/> */}
+          </Typography>
           <IconButton>
             <Menu sx={{ height: 32, width: 32, color: "#f7f7f8" }} speed={2} />
           </IconButton>
         </Box>
 
-        <Box sx={{ mt: 6, width: "100%",flex:1 }}>
-
-          <Link
-            href={"/dashboard/"}
-            className={classes.btnLink}
-            variant="button"
-            sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
-          >
-            <CustomButton>Dashboard</CustomButton>
-          </Link>
-          <Link
-            href={"/dashboard/marque/"}
-            className={classes.btnLink}
-            variant="button"
-            sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
-          >
-            <CustomButton>Marque</CustomButton>
-
-          </Link>
-          <Link
-            href="/dashboard/modele/"
-            className={classes.btnLink}
-            variant="button"
-            sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
-          >
-            <CustomButton>Model</CustomButton>
-
-          </Link>
-          <Link
-            href="/dashboard/voiture/"
-            className={classes.btnLink}
-            variant="button"
-            sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
-          >
-            <CustomButton>Voiture</CustomButton>
-
-          </Link>
-          <Link
-            href="/dashboard/annonce/"
-            className={classes.btnLink}
-            variant="button"
-            sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
-          >
-            <CustomButton>Annonce</CustomButton>
-
-            {/* <Box sx={{ p: 1.2, borderRadius: 1, m: 1 }}>
-              <Typography variant={"body1"}>Annonce</Typography>
-            </Box> */}
-          </Link>
+        <Box sx={{ mt: 6, width: "100%", flex: 1 }}>
+          {routes.map((route) => (
+            <Link
+              key={route.path}
+              href={route.path}
+              className={classes.btnLink}
+              variant="button"
+              sx={{
+                color: "#cad4ed",
+                cursor: "pointer",
+                textDecoration: "none",
+              }}
+            >
+              <CustomButton
+                sx={{
+                  backgroundColor:
+                    location.pathname === route.path
+                      ? "rgba(255,255,255,.5)"
+                      : "transparent",
+                }}
+              >
+                {route.label}
+              </CustomButton>
+            </Link>
+          ))}
         </Box>
         <Box>
-        <Link
-            href={"/"}
+          <CustomButton
+            style={{
+              backgroundColor: "#ffffff40",
+            }}
+            onClick={() => {
+              logoutUser();
+              window.location.href = "/";
+            }}
+          >
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              Logout <LogoutRounded />{" "}
+            </span>
+          </CustomButton>
+          <Link
+            href="/"
             className={classes.btnLink}
             variant="button"
             sx={{ color: "#cad4ed", cursor: "pointer", textDecoration: "none" }}
           >
-            <CustomButton style={{backgroundColor:"#ffffff40"}}>View Site</CustomButton>
+            <CustomButton style={{ backgroundColor: "#ffffff40" }}>
+              View Site
+            </CustomButton>
           </Link>
         </Box>
       </Box>

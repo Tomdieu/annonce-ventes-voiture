@@ -9,7 +9,13 @@ type Props = {
 const AuthProvider = (props: Props) => {
   const { children } = props;
   const [userToken, setUserToken] = useState("");
-  const [user, setUser] = useState<UserTypes>(null); // Make user nullable
+  const [user, setUser] = useState<UserTypes>(null);
+
+  const logoutUser = () =>{
+    localStorage.clear()
+    setUserToken("")
+    setUser(null)
+  }
 
   useEffect(() => {
     if (user) {
@@ -33,7 +39,7 @@ const AuthProvider = (props: Props) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ userToken, setUserToken, user, setUser }}>
+    <AuthContext.Provider value={{ userToken, setUserToken, user, setUser,logoutUser }}>
       {children}
     </AuthContext.Provider>
   );

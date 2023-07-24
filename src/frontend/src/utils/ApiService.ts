@@ -1,5 +1,7 @@
 export default class ApiService {
-  static API_URL = "http://localhost:8000/api/";
+  // static API_URL = "http://localhost:8000/api/";
+  static API_URL = "/api/";
+
   static async login(data: string) {
     const url = this.API_URL + "accounts/login/";
     const res = await fetch(url, {

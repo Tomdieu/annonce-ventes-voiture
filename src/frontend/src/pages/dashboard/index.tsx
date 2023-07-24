@@ -10,11 +10,7 @@ import { useAuth } from "../../context/AuthContext";
 import ApiService from "../../utils/ApiService";
 import millify from "millify";
 
-import {
-  VoitureTypes,
-  AnnonceTypes,
-  FetchError,
-} from "../../types";
+import { VoitureTypes, AnnonceTypes, FetchError } from "../../types";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -79,19 +75,19 @@ const Dashboard = () => {
         .then((data: AnnonceTypes[]) => {
           setRecentesAnnonces(data);
         })
-        .catch((err:FetchError) => console.log(err.message));
+        .catch((err: FetchError) => console.log(err.message));
 
       const fetchMarque = async () => {
         const res = await ApiService.listMarque();
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data:[] = await res.json();
+        const data: [] = await res.json();
         setNumMarque(data.length);
       };
 
       const fetchModele = async () => {
         const res = await ApiService.listModele();
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data:[] = await res.json();
+        const data: [] = await res.json();
         setNumModele(data.length);
       };
 
@@ -105,7 +101,7 @@ const Dashboard = () => {
       const fetchAnnonce = async () => {
         const res = await ApiService.listAnnonce(userToken);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data:string[] = await res.json();
+        const data: string[] = await res.json();
         setNumAnnonce(data.length);
       };
       void (async () => {
@@ -151,23 +147,20 @@ const Dashboard = () => {
                 width: "95%",
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 3,
-                  p: 2,
-                  flexWrap: "wrap",
-                  width:'100%',
-                  // alignItems: "flex-start",
-                  // justifyContent: "space-between",
-                }}
-              >
-                <CountNumber text={"Marques"} count={numMarque} />
-                <CountNumber text={"Modeles"} count={numModel} />
-
-                <CountNumber text={"Voitures"} count={numVoiture} />
-                <CountNumber text={"Annonces"} count={numAnnonce} />
-              </Box>
+              <Grid container flex={1} sx={{ p: 2}} spacing={2} rowSpacing={10} columnSpacing={10}>
+                <Grid item lg={3} md={3} sm={5} xs={12}>
+                  <CountNumber text={"Marques"} count={numMarque} />
+                </Grid>
+                <Grid item lg={3} md={3} sm={5} xs={12}>
+                  <CountNumber text={"Modeles"} count={numModel} />
+                </Grid>
+                <Grid item lg={3} md={3} sm={5} xs={12}>
+                  <CountNumber text={"Voitures"} count={numVoiture} />
+                </Grid>
+                <Grid item lg={3} md={3} sm={5} xs={12}>
+                  <CountNumber text={"Annonces"} count={numAnnonce} />
+                </Grid>
+              </Grid>
               <Grid
                 container
                 height={"100%"}
@@ -178,7 +171,7 @@ const Dashboard = () => {
                 className="bbb"
               >
                 <Grid item md={5.95} sm={12} className="box">
-                  <Typography variant="h5" className="recent">
+                  <Typography variant="h4" className="recent">
                     Recentes voitures
                   </Typography>
                   <Box sx={{ width: "100%", flex: 1, display: "flex" }}>
@@ -209,7 +202,7 @@ const Dashboard = () => {
                   </Box>
                 </Grid>
                 <Grid item md={5.95} sm={12} className="box">
-                  <Typography variant="h5" className="recent">
+                  <Typography variant="h4" className="recent">
                     Recentes Annonces
                   </Typography>
                   <Box sx={{ width: "100%", flex: 1, display: "flex" }}>

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import {
   Breadcrumbs,
   Grid,
@@ -9,38 +11,33 @@ import {
   ButtonGroup,
   TextField,
   MenuItem,
-  IconButton,
 } from "@mui/material";
 import React from "react";
 import Layout from "../../../components/dashboard/layouts";
 import { useState, useEffect, Suspense, lazy } from "react";
 import ApiService from "../../../utils/ApiService";
 import { useAuth } from "../../../context/AuthContext";
-import { Add, Search, Delete, Update } from "@mui/icons-material";
+import { Add, Search } from "@mui/icons-material";
 import Paper from "@mui/material/Paper";
 import { Helmet } from "react-helmet";
 import moment from "moment";
 import millify from "millify";
+import Swal from "sweetalert2";
 
 import { DataGrid, GridRenderCellParams, GridColDef } from "@mui/x-data-grid";
-const UpdateAnnonce = lazy(
-  () => import("../../../components/annonce/UpdateAnnonce")
-);
+
 const AddAnnonce = lazy(() => import("../../../components/annonce/AddAnnonce"));
 
 import { AnnonceTypes, _AnnonceTypes } from "../../../types";
 
-const Voitures = () => {
+const Annonces = () => {
   const { userToken } = useAuth();
   const [showPopup, setShowPopup] = useState(false);
   const [search, setSearch] = useState("");
   const [annonces, setAnnonces] = useState<AnnonceTypes[]>([]);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState<number[]>([]);
   const [action, setAction] = useState("none");
   const [rows, setRows] = useState<_AnnonceTypes[]>([]);
-
-  const [annonceId, setAnnonceId] = useState<number>();
-  const [_action, _setAction] = useState("new");
 
   const columns: GridColDef<_AnnonceTypes>[] = [
     { field: "id", headerName: "ID", width: 70 },
@@ -53,35 +50,30 @@ const Voitures = () => {
     {
       field: "actions",
       headerName: "Actions",
-      width: 120,
+      width: 300,
       renderCell: (params: GridRenderCellParams<_AnnonceTypes>) => (
-        <>
-          <IconButton
+        <Box sx={{ display: "flex", gap: 2, justifyContent: "space-between" }}>
+          <Button
             color="info"
-            onClick={() => handleSelectForUpdate(params.row.id)}
+            onClick={() => {
+              location.href = `/dashboard/annonce/${params.row.id}/`;
+            }}
+            variant={"contained"}
           >
-            <Update />
-          </IconButton>
-          <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
-            <Delete />
-          </IconButton>
-        </>
+            Detail
+          </Button>
+          <Button
+            variant={"contained"}
+            color="error"
+            onClick={() => handleDelete(params.row)}
+          >
+            Supprimer
+          </Button>
+        </Box>
       ),
     },
   ];
 
-  const handleSelectForUpdate = (annonceId: number) => {
-    setAnnonceId(annonceId);
-    _setAction("update");
-    setShowPopup(true);
-  };
-
-  useEffect(() => {
-    if (!showPopup) {
-      setAnnonceId(null);
-      _setAction("new");
-    }
-  }, [showPopup]);
   const loadAnnonceIntoRow = React.useCallback(() => {
     const _annonce: _AnnonceTypes[] = annonces.map((annonce) => ({
       ...annonce,
@@ -101,23 +93,96 @@ const Voitures = () => {
       loadAnnonceIntoRow();
     }
   }, [annonces, loadAnnonceIntoRow]);
-  function handleDelete(rowId: number) {
-    const updatedRows = rows.filter((row) => row.id !== rowId);
-    setRows(updatedRows);
+  function handleDelete(annonce: _AnnonceTypes) {
+    void Swal.fire({
+      title: "Es-tu sûr ?",
+      text: "Vous ne pourrez pas revenir en arrière !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Oui, supprimez-le !",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        ApiService.deleteAnnonce(annonce.id, userToken)
+          .then(() => {
+            void Swal.fire(
+              "Supprimez!",
+              "Votre annonce a été supprimé",
+              "success"
+            );
+            setAnnonces(
+              annonces.filter((_annonce) => annonce.id !== _annonce.id)
+            );
+          })
+          .catch(() => {
+            void Swal.fire(
+              "Erreur!",
+              "Désolé, un problème est survenu.",
+              "error"
+            );
+          });
+      }
+    });
   }
+  const handleBulkDelete = () => {
+    if (selected) {
+      void Swal.fire({
+        title: "Es-tu sûr de vouloir supprimer ces annonces ?",
+        text: "Vous ne pourrez pas revenir en arrière !",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oui, supprimez-les !",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          selected?.map((annonceId) => {
+            ApiService.deleteAnnonce(annonceId, userToken)
+              .then(() => {
+                void Swal.fire({
+                  toast: true,
+                  position: "bottom-start",
+                  icon: "success",
+                  title: "Annonce Supprimer avec succès.",
+                  showConfirmButton: false,
+                  timer: 5000,
+                })
+
+                setAnnonces(
+                  annonces.filter((_annonce) => annonceId !== _annonce.id)
+                );
+              })
+              .catch(() => {
+                void Swal.fire({
+                  toast: true,
+                  position: "bottom-start",
+                  icon: "error",
+                  title: "Désolé, un problème est survenu.",
+                  showConfirmButton: false,
+                  timer: 5000,
+                });
+              });
+          });
+        }
+      });
+    }
+  };
+
   useEffect(() => {
-    if (userToken) {
-      ApiService.listAnnonce(userToken)
+    const _userToken = localStorage.getItem("AuserToken");
+
+    if (_userToken) {
+      ApiService.listAnnonce(_userToken)
         .then((res) => res.json())
         .then((data: AnnonceTypes[]) => {
-          console.log(data);
           setAnnonces(data);
         })
         .catch((err) => {
           console.log(err);
         });
     }
-  }, [userToken]);
+  }, []);
   useEffect(() => {
     if (search) {
       const filteredRows = rows.filter(
@@ -140,7 +205,6 @@ const Voitures = () => {
         </Helmet>
         <Grid container width={"100%"} height={"100%"}>
           <Grid item md={12} xs={12} sm={12} pl={2} pr={2}>
-            {/* <Typography variant={"h5"}>Annonce</Typography> */}
             <Breadcrumbs
               aria-label="breadcrumb"
               sx={{
@@ -233,7 +297,13 @@ const Voitures = () => {
                       </Typography>
                     </MenuItem>
                   </TextField>
-                  <Button variant="contained">Go</Button>
+                  <Button
+                    variant="contained"
+                    disabled={selected.length === 0}
+                    onClick={handleBulkDelete}
+                  >
+                    Go
+                  </Button>
                   <Typography>
                     {selected.length} sur {annonces.length}
                   </Typography>
@@ -241,19 +311,18 @@ const Voitures = () => {
               </Box>
               <Suspense fallback={<div>Loading...</div>}>
                 <AddAnnonce
-                  open={showPopup && Boolean(_action === "new")}
+                  open={showPopup}
                   onClose={setShowPopup}
-                  onCreate={(data) => setAnnonces([...annonces, data])}
-                />
-                <UpdateAnnonce
-                  open={showPopup && Boolean(_action === "update")}
-                  onClose={setShowPopup}
-                  annonceId={annonceId}
-                  onUpdate={(data) => {
-                    const olderAnnonces = annonces.filter(
-                      (_annonce) => _annonce.id !== data.id
-                    );
-                    setAnnonces([...olderAnnonces, data]);
+                  onCreate={(data) => {
+                    setAnnonces([...annonces, data]);
+                    void Swal.fire({
+                      toast: true,
+                      position: "bottom-start",
+                      icon: "success",
+                      title: "Annonce créée avec succès.",
+                      showConfirmButton: false,
+                      timer: 5000,
+                    });
                   }}
                 />
               </Suspense>
@@ -272,10 +341,10 @@ const Voitures = () => {
                     columns={columns}
                     checkboxSelection
                     onRowSelectionModelChange={(_selected_rows) => {
-                      setSelected(_selected_rows);
+                      setSelected(_selected_rows as number[]);
                     }}
                   />
-                </Paper>
+                </Paper>  
               </Grid>
             </Box>
           </Grid>
@@ -284,5 +353,5 @@ const Voitures = () => {
     </Layout>
   );
 };
-
-export default Voitures;
+  
+export default Annonces;

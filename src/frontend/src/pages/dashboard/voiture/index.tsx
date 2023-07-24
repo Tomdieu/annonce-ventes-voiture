@@ -17,6 +17,8 @@ import Voiture from "../../../components/voiture/Voiture";
 import { Helmet } from "react-helmet";
 import { VoitureTypes } from "../../../types";
 import Loading from "../../../components/loading";
+import Swal from "sweetalert2";
+
 const AddVoiture = lazy(() => import("../../../components/voiture/AddVoiture"));
 
 const Voitures = () => {
@@ -156,9 +158,17 @@ const Voitures = () => {
                 <AddVoiture
                   open={showPopup}
                   onClose={setShowPopup}
-                  onCreate={(nouvelleVoiture) =>
-                    setVoitures([...voitures, nouvelleVoiture])
-                  }
+                  onCreate={(nouvelleVoiture) => {
+                    setVoitures([...voitures, nouvelleVoiture]);
+                    void Swal.fire({
+                      toast: true,
+                      position: "bottom-start",
+                      icon: "success",
+                      title: "Voiture créée avec succès.",
+                      showConfirmButton: false,
+                      timer: 5000,
+                    });
+                  }}
                 />
               </Suspense>
               {loading ? (
@@ -173,7 +183,7 @@ const Voitures = () => {
                   flexDirection={"row"}
                 >
                   {filterCars?.map((voiture, key) => (
-                    <Grid sm={6} md={2.8} item>
+                    <Grid sm={6} md={2.8} item key={key}>
                       <a
                         style={{ textDecoration: "none" }}
                         href={`/dashboard/voiture/${voiture.id}/`}

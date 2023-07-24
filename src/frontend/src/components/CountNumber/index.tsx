@@ -7,8 +7,8 @@ const useStyles = makeStyles((theme:Theme) => ({
     container: {
         width: 250,
         height: 250,
-        maxWidth: 250,
-        maxHeight: 250,
+        // maxWidth: 250,
+        // maxHeight: 250,
         display: "flex",
         flex:1,
         flexDirection: "column",
@@ -18,10 +18,10 @@ const useStyles = makeStyles((theme:Theme) => ({
         // backgoundColor: "#c7c1c19c",
         backgroundColor:"#fdfcfcf2",
         cursor: "pointer",
-        [theme.breakpoints.down('md')]:{
-            maxWidth: 150,
-            maxHeight: 150,
-        },
+        // [theme.breakpoints.down('md')]:{
+        //     maxWidth: 150,
+        //     maxHeight: 150,
+        // },
         "&:hover":{
             boxShadow:"2px 5px 8px #ccc",
             backgroundColor:"#3b7de8f2",

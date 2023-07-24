@@ -76,7 +76,7 @@ const Footer = () => {
       </Box>
       <Box className="footer-bottom">
         <div className="container">
-          <p>Tous droits réservés ivantom &copy; {new Date().getFullYear()}</p>
+          <p>Tous droits réservés <a style={{color:"#ffff"}} href="https://github.com/tomdieu">ivantom</a> &copy; {new Date().getFullYear()}</p>
         </div>
       </Box>
     </Box>

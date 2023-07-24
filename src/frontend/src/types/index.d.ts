@@ -38,7 +38,7 @@ export interface UserTypes {
     phone_2: string;
     username: string;
     is_staff:boolean;
-    is_admin:boolean;
+    is_superuser:boolean;
 }
 
 export interface LoginRegisterTypes {

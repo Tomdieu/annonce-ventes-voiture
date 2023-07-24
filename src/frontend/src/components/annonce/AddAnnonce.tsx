@@ -12,9 +12,16 @@ import {
   InputAdornment,
   MenuItem,
   Paper,
+  ButtonBase,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { Save, Restore, Close } from "@mui/icons-material";
+import {
+  Save,
+  Restore,
+  Close,
+  LocationDisabledRounded,
+  MyLocationRounded,
+} from "@mui/icons-material";
 
 import Map, {
   Marker,
@@ -82,10 +89,10 @@ const AddAnnonce = (props: Props) => {
   };
 
   useEffect(() => {
-    if (annonceLocation) {
+    if (annonceLocation.latitude !== 0 && annonceLocation.longitude !== 0) {
       mapRef.current?.flyTo({
         center: [annonceLocation.longitude, annonceLocation.latitude],
-        duration: 2000,
+        duration: 500,
         zoom: 14,
       });
     }
@@ -99,6 +106,55 @@ const AddAnnonce = (props: Props) => {
         .catch((err) => console.log(err));
     }
   }, [userToken]);
+
+  // useEffect(() => {
+  //   const getLocation = () => {
+  //     if (navigator.geolocation) {
+  //       navigator.geolocation.getCurrentPosition(
+  //         (position) => {
+  //           const { latitude, longitude } = position.coords;
+  //           setAnnonceLocation({ ...annonceLocation, latitude, longitude });
+  //         },
+  //         (error) => {
+  //           console.log(error.message);
+  //         }
+  //       );
+  //     } else {
+  //       console.log("Geolocation is not supported by your browser.");
+  //     }
+  //   };
+
+  //   getLocation();
+  // }, [annonceLocation]);
+
+  const handleSearch = async (value: string) => {
+    setSearchTerm(value);
+    if (value) {
+      try {
+        if (value.length >= 3) {
+          const response = await axios.get<GeoapifyResponse>(
+            `https://api.geoapify.com/v1/geocode/autocomplete?text=${value}&limit=5&apiKey=aedf3186d09b474abd1a8808eaf0bcc1`
+          );
+          const data: LocationTypes[] = response.data.features.map(
+            (feature) => ({
+              label: feature.properties.formatted,
+              latitude: feature.properties.lat,
+              longitude: feature.properties.lon,
+            })
+          );
+          setOptions(data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      setAnnonceLocation({
+        longitude: 0,
+        latitude: 0,
+        zoom: 2,
+      });
+    }
+  };
 
   useEffect(() => {
     if (
@@ -123,55 +179,11 @@ const AddAnnonce = (props: Props) => {
     }
   }, [annonceLocation]);
 
-  useEffect(() => {
-    const getLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setAnnonceLocation({ ...annonceLocation, latitude, longitude });
-          },
-          (error) => {
-            console.log(error.message);
-          }
-        );
-      } else {
-        console.log("Geolocation is not supported by your browser.");
-      }
-    };
+  const [isTrackingUser, setIsTrackingUser] = React.useState(false);
 
-    getLocation();
-  }, [annonceLocation]);
-
-  const handleSearch = async (event: React.SyntheticEvent<Element, Event>) => {
-    const value = (event.target as HTMLInputElement).value;
-    setSearchTerm(value);
-
-    try {
-      if (value.length >= 3) {
-        const response = await axios.get<GeoapifyResponse>(
-          `https://api.geoapify.com/v1/geocode/autocomplete?text=${value}&limit=5&apiKey=aedf3186d09b474abd1a8808eaf0bcc1`
-        );
-        const data: LocationTypes[] = response.data.features.map((feature) => ({
-          label: feature.properties.formatted,
-          latitude: feature.properties.lat,
-          longitude: feature.properties.lon,
-        }));
-        setOptions(data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+  const handleGeolocateClick = () => {
+    setIsTrackingUser(true);
   };
-
-  const geolocateControlRef = React.useCallback(
-    (ref: { trigger: () => void }) => {
-      if (ref) {
-        ref.trigger();
-      }
-    },
-    []
-  );
 
   return (
     <Dialog
@@ -193,7 +205,7 @@ const AddAnnonce = (props: Props) => {
           titre: "",
           description: "",
           prix: 0,
-          voiture: 0,
+          voiture: "",
           latitude: 0.0,
           longitude: 0.0,
           address: "",
@@ -344,8 +356,11 @@ const AddAnnonce = (props: Props) => {
                   options={options}
                   getOptionLabel={(option: { label: string }) => option.label}
                   inputValue={searchTerm}
-                  onInputChange={(e: React.SyntheticEvent<Element, Event>) => {
-                    handleSearch(e).catch((err) => console.log(err));
+                  onInputChange={(
+                    _e: React.SyntheticEvent<Element, Event>,
+                    value: string
+                  ) => {
+                    handleSearch(value).catch((err) => console.log(err));
                   }}
                   onChange={(
                     _e: React.SyntheticEvent<Element, Event>,
@@ -412,7 +427,7 @@ const AddAnnonce = (props: Props) => {
                     variant="contained"
                     type="reset"
                   >
-                    Reset
+                    Renitailiser
                   </Button>
                   <Button
                     startIcon={<Save />}
@@ -427,11 +442,41 @@ const AddAnnonce = (props: Props) => {
                       annonceLocation.longitude === 0
                     }
                   >
-                    Save
+                    Cree
                   </Button>
                 </Box>
               </Grid>
-              <Grid md={5} sm={12} xs={12} item component={Paper}>
+              <Grid
+                md={5}
+                sm={12}
+                xs={12}
+                item
+                component={Paper}
+                sx={{ position: "relative" }}
+              >
+                <Box
+                  sx={{ position: "absolute", top: 8, left: 8, zIndex: 999 }}
+                >
+                  <ButtonBase
+                    sx={{ borderRadius: 2 }}
+                    onClick={() => setIsTrackingUser(!isTrackingUser)}
+                  >
+                    <Box
+                      sx={{
+                        p: 1,
+                        borderRadius: 2,
+                        backgroundColor: "rgba(255,255,255,1)",
+                        border: "1px solid #ddd",
+                      }}
+                    >
+                      {!isTrackingUser ? (
+                        <LocationDisabledRounded />
+                      ) : (
+                        <MyLocationRounded />
+                      )}
+                    </Box>
+                  </ButtonBase>
+                </Box>
                 <Map
                   ref={mapRef}
                   initialViewState={viewport}
@@ -441,16 +486,18 @@ const AddAnnonce = (props: Props) => {
                 >
                   <NavigationControl />
                   <GeolocateControl
-                    showAccuracyCircle
-                    showUserLocation
-                    ref={geolocateControlRef}
-                    onGeolocate={(e) =>
+                    positionOptions={{ enableHighAccuracy: true }}
+                    trackUserLocation={isTrackingUser} // Set to true when the user has clicked the icon
+                    showUserLocation={isTrackingUser}
+                    onGeolocate={(e) => {
+                      handleGeolocateClick();
                       setAnnonceLocation({
                         ...annonceLocation,
                         longitude: e.coords.longitude,
                         latitude: e.coords.latitude,
-                      })
-                    }
+                      });
+                      
+                    }}
                   />
                   <Marker
                     onDragEnd={(e) =>
@@ -465,6 +512,9 @@ const AddAnnonce = (props: Props) => {
                     latitude={annonceLocation.latitude}
                     anchor="bottom"
                   />
+                  {/* {annonceLocation.latitude !== 0 && annonceLocation.longitude!==0 && (
+                    
+                  )} */}
                 </Map>
               </Grid>
             </Grid>

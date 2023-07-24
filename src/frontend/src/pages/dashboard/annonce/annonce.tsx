@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   Button,
   TextField,
@@ -36,13 +37,13 @@ import { useAuth } from "../../../context/AuthContext";
 import ApiService from "../../../utils/ApiService";
 import { Helmet } from "react-helmet-async";
 import Loading from "../../../components/loading";
+import Swal from 'sweetalert2'
 
 import * as yup from "yup";
 
 type FormDataState = { [key: string]: FormDataEntryValue | number };
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const GEOAPIFY_API_KEY = import.meta.env.VITE_GEOAPIFY_KEY;
+const GEOAPIFY_API_KEY = "aedf3186d09b474abd1a8808eaf0bcc1";
 
 const viewport = {
   width: 500,
@@ -117,10 +118,11 @@ const AnnonceDetailDashboardPage = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [options, setOptions] = useState<LocationTypes[]>([]);
-  console.log({ annonce });
   useEffect(() => {
-    if (annonceId && loading && !annonce.titre) {
-      ApiService.getAnnonce(Number(annonceId), userToken)
+    const _userToken = localStorage.getItem("AuserToken")
+
+    if (_userToken && annonceId && loading && !annonce.titre) {
+      ApiService.getAnnonce(Number(annonceId), _userToken)
         .then((res) => res.json())
         .then((data: AnnonceTypes) => {
           const updateAnnonce: UpdateAnnonceTypes = {
@@ -145,7 +147,7 @@ const AnnonceDetailDashboardPage = () => {
         .catch((err: FetchError) => console.log(err.message))
         .finally(() => setLoading(false));
     }
-  }, [annonceId, loading, annonceLocation, userToken, annonce]);
+  }, []);
 
   useEffect(() => {
     if (annonceLocation) {
@@ -158,58 +160,38 @@ const AnnonceDetailDashboardPage = () => {
   }, [annonceLocation]);
 
   useEffect(() => {
-    if (userToken) {
-      ApiService.listVoiture(userToken)
+    const _userToken = localStorage.getItem("AuserToken")
+    if (_userToken) {
+      ApiService.listVoiture(_userToken)
         .then((res) => res.json())
         .then((data: VoitureTypes[]) => setVoitures(data))
         .catch((err) => console.log(err));
     }
-  }, [userToken]);
+  }, []);
 
-  useEffect(() => {
-    if (
-      annonceLocation &&
-      annonceLocation.latitude !== 0 &&
-      annonceLocation.longitude !== 0
-    ) {
-      const { longitude, latitude } = annonceLocation;
-      const getPlaceName = async () => {
-        try {
-          const response = await axios.get<GeoapifyResponse>(
-            `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=aedf3186d09b474abd1a8808eaf0bcc1`
-          );
-          const { formatted } = response.data.features[0].properties;
-          setSearchTerm(formatted);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      if (!loading) {
-        getPlaceName().catch((err) => console.log(err));
-      }
-    }
-  }, [annonceLocation, loading]);
-
-  useEffect(() => {
-    const getLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setAnnonceLocation({ ...annonceLocation, latitude, longitude });
-          },
-          (error) => {
-            console.log(error.message);
+    useEffect(() => {
+      if (
+        annonceLocation &&
+        annonceLocation.latitude !== 0 &&
+        annonceLocation.longitude !== 0
+      ) {
+        const { longitude, latitude } = annonceLocation;
+        const getPlaceName = async () => {
+          try {
+            const response = await axios.get<GeoapifyResponse>(
+              `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=aedf3186d09b474abd1a8808eaf0bcc1`
+            );
+            const { formatted } = response.data.features[0].properties;
+            setSearchTerm(formatted);
+          } catch (error) {
+            console.error(error);
           }
-        );
-      } else {
-        console.log("Geolocation is not supported by your browser.");
+        };
+        if (!loading) {
+          getPlaceName().catch((err) => console.log(err));
+        }
       }
-    };
-    if (!loading) {
-      getLocation();
-    }
-  }, [annonceLocation, loading]);
+    }, [annonceLocation, loading]);
 
   const handleSearch = async (event: React.SyntheticEvent<Element, Event>) => {
     const value = (event.target as HTMLInputElement).value;
@@ -280,7 +262,7 @@ const AnnonceDetailDashboardPage = () => {
                   <title>{`Dashboard | Annonce ${annonce.titre}`}</title>
                 </Helmet>
                 <Formik
-                  initialValues={annonce}
+                  initialValues={{ ...initialValues, ...annonce }}
                   validationSchema={updateAnnonceSchema}
                   onSubmit={console.log}
                 >
@@ -323,10 +305,27 @@ const AnnonceDetailDashboardPage = () => {
                           .then((data: AnnonceTypes) => {
                             console.log(data);
                             handleReset(e);
+                            void Swal.fire({
+                                toast: true,
+                                position: "bottom-start",
+                                icon: "success",
+                                title: "Annonce actualisée",
+                                showConfirmButton: false,
+                                timer: 5000,
+                              });
+                              window.location.href = "/dashboard/annonce/"
                           })
                           .catch((err: FetchError) => {
                             console.log(err.message);
                             console.log(err);
+                            void Swal.fire({
+                                toast: true,
+                                position: "bottom-start",
+                                icon: "error",
+                                title: "Désolé, un problème est survenu",
+                                showConfirmButton: false,
+                                timer: 5000,
+                              });
                           });
                       }}
                     >
@@ -372,7 +371,7 @@ const AnnonceDetailDashboardPage = () => {
                             onChange={handleChange("titre")}
                             onBlur={handleBlur("titre")}
                             error={Boolean(touched.titre && errors.titre)}
-                            helperText={touched.titre && errors.titre}
+                            helperText={touched.titre && errors.titre.toString()}
                             fullWidth
                           />
 
@@ -383,7 +382,7 @@ const AnnonceDetailDashboardPage = () => {
                             onChange={handleChange("voiture")}
                             onBlur={handleBlur("voiture")}
                             error={Boolean(touched.voiture && errors.voiture)}
-                            helperText={touched.voiture && errors.voiture}
+                            helperText={touched.voiture && errors.voiture.toString()}
                             fullWidth
                             select
                           >
@@ -409,7 +408,7 @@ const AnnonceDetailDashboardPage = () => {
                             onChange={handleChange("prix")}
                             onBlur={handleBlur("prix")}
                             error={Boolean(touched.prix && errors.prix)}
-                            helperText={touched.prix && errors.prix}
+                            helperText={touched.prix && errors.prix.toString()}
                             fullWidth
                           />
                           <TextField
@@ -424,7 +423,7 @@ const AnnonceDetailDashboardPage = () => {
                               touched.description && errors.description
                             )}
                             helperText={
-                              touched.description && errors.description
+                              touched.description && errors.description.toString()
                             }
                             fullWidth
                           />
@@ -476,7 +475,7 @@ const AnnonceDetailDashboardPage = () => {
                               error={Boolean(
                                 touched.latitude && errors.latitude
                               )}
-                              helperText={touched.latitude && errors.latitude}
+                              helperText={touched.latitude && errors.latitude.toString()}
                             />
                             <TextField
                               label="Longitude"
@@ -489,7 +488,7 @@ const AnnonceDetailDashboardPage = () => {
                               error={Boolean(
                                 touched.longitude && errors.longitude
                               )}
-                              helperText={touched.longitude && errors.longitude}
+                              helperText={touched.longitude && errors.longitude.toString()}
                             />
                           </Box>
                           <Box

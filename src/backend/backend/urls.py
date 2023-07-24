@@ -48,7 +48,12 @@ admin.site.site_title = "Vente Voiture Annonce"
 admin.site.index_title = "Vente Voiture Administration"
 admin.empty_value_display = "**Empty**"
 
-urlpatterns = [
+urlpatterns = []
+urlpatterns += staticfiles_urlpatterns()
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += [
     path("admin/", admin.site.urls),
     path(
         "api/",
@@ -87,20 +92,19 @@ urlpatterns = [
         ),
     ),
     path("api-auth/", include("rest_framework.urls"), name="api-auth"),
-    
     path("logo.png", RedirectView.as_view(url=settings.STATIC_URL + "logo.png")),
+    path(
+        "logo-blue.png", RedirectView.as_view(url=settings.STATIC_URL + "logo-blue.png")
+    ),
     path("bg.svg", RedirectView.as_view(url=settings.STATIC_URL + "bg.svg")),
     path("rav4.png", RedirectView.as_view(url=settings.STATIC_URL + "rav4.png")),
     path("logo.svg", RedirectView.as_view(url=settings.STATIC_URL + "logo.svg")),
-    
     path(
         "logo-white.png",
         RedirectView.as_view(url=settings.STATIC_URL + "logo-white.png"),
     ),
+    re_path(r"^(?P<url>.*)$", react_frontend),
 ]
 
-urlpatterns += staticfiles_urlpatterns()
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 # urlpatterns += re_path(r'^(?P<url>.*)$', react_frontend)

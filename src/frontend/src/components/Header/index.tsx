@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Button, Theme, AppBarProps } from "@mui/material";
 
 import { makeStyles } from "@mui/styles";
+import { useAuth } from "../../context/AuthContext";
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -41,6 +42,7 @@ type HeaderProps = AppBarProps;
 const Header = (props:HeaderProps) => {
   const classes = useStyles();
   const {...others} = props;
+  const {userToken} = useAuth()
   return (
     <AppBar {...others} sx={{backgroundColor:"RGBA(49, 114, 221,9)"}} position="absolute" className={classes.header}>
       <Toolbar>
@@ -74,11 +76,22 @@ const Header = (props:HeaderProps) => {
           <Button
             sx={{ color: "#fff" }}
             component={Link}
-            to="/contact"
+            to="/contact/"
             className={classes.link}
           >
             Contact
           </Button>
+          
+          {userToken && (
+            <Button
+            sx={{ color: "#fff" }}
+            component={Link}
+            to="/dashboard/"
+            className={classes.link}
+          >
+            Dashboard
+          </Button>
+          )}
         </nav>
       </Toolbar>
     </AppBar>
