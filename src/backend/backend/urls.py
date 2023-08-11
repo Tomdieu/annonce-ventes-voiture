@@ -106,5 +106,4 @@ urlpatterns += [
     re_path(r"^(?P<url>.*)$", react_frontend),
 ]
 
-
-# urlpatterns += re_path(r'^(?P<url>.*)$', react_frontend)
+urlpatterns += re_path(r'^(?P<url>.*)$', react_frontend)
