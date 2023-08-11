@@ -93,15 +93,24 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 # DATABASES = {
-#     'default': dj_database_url.parse('postgres://Tomdieu:ELfI5M4UBFsn@ep-little-mountain-654464.us-east-2.aws.neon.tech/annonce-ventes')
+#     'default': dj_database_url.parse(env('POSTGRES_URL'))
 # }
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': env('DB_NAME'),
+    'USER': env('DB_USER'),
+    'PASSWORD': env('DB_PASSWORD'),
+    'HOST': env('DB_HOST'),
+    'PORT': env('DB_PORT'),
+  }
 }
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 
 # Password validation
@@ -189,5 +198,11 @@ AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME")
 AWS_S3_SIGNATURE_NAME = "s3v4"
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
-AWS_S3_VERIFY = True
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+STATICFILES_LOCATION = 'static'
+# STATICFILES_STORAGE = 'backend.storage_backends.StaticStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
