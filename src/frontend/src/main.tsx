@@ -6,10 +6,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/styles";
-
 import AuthProvider from "./provider/AuthProvider";
 import { HelmetProvider } from "react-helmet-async";
-
 const theme = responsiveFontSizes(
   createTheme({
     typography: {

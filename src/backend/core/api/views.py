@@ -245,13 +245,16 @@ class AnnoncesViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         return queryset
     
     def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
+        instance:Annonce = self.get_object()
         serializer = self.get_serializer(instance)
 
         # Get similar advertisements based on some criteria, e.g., same model and year
         similar_ads = Annonce.objects.filter(
             Q(voiture__model=instance.voiture.model) |
-            Q(voiture__annee=instance.voiture.annee)
+            Q(voiture__annee=instance.voiture.annee) |
+            Q(voiture__model__marque=instance.voiture.model.marque) |
+            Q(voiture__type_carburant=instance.voiture.type_carburant) |
+            Q(voiture__type_vehicule=instance.voiture.type_vehicule)
         ).exclude(pk=instance.pk)
 
         # Modify the serializer data to include similar_ads
