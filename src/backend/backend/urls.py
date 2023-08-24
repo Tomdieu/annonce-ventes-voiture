@@ -49,10 +49,7 @@ admin.site.index_title = "Vente Voiture Administration"
 admin.empty_value_display = "**Empty**"
 
 urlpatterns = []
-urlpatterns += staticfiles_urlpatterns()
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += [
     path("admin/", admin.site.urls),
     path(
@@ -106,5 +103,9 @@ urlpatterns += [
     re_path(r"^(?P<url>.*)$", react_frontend),
 ]
 
+urlpatterns += staticfiles_urlpatterns()
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # urlpatterns += [re_path(r'^(?P<url>.*)$', react_frontend)]

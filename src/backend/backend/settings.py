@@ -151,13 +151,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "assets/"
+# if env('ENV') == "development":
+STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles", "static")
+
+    
 STATICFILES_DIRS = [
     BASE_DIR / "static/",
     BASE_DIR / "frontend/build/static/",
     BASE_DIR / "frontend/build/",
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles", "static")
 
 
 MEDIA_URL = "/media/"
@@ -195,7 +198,7 @@ REDOC_SETTINGS = {
 
 # aws settings
 if env('ENV') == "production":
-
+    # aws settings
     AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
@@ -203,10 +206,12 @@ if env('ENV') == "production":
     AWS_S3_SIGNATURE_NAME = "s3v4"
     AWS_S3_FILE_OVERWRITE = False
     AWS_DEFAULT_ACL = None
+    # AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    DEFAULT_FILE_STORAGE = 'backend.storage_backends.PublicMediaStorage'
+    
 
-
-    STATICFILES_LOCATION = 'static'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'  
+    # s3 static settings
+    # STATICFILES_LOCATION = 'static'
+    # STATICFILES_STORAGE = 'backend.storage_backends.StaticStorage'
+    # STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
