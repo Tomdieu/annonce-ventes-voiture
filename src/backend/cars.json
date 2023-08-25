@@ -1,0 +1,53 @@
+{
+    "brands": [
+      {
+        "name": "Lamborghini",
+        "models": ["Aventador", "Huracán", "Urus"]
+      },
+      {
+        "name": "Kia",
+        "models": ["Forte", "Optima", "Sorento", "Sportage", "Telluride", "Soul", "Stinger", "Cadenza", "K900", "Rio"]
+      },
+      {
+        "name": "Jaguar",
+        "models": ["XE", "XF", "XJ", "F-PACE", "E-PACE", "I-PACE", "F-TYPE"]
+      },
+      {
+        "name": "Hyundai",
+        "models": ["Accent", "Elantra", "Sonata", "Veloster", "Kona", "Tucson", "Santa Fe", "Palisade"]
+      },
+      {
+        "name": "Honda",
+        "models": ["Accord", "Civic", "Clarity", "CR-V", "Fit", "HR-V", "Insight", "Odyssey", "Passport", "Pilot", "Ridgeline"]
+      },
+      {
+        "name": "Ford",
+        "models": ["Bronco", "Escape", "Expedition", "Explorer", "F-150", "Fiesta", "Focus", "Fusion", "Mustang", "Ranger"]
+      },
+      {
+        "name": "Ferrari",
+        "models": ["F8", "Roma", "812", "Portofino", "SF90"]
+      },
+      {
+        "name": "Chevrolet",
+        "models": ["Blazer", "Camaro", "Colorado", "Equinox", "Impala", "Malibu", "Silverado", "Suburban", "Tahoe", "Trailblazer", "Traverse"]
+      },
+      {
+        "name": "Cadillac",
+        "models": ["CT4", "CT5", "CT6", "Escalade", "XT4", "XT5", "XT6"]
+      },
+      {
+        "name": "BMW",
+        "models": ["2 Series", "3 Series", "4 Series", "5 Series", "7 Series", "8 Series", "X1", "X3", "X5", "X6", "X7"]
+      },
+      {
+        "name": "Bentley",
+        "models": ["Bentayga", "Continental", "Flying Spur", "Mulsanne"]
+      },
+      {
+        "name": "Audi",
+        "models": ["A3", "A4", "A5", "A6", "A7", "A8", "Q3", "Q5", "Q7", "Q8", "e-tron", "TT"]
+      }
+    ]
+  }
+  
