@@ -22,6 +22,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import RedirectView
+from django.views.static import serve
 
 from core.views import react_frontend
 
@@ -101,11 +102,11 @@ urlpatterns += [
         RedirectView.as_view(url=settings.STATIC_URL + "logo-white.png"),
     ),
     re_path(r"^(?P<url>.*)$", react_frontend),
+    re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
+re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-# urlpatterns += [re_path(r'^(?P<url>.*)$', react_frontend)]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  

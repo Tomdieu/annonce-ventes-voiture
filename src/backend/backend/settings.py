@@ -28,7 +28,7 @@ env = environ.Env()
 SECRET_KEY = "django-insecure-dp!viq9=s21qetvdk0bk$!w4k(a0+y2pq*+awtg*&@f1nsq*a("
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG", default=False)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -36,7 +36,7 @@ ALLOWED_HOSTS = ["*"]
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Application definition
-
+ 
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "rest_framework.authtoken",
-    # "storages",
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -205,8 +205,8 @@ if env('ENV') == "production":
     AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME")
     AWS_S3_SIGNATURE_NAME = "s3v4"
     AWS_S3_FILE_OVERWRITE = False
-    AWS_DEFAULT_ACL = 'public-read-write'
-    # AWS_DEFAULT_ACL= None
+    # AWS_DEFAULT_ACL = 'public-read-write'
+    AWS_DEFAULT_ACL= None
     AWS_S3_VERIFY=True
     
     # AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
@@ -215,6 +215,6 @@ if env('ENV') == "production":
     
 
     # s3 static settings
-    # STATICFILES_LOCATION = 'static'
-    # STATICFILES_STORAGE = 'backend.storage_backends.StaticStorage'
-    # STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
