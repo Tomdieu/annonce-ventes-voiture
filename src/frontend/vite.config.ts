@@ -8,7 +8,8 @@ export default defineConfig({
     minify: true, // Enable or disable minification
     cssMinify: true, // Enable or disable CSS minification
     chunkSizeWarningLimit: 1000, // Adjust the value according to your needs
-    outDir: '../backend/frontend/build/',
+    // outDir: '../backend/frontend/build/',
     assetsDir: 'static',
   },
+  
 })

@@ -151,16 +151,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-# if env('ENV') == "development":
-STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles", "static")
+if env('ENV') == "development":
+    STATIC_URL = "static/"
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles", "static")
 
     
-STATICFILES_DIRS = [
-    BASE_DIR / "static/",
-    BASE_DIR / "frontend/build/static/",
-    BASE_DIR / "frontend/build/",
-]
+
 
 
 MEDIA_URL = "/media/"
@@ -218,3 +214,9 @@ if env('ENV') == "production":
     STATICFILES_LOCATION = 'static'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static/",
+    BASE_DIR / "frontend/build/static/",
+    BASE_DIR / "frontend/build/",
+]

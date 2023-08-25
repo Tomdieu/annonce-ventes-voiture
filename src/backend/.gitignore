@@ -179,8 +179,6 @@ __pycache__
 *.rdb
 celerybeat-schedule
 
-
-*_*.py
 *.pyc
 *__pycache__*
 .env/

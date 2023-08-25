@@ -2,6 +2,7 @@
 
 module.exports = {
   root: true,
+  parser: "@typescript-eslint/parser",
   env: { browser: true, es2020: true },
   ignorePatterns: ["node_modules/", "dist/", "src/components/*.tsx"],
   extends: [
